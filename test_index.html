@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Klasemen BRI SUPER LEAGUE 2025/26</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-shadow { box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .hover-scale { transition: transform 0.2s; }
+        .hover-scale:hover { transform: scale(1.02); }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="gradient-bg text-white py-8">
+        <div class="container mx-auto px-4">
+            <h1 class="text-4xl font-bold text-center mb-2">⚽ Kalkulator Klasemen BRI SUPER LEAGUE 2025/26</h1>
+            <p class="text-center text-blue-100">Sistem peringkat sesuai regulasi resmi sepak bola Indonesia</p>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Input Tim -->
+        <div class="bg-white rounded-xl card-shadow p-6 mb-8">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">📝 Tambah Tim</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <input type="text" id="teamName" placeholder="Nama Tim" class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <button onclick="addTeam()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                    ➕ Tambah Tim
+                </button>
+            </div>
+        </div>
+
+        <!-- Input Pertandingan -->
+        <div class="bg-white rounded-xl card-shadow p-6 mb-8">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">⚽ Tambah Hasil Pertandingan</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <select id="homeTeam" class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+                    <option value="">Tim Tuan Rumah</option>
+                </select>
+                <select id="awayTeam" class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+                    <option value="">Tim Tamu</option>
+                </select>
+                <input type="number" id="homeScore" placeholder="Gol Tuan Rumah" min="0" class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+                <input type="number" id="awayScore" placeholder="Gol Tamu" min="0" class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                <input type="number" id="homeYellow" placeholder="Kartu Kuning Tuan Rumah" min="0" class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+                <input type="number" id="homeRed" placeholder="Kartu Merah Tuan Rumah" min="0" class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+                <input type="number" id="awayYellow" placeholder="Kartu Kuning Tamu" min="0" class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+                <input type="number" id="awayRed" placeholder="Kartu Merah Tamu" min="0" class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+            </div>
+            <button onclick="addMatch()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                ⚽ Tambah Pertandingan
+            </button>
+        </div>
+
+        <!-- Klasemen -->
+        <div class="bg-white rounded-xl card-shadow p-6 mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-semibold text-gray-800">🏆 Klasemen BRI SUPER LEAGUE 2025/26</h2>
+                <div class="flex space-x-2">
+                    <button onclick="copyToClipboard()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm">
+                        📋 Copy Klasemen
+                    </button>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="px-4 py-3 text-left font-semibold">Pos</th>
+                            <th class="px-4 py-3 text-left font-semibold">Tim</th>
+                            <th class="px-4 py-3 text-center font-semibold">Main</th>
+                            <th class="px-4 py-3 text-center font-semibold">M</th>
+                            <th class="px-4 py-3 text-center font-semibold">S</th>
+                            <th class="px-4 py-3 text-center font-semibold">K</th>
+                            <th class="px-4 py-3 text-center font-semibold">GM</th>
+                            <th class="px-4 py-3 text-center font-semibold">GK</th>
+                            <th class="px-4 py-3 text-center font-semibold">SG</th>
+                            <th class="px-4 py-3 text-center font-semibold">Poin</th>
+                            <th class="px-4 py-3 text-center font-semibold">Fair Play</th>
+                        </tr>
+                    </thead>
+                    <tbody id="standingsTable">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Riwayat Pertandingan -->
+       <div class="bg-white rounded-xl card-shadow p-6">
+    <h2 class="text-2xl font-semibold mb-4 text-gray-800">📋 Riwayat Pertandingan</h2>
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-4 py-3 text-left font-semibold">No</th>
+                    <th class="px-4 py-3 text-left font-semibold">Tim Tuan Rumah</th>
+                    <th class="px-4 py-3 text-center font-semibold">Skor</th>
+                    <th class="px-4 py-3 text-left font-semibold">Tim Tamu</th>
+                    <th class="px-4 py-3 text-center font-semibold">Kartu</th>
+                    <th class="px-4 py-3 text-center font-semibold">Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="matchHistoryTableBody">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+    <script>
+        let teams = [];
+        let matches = [];
+
+        function addTeam() {
+            const teamName = document.getElementById('teamName').value.trim();
+            if (!teamName) {
+                alert('Masukkan nama tim!');
+                return;
+            }
+            
+            if (teams.find(team => team.name === teamName)) {
+                alert('Tim sudah ada!');
+                return;
+            }
+
+            teams.push({
+                name: teamName,
+                played: 0,
+                won: 0,
+                drawn: 0,
+                lost: 0,
+                goalsFor: 0,
+                goalsAgainst: 0,
+                goalDifference: 0,
+                points: 0,
+                yellowCards: 0,
+                redCards: 0,
+                fairPlayScore: 0
+            });
+
+            document.getElementById('teamName').value = '';
+            updateTeamSelects();
+            updateStandings();
+            saveData();
+        }
+
+        function updateTeamSelects() {
+            const homeSelect = document.getElementById('homeTeam');
+            const awaySelect = document.getElementById('awayTeam');
+            
+            homeSelect.innerHTML = '<option value="">Tim Tuan Rumah</option>';
+            awaySelect.innerHTML = '<option value="">Tim Tamu</option>';
+            
+            teams.forEach(team => {
+                homeSelect.innerHTML += `<option value="${team.name}">${team.name}</option>`;
+                awaySelect.innerHTML += `<option value="${team.name}">${team.name}</option>`;
+            });
+        }
+
+        function addMatch() {
+            const homeTeam = document.getElementById('homeTeam').value;
+            const awayTeam = document.getElementById('awayTeam').value;
+            const homeScore = parseInt(document.getElementById('homeScore').value) || 0;
+            const awayScore = parseInt(document.getElementById('awayScore').value) || 0;
+            const homeYellow = parseInt(document.getElementById('homeYellow').value) || 0;
+            const homeRed = parseInt(document.getElementById('homeRed').value) || 0;
+            const awayYellow = parseInt(document.getElementById('awayYellow').value) || 0;
+            const awayRed = parseInt(document.getElementById('awayRed').value) || 0;
+
+            if (!homeTeam || !awayTeam) {
+                alert('Pilih kedua tim!');
+                return;
+            }
+
+            if (homeTeam === awayTeam) {
+                alert('Tim tidak boleh sama!');
+                return;
+            }
+
+            const match = {
+                homeTeam,
+                awayTeam,
+                homeScore,
+                awayScore,
+                homeYellow,
+                homeRed,
+                awayYellow,
+                awayRed
+            };
+
+            matches.push(match);
+            updateTeamStats();
+            updateStandings();
+            updateMatchHistory();
+            clearMatchForm();
+            saveData();
+        }
+
+        function clearMatchForm() {
+            document.getElementById('homeTeam').value = '';
+            document.getElementById('awayTeam').value = '';
+            document.getElementById('homeScore').value = '';
+            document.getElementById('awayScore').value = '';
+            document.getElementById('homeYellow').value = '';
+            document.getElementById('homeRed').value = '';
+            document.getElementById('awayYellow').value = '';
+            document.getElementById('awayRed').value = '';
+        }
+
+        function updateTeamStats() {
+            // Reset stats
+            teams.forEach(team => {
+                team.played = 0;
+                team.won = 0;
+                team.drawn = 0;
+                team.lost = 0;
+                team.goalsFor = 0;
+                team.goalsAgainst = 0;
+                team.points = 0;
+                team.yellowCards = 0;
+                team.redCards = 0;
+            });
+
+            // Calculate stats from matches
+            matches.forEach(match => {
+                const homeTeam = teams.find(t => t.name === match.homeTeam);
+                const awayTeam = teams.find(t => t.name === match.awayTeam);
+
+                homeTeam.played++;
+                awayTeam.played++;
+                
+                homeTeam.goalsFor += match.homeScore;
+                homeTeam.goalsAgainst += match.awayScore;
+                awayTeam.goalsFor += match.awayScore;
+                awayTeam.goalsAgainst += match.homeScore;
+
+                homeTeam.yellowCards += match.homeYellow;
+                homeTeam.redCards += match.homeRed;
+                awayTeam.yellowCards += match.awayYellow;
+                awayTeam.redCards += match.awayRed;
+
+                if (match.homeScore > match.awayScore) {
+                    homeTeam.won++;
+                    homeTeam.points += 3;
+                    awayTeam.lost++;
+                } else if (match.homeScore < match.awayScore) {
+                    awayTeam.won++;
+                    awayTeam.points += 3;
+                    homeTeam.lost++;
+                } else {
+                    homeTeam.drawn++;
+                    awayTeam.drawn++;
+                    homeTeam.points += 1;
+                    awayTeam.points += 1;
+                }
+            });
+
+            // Calculate goal difference and fair play score
+            teams.forEach(team => {
+                team.goalDifference = team.goalsFor - team.goalsAgainst;
+                team.fairPlayScore = team.yellowCards + (team.redCards * 3); // Kartu kuning = 1 poin, kartu merah = 3 poin
+            });
+        }
+
+        function getHeadToHeadStats(teamNames) {
+            const h2hMatches = matches.filter(match => 
+                teamNames.includes(match.homeTeam) && teamNames.includes(match.awayTeam)
+            );
+
+            const h2hStats = {};
+            teamNames.forEach(teamName => {
+                h2hStats[teamName] = {
+                    points: 0,
+                    goalsFor: 0,
+                    goalsAgainst: 0,
+                    goalDifference: 0
+                };
+            });
+
+            h2hMatches.forEach(match => {
+                const homeStats = h2hStats[match.homeTeam];
+                const awayStats = h2hStats[match.awayTeam];
+
+                homeStats.goalsFor += match.homeScore;
+                homeStats.goalsAgainst += match.awayScore;
+                awayStats.goalsFor += match.awayScore;
+                awayStats.goalsAgainst += match.homeScore;
+
+                if (match.homeScore > match.awayScore) {
+                    homeStats.points += 3;
+                } else if (match.homeScore < match.awayScore) {
+                    awayStats.points += 3;
+                } else {
+                    homeStats.points += 1;
+                    awayStats.points += 1;
+                }
+            });
+
+            Object.keys(h2hStats).forEach(teamName => {
+                h2hStats[teamName].goalDifference = h2hStats[teamName].goalsFor - h2hStats[teamName].goalsAgainst;
+            });
+
+            return h2hStats;
+        }
+
+        function updateStandings() {
+            const sortedTeams = [...teams].sort((a, b) => {
+                // 1. Points
+                if (a.points !== b.points) {
+                    return b.points - a.points;
+                }
+
+                // 2. Head-to-head (simplified for two teams)
+                if (teams.filter(t => t.points === a.points).length === 2) {
+                    const h2hStats = getHeadToHeadStats([a.name, b.name]);
+                    const aH2H = h2hStats[a.name];
+                    const bH2H = h2hStats[b.name];
+
+                    if (aH2H.points !== bH2H.points) {
+                        return bH2H.points - aH2H.points;
+                    }
+                    if (aH2H.goalDifference !== bH2H.goalDifference) {
+                        return bH2H.goalDifference - aH2H.goalDifference;
+                    }
+                    if (aH2H.goalsFor !== bH2H.goalsFor) {
+                        return bH2H.goalsFor - aH2H.goalsFor;
+                    }
+                }
+
+                // 3. Goal difference
+                if (a.goalDifference !== b.goalDifference) {
+                    return b.goalDifference - a.goalDifference;
+                }
+
+                // 4. Goals scored
+                if (a.goalsFor !== b.goalsFor) {
+                    return b.goalsFor - a.goalsFor;
+                }
+
+                // 5. Fair play (lower is better)
+                return a.fairPlayScore - b.fairPlayScore;
+            });
+
+            const tableBody = document.getElementById('standingsTable');
+            tableBody.innerHTML = '';
+
+            sortedTeams.forEach((team, index) => {
+                const row = document.createElement('tr');
+                row.className = index % 2 === 0 ? 'bg-gray-50' : 'bg-white';
+                
+                let positionClass = '';
+                if (index < 3) positionClass = 'text-green-600 font-bold';
+                else if (index >= sortedTeams.length - 3) positionClass = 'text-red-600 font-bold';
+
+                row.innerHTML = `
+                    <td class="px-4 py-3 ${positionClass}">${index + 1}</td>
+                    <td class="px-4 py-3 font-medium">${team.name}</td>
+                    <td class="px-4 py-3 text-center">${team.played}</td>
+                    <td class="px-4 py-3 text-center">${team.won}</td>
+                    <td class="px-4 py-3 text-center">${team.drawn}</td>
+                    <td class="px-4 py-3 text-center">${team.lost}</td>
+                    <td class="px-4 py-3 text-center">${team.goalsFor}</td>
+                    <td class="px-4 py-3 text-center">${team.goalsAgainst}</td>
+                    <td class="px-4 py-3 text-center ${team.goalDifference >= 0 ? 'text-green-600' : 'text-red-600'}">${team.goalDifference >= 0 ? '+' : ''}${team.goalDifference}</td>
+                    <td class="px-4 py-3 text-center font-bold text-blue-600">${team.points}</td>
+                    <td class="px-4 py-3 text-center">${team.fairPlayScore}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+
+        // Ganti fungsi lama dengan yang ini
+function editMatch(index) { // Parameter sekarang adalah 'index' langsung
+    const match = matches[index]; // Ambil data langsung dengan index
+
+    document.getElementById('homeTeam').value = match.homeTeam;
+    document.getElementById('awayTeam').value = match.awayTeam;
+    document.getElementById('homeScore').value = match.homeScore;
+    document.getElementById('awayScore').value = match.awayScore;
+    document.getElementById('homeYellow').value = match.homeYellow;
+    document.getElementById('homeRed').value = match.homeRed;
+    document.getElementById('awayYellow').value = match.awayYellow;
+    document.getElementById('awayRed').value = match.awayRed;
+
+    // Hapus match dari array menggunakan index yang benar
+    matches.splice(index, 1);
+
+    updateAllAndSave(); // Fungsi ini sudah mencakup semua update
+
+    document.querySelector('.bg-white.rounded-xl.card-shadow').scrollIntoView({ behavior: 'smooth' });
+}
+
+       // Ganti fungsi lama dengan yang ini
+function deleteMatch(index) { // Parameter sekarang adalah 'index' langsung
+    if (confirm('Apakah Anda yakin ingin menghapus pertandingan ini?')) {
+        matches.splice(index, 1); // Hapus data langsung dengan index
+        updateAllAndSave();
+    }
+}
+        function updateMatchHistory() {
+    // Targetkan body tabel yang baru
+    const tableBody = document.getElementById('matchHistoryTableBody');
+    tableBody.innerHTML = '';
+
+    if (matches.length === 0) {
+        // Tampilkan pesan jika tidak ada data, tapi dalam format baris tabel
+        tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-gray-500 py-4">Belum ada pertandingan yang diinput</td></tr>';
+        return;
+    }
+
+    // Loop dari pertandingan terakhir ke pertama agar yang terbaru di atas
+    for (let i = matches.length - 1; i >= 0; i--) {
+        const match = matches[i];
+        const row = document.createElement('tr');
+        row.className = 'border-b hover:bg-gray-50'; // Tambahkan efek hover
+
+        let resultClass = '';
+        if (match.homeScore > match.awayScore) resultClass = 'text-green-600';
+        else if (match.homeScore < match.awayScore) resultClass = 'text-red-600';
+
+        // Buat sel untuk setiap kolom
+        row.innerHTML = `
+            <td class="px-4 py-3">${matches.length - i}</td>
+            <td class="px-4 py-3 font-medium">${match.homeTeam}</td>
+            <td class="px-4 py-3 text-center font-bold ${resultClass}">${match.homeScore} - ${match.awayScore}</td>
+            <td class="px-4 py-3 font-medium">${match.awayTeam}</td>
+            <td class="px-4 py-3 text-center text-gray-600">
+                <span class="text-yellow-500 font-bold">🟨</span> ${match.homeYellow + match.awayYellow}
+                <span class="text-red-600 font-bold ml-2">🟥</span> ${match.homeRed + match.awayRed}
+            </td>
+            <td class="px-4 py-3 text-center">
+                <div class="flex space-x-2 justify-center admin-buttons" style="display:flex;">
+                    <button onclick="editMatch(${i})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors">✏️ Edit</button>
+                    <button onclick="deleteMatch(${i})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors">🗑️ Hapus</button>
+                </div>
+            </td>
+        `;
+        tableBody.appendChild(row);
+    }
+}
+
+        // Initialize with all participating teams
+        function initializeSampleData() {
+            const participatingTeams = [
+                'Arema FC',
+                'Bali United FC',
+                'Bhayangkara Presisi Lampung FC',
+                'Borneo FC Samarinda',
+                'Dewa United FC',
+                'Madura United FC',
+                'Malut United FC',
+                'PERSEBAYA Surabaya',
+                'PERSIB Bandung',
+                'PERSIJA Jakarta',
+                'PERSIJAP Jepara',
+                'PERSIK Kediri',
+                'PERSIS Solo',
+                'PERSITA',
+                'PSBS Biak',
+                'PSIM Yogyakarta',
+                'PSM Makassar',
+                'Semen Padang FC'
+            ];
+            
+            participatingTeams.forEach(teamName => {
+                teams.push({
+                    name: teamName,
+                    played: 0,
+                    won: 0,
+                    drawn: 0,
+                    lost: 0,
+                    goalsFor: 0,
+                    goalsAgainst: 0,
+                    goalDifference: 0,
+                    points: 0,
+                    yellowCards: 0,
+                    redCards: 0,
+                    fairPlayScore: 0
+                });
+            });
+            updateTeamSelects();
+            updateStandings();
+        }
+
+
+
+
+
+        function copyToClipboard() {
+            let textData = 'KLASEMEN BRI SUPER LEAGUE 2025/26\n';
+            textData += '='.repeat(80) + '\n';
+            textData += 'Pos\tTim\t\t\tMain\tM\tS\tK\tGM\tGK\tSG\tPoin\tFP\n';
+            textData += '-'.repeat(80) + '\n';
+            
+            const sortedTeams = [...teams].sort((a, b) => {
+                if (a.points !== b.points) return b.points - a.points;
+                if (a.goalDifference !== b.goalDifference) return b.goalDifference - a.goalDifference;
+                if (a.goalsFor !== b.goalsFor) return b.goalsFor - a.goalsFor;
+                return a.fairPlayScore - b.fairPlayScore;
+            });
+
+            sortedTeams.forEach((team, index) => {
+                const teamName = team.name.padEnd(20);
+                textData += `${(index + 1).toString().padStart(2)}\t${teamName}\t${team.played}\t${team.won}\t${team.drawn}\t${team.lost}\t${team.goalsFor}\t${team.goalsAgainst}\t${team.goalDifference >= 0 ? '+' : ''}${team.goalDifference}\t${team.points}\t${team.fairPlayScore}\n`;
+            });
+
+            textData += '\n\nRIWAYAT PERTANDINGAN\n';
+            textData += '='.repeat(80) + '\n';
+            
+            matches.forEach((match, index) => {
+                textData += `${index + 1}. ${match.homeTeam} ${match.homeScore} - ${match.awayScore} ${match.awayTeam}\n`;
+                if (match.homeYellow + match.homeRed + match.awayYellow + match.awayRed > 0) {
+                    textData += `   Kartu: ${match.homeYellow + match.awayYellow} Kuning, ${match.homeRed + match.awayRed} Merah\n`;
+                }
+            });
+
+            navigator.clipboard.writeText(textData).then(() => {
+                showNotification('Klasemen berhasil disalin ke clipboard!', 'success');
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = textData;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification('Klasemen berhasil disalin ke clipboard!', 'success');
+            });
+        }
+
+
+
+
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white z-50 ${
+                type === 'success' ? 'bg-green-600' : 'bg-blue-600'
+            }`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Data persistence functions
+        function saveData() {
+            const data = {
+                teams: teams,
+                matches: matches
+            };
+            localStorage.setItem('leagueCalculatorData', JSON.stringify(data));
+        }
+
+        function loadData() {
+            const savedData = localStorage.getItem('leagueCalculatorData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                teams = data.teams || [];
+                matches = data.matches || [];
+                return true;
+            }
+            return false;
+        }
+
+        function clearAllData() {
+            if (confirm('Apakah Anda yakin ingin menghapus semua data? Tindakan ini tidak dapat dibatalkan.')) {
+                localStorage.removeItem('leagueCalculatorData');
+                teams = [];
+                matches = [];
+                initializeSampleData();
+                showNotification('Semua data berhasil dihapus!', 'success');
+            }
+        }
+
+        // Initialize the app
+        if (!loadData()) {
+            initializeSampleData();
+        } else {
+            updateTeamSelects();
+            updateStandings();
+            updateMatchHistory();
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96d870b7b69f9d1d',t:'MTc1NDkyMjcyNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
