@@ -253,44 +253,83 @@
     }
 
     function updateStandings() {
-        const sortedTeams = [...teams].sort((a, b) => {
-            if (a.points !== b.points) return b.points - a.points;
-            if (teams.filter(t => t.points === a.points).length === 2) {
-                const h2hStats = getHeadToHeadStats([a.name, b.name]);
-                const aH2H = h2hStats[a.name];
-                const bH2H = h2hStats[b.name];
-                if (aH2H.points !== bH2H.points) return bH2H.points - aH2H.points;
-                if (aH2H.goalDifference !== bH2H.goalDifference) return bH2H.goalDifference - aH2H.goalDifference;
-                if (aH2H.goalsFor !== bH2H.goalsFor) return bH2H.goalsFor - aH2H.goalsFor;
-            }
-            if (a.goalDifference !== b.goalDifference) return b.goalDifference - a.goalDifference;
-            if (a.goalsFor !== b.goalsFor) return b.goalsFor - a.goalsFor;
-            return a.fairPlayScore - b.fairPlayScore;
-        });
-        const tableBody = document.getElementById('standingsTable');
-        tableBody.innerHTML = '';
-        sortedTeams.forEach((team, index) => {
-            const row = document.createElement('tr');
-            row.className = index % 2 === 0 ? 'bg-gray-50' : 'bg-white';
-            let positionClass = '';
-            if (index < 3) positionClass = 'text-green-600 font-bold';
-            else if (index >= sortedTeams.length - 3) positionClass = 'text-red-600 font-bold';
-            row.innerHTML = `
-                <td class="px-4 py-3 ${positionClass}">${index + 1}</td>
-                <td class="px-4 py-3 font-medium">${team.name}</td>
-                <td class="px-4 py-3 text-center">${team.played}</td>
-                <td class="px-4 py-3 text-center">${team.won}</td>
-                <td class="px-4 py-3 text-center">${team.drawn}</td>
-                <td class="px-4 py-3 text-center">${team.lost}</td>
-                <td class="px-4 py-3 text-center">${team.goalsFor}</td>
-                <td class="px-4 py-3 text-center">${team.goalsAgainst}</td>
-                <td class="px-4 py-3 text-center ${team.goalDifference >= 0 ? 'text-green-600' : 'text-red-600'}">${team.goalDifference >= 0 ? '+' : ''}${team.goalDifference}</td>
-                <td class="px-4 py-3 text-center font-bold text-blue-600">${team.points}</td>
-                <td class="px-4 py-3 text-center">${team.fairPlayScore}</td>`;
-            tableBody.appendChild(row);
-        });
-    }
+    const sortedTeams = [...teams].sort((a, b) => {
+        // Kriteria 1: Poin Keseluruhan (Tidak berubah)
+        if (a.points !== b.points) {
+            return b.points - a.points;
+        }
 
+        // ▼▼▼ BLOK HEAD-TO-HEAD YANG DIPERBAIKI ▼▼▼
+
+        // Ambil semua tim yang memiliki poin yang sama dengan tim 'a' dan 'b'
+        const tiedTeams = teams.filter(t => t.points === a.points);
+
+        // Kriteria 2: Head-to-Head untuk 2 tim atau lebih
+        if (tiedTeams.length >= 2) {
+            // Ambil nama dari semua tim yang terikat
+            const tiedTeamNames = tiedTeams.map(t => t.name);
+            
+            // Buat "klasemen kecil" dari tim-tim tersebut
+            const h2hStats = getHeadToHeadStats(tiedTeamNames);
+            
+            const aH2H = h2hStats[a.name];
+            const bH2H = h2hStats[b.name];
+
+            // Urutkan berdasarkan kriteria head-to-head:
+            // 2a. Poin Head-to-Head
+            if (aH2H.points !== bH2H.points) {
+                return bH2H.points - aH2H.points;
+            }
+            // 2b. Selisih Gol Head-to-Head
+            if (aH2H.goalDifference !== bH2H.goalDifference) {
+                return bH2H.goalDifference - aH2H.goalDifference;
+            }
+            // 2c. Jumlah Gol Head-to-Head
+            if (aH2H.goalsFor !== bH2H.goalsFor) {
+                return bH2H.goalsFor - aH2H.goalsFor;
+            }
+        }
+        // ▲▲▲ AKHIR BLOK PERBAIKAN ▲▲▲
+
+
+        // Kriteria 3: Selisih Gol Keseluruhan (Jika head-to-head masih sama)
+        if (a.goalDifference !== b.goalDifference) {
+            return b.goalDifference - a.goalDifference;
+        }
+
+        // Kriteria 4: Jumlah Gol Keseluruhan
+        if (a.goalsFor !== b.goalsFor) {
+            return b.goalsFor - a.goalsFor;
+        }
+
+        // Kriteria 5: Poin Fair Play (Poin lebih rendah lebih baik)
+        return a.fairPlayScore - b.fairPlayScore;
+    });
+
+    // Bagian untuk render tabel tidak perlu diubah
+    const tableBody = document.getElementById('standingsTable');
+    tableBody.innerHTML = '';
+    sortedTeams.forEach((team, index) => {
+        const row = document.createElement('tr');
+        row.className = index % 2 === 0 ? 'bg-gray-50' : 'bg-white';
+        let positionClass = '';
+        if (index < 3) positionClass = 'text-green-600 font-bold';
+        else if (index >= sortedTeams.length - 3) positionClass = 'text-red-600 font-bold';
+        row.innerHTML = `
+            <td class="px-4 py-3 ${positionClass}">${index + 1}</td>
+            <td class="px-4 py-3 font-medium">${team.name}</td>
+            <td class="px-4 py-3 text-center">${team.played}</td>
+            <td class="px-4 py-3 text-center">${team.won}</td>
+            <td class="px-4 py-3 text-center">${team.drawn}</td>
+            <td class="px-4 py-3 text-center">${team.lost}</td>
+            <td class="px-4 py-3 text-center">${team.goalsFor}</td>
+            <td class="px-4 py-3 text-center">${team.goalsAgainst}</td>
+            <td class="px-4 py-3 text-center ${team.goalDifference >= 0 ? 'text-green-600' : 'text-red-600'}">${team.goalDifference >= 0 ? '+' : ''}${team.goalDifference}</td>
+            <td class="px-4 py-3 text-center font-bold text-blue-600">${team.points}</td>
+            <td class="px-4 py-3 text-center">${team.fairPlayScore}</td>`;
+        tableBody.appendChild(row);
+    });
+}
     function editMatch(matchIndex) {
         const match = matches[matches.length - 1 - matchIndex];
         document.getElementById('homeTeam').value = match.homeTeam;
@@ -496,6 +535,7 @@
     
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96d870b7b69f9d1d',t:'MTc1NDkyMjcyNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
