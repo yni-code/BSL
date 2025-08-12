@@ -35,6 +35,13 @@
             </div>
         </div>
 
+        <div class="container mx-auto px-4 py-4 text-center">
+    <div id="login-form">
+        <input type="password" id="password" placeholder="Masukkan Kata Sandi Admin" class="border rounded-lg px-3 py-1">
+        <button onclick="checkPassword()" class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-1 rounded-lg text-sm">Login</button>
+    </div>
+</div>
+
         <!-- Input Pertandingan -->
         <div class="bg-white rounded-xl card-shadow p-6 mb-8">
             <h2 class="text-2xl font-semibold mb-4 text-gray-800">⚽ Tambah Hasil Pertandingan</h2>
@@ -58,6 +65,17 @@
                 ⚽ Tambah Pertandingan
             </button>
         </div>
+
+        <!-- id password -->
+        <div id="admin-forms" class="space-y-8" style="display:none;">
+            <div class="bg-white rounded-xl card-shadow p-6">
+              <h2 class="text-2xl font-semibold mb-4 text-gray-800">📝 Tambah Tim</h2>
+            </div>
+
+            <div class="bg-white rounded-xl card-shadow p-6">
+              <h2 class="text-2xl font-semibold mb-4 text-gray-800">⚽ Tambah Hasil Pertandingan</h2>
+               </div>
+       </div>
 
         <!-- Klasemen -->
         <div class="bg-white rounded-xl card-shadow p-6 mb-8">
@@ -345,7 +363,7 @@
                         <div class="text-sm text-gray-500">
                             🟨${match.homeYellow + match.awayYellow} 🟥${match.homeRed + match.awayRed}
                         </div>
-                        <div class="flex space-x-2">
+                        <div class="admin-buttons flex space-x-2" style="display:none;">
                             <button onclick="editMatch(${index})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors">✏️ Edit</button>
                             <button onclick="deleteMatch(${index})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors">🗑️ Hapus</button>
                         </div>
@@ -413,6 +431,27 @@
         document.body.appendChild(notification);
         setTimeout(() => { notification.remove(); }, 3000);
     }
+
+    // TAMBAHKAN FUNGSI BARU INI
+function checkPassword() {
+    // GANTI 'sepakbola123' DENGAN KATA SANDI ANDA
+    const correctPassword = 'sepakbola123'; 
+    const enteredPassword = document.getElementById('password').value;
+
+    if (enteredPassword === correctPassword) {
+        // Tampilkan semua form dan tombol admin
+        document.getElementById('admin-forms').style.display = 'block';
+        document.querySelectorAll('.admin-buttons').forEach(buttonDiv => {
+            buttonDiv.style.display = 'flex';
+        });
+
+        // Sembunyikan form login
+        document.getElementById('login-form').style.display = 'none';
+        alert('Login berhasil! Mode Admin aktif.');
+    } else {
+        alert('Kata sandi salah!');
+    }
+}
     
     // ===================================================================
     // FUNGSI BARU UNTUK GOOGLE SHEET (PENGGANTI localStorage)
@@ -503,6 +542,7 @@
     
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96d870b7b69f9d1d',t:'MTc1NDkyMjcyNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
