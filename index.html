@@ -305,61 +305,77 @@
         });
     }
 
-    function editMatch(matchIndex) {
-        const match = matches[matches.length - 1 - matchIndex];
-        document.getElementById('homeTeam').value = match.homeTeam;
-        document.getElementById('awayTeam').value = match.awayTeam;
-        document.getElementById('homeScore').value = match.homeScore;
-        document.getElementById('awayScore').value = match.awayScore;
-        document.getElementById('homeYellow').value = match.homeYellow;
-        document.getElementById('homeRed').value = match.homeRed;
-        document.getElementById('awayYellow').value = match.awayYellow;
-        document.getElementById('awayRed').value = match.awayRed;
-        matches.splice(matches.length - 1 - matchIndex, 1);
+    // Ganti fungsi lama dengan yang ini
+function editMatch(index) { // Parameter sekarang adalah 'index' langsung
+    const match = matches[index]; // Ambil data langsung dengan index
+
+    document.getElementById('homeTeam').value = match.homeTeam;
+    document.getElementById('awayTeam').value = match.awayTeam;
+    document.getElementById('homeScore').value = match.homeScore;
+    document.getElementById('awayScore').value = match.awayScore;
+    document.getElementById('homeYellow').value = match.homeYellow;
+    document.getElementById('homeRed').value = match.homeRed;
+    document.getElementById('awayYellow').value = match.awayYellow;
+    document.getElementById('awayRed').value = match.awayRed;
+
+    // Hapus match dari array menggunakan index yang benar
+    matches.splice(index, 1);
+
+    updateAllAndSave(); // Fungsi ini sudah mencakup semua update
+
+    document.querySelector('.bg-white.rounded-xl.card-shadow').scrollIntoView({ behavior: 'smooth' });
+}
+
+   // Ganti fungsi lama dengan yang ini
+function deleteMatch(index) { // Parameter sekarang adalah 'index' langsung
+    if (confirm('Apakah Anda yakin ingin menghapus pertandingan ini?')) {
+        matches.splice(index, 1); // Hapus data langsung dengan index
         updateAllAndSave();
-        document.querySelector('.bg-white.rounded-xl.card-shadow').scrollIntoView({ behavior: 'smooth' });
     }
-
-    function deleteMatch(matchIndex) {
-        if (confirm('Apakah Anda yakin ingin menghapus pertandingan ini?')) {
-            matches.splice(matches.length - 1 - matchIndex, 1);
-            updateAllAndSave();
-        }
-    }
-
+}
     function updateMatchHistory() {
-        const historyDiv = document.getElementById('matchHistory');
-        historyDiv.innerHTML = '';
-        if (matches.length === 0) {
-            historyDiv.innerHTML = '<p class="text-gray-500 text-center py-4">Belum ada pertandingan yang diinput</p>';
-            return;
-        }
-        matches.slice().reverse().forEach((match, index) => {
-            const matchDiv = document.createElement('div');
-            matchDiv.className = 'bg-gray-50 rounded-lg p-4 hover-scale';
-            let resultClass = '';
-            if (match.homeScore > match.awayScore) resultClass = 'text-green-600';
-            else if (match.homeScore < match.awayScore) resultClass = 'text-red-600';
-            else resultClass = 'text-yellow-600';
-            matchDiv.innerHTML = `
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center space-x-4">
-                        <span class="font-medium">${match.homeTeam}</span>
-                        <span class="text-2xl font-bold ${resultClass}">${match.homeScore} - ${match.awayScore}</span>
-                        <span class="font-medium">${match.awayTeam}</span>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <div class="text-sm text-gray-500">
-                            🟨${match.homeYellow + match.awayYellow} 🟥${match.homeRed + match.awayRed}
-                        </div>
-                            <button onclick="editMatch(${index})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors">✏️ Edit</button>
-                            <button onclick="deleteMatch(${index})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors">🗑️ Hapus</button>
-                        </div>
-                    </div>
-                </div>`;
-            historyDiv.appendChild(matchDiv);
-        });
+    // Targetkan body tabel yang baru
+    const tableBody = document.getElementById('matchHistoryTableBody');
+    tableBody.innerHTML = '';
+
+    if (matches.length === 0) {
+        // Tampilkan pesan jika tidak ada data, tapi dalam format baris tabel
+        tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-gray-500 py-4">Belum ada pertandingan yang diinput</td></tr>';
+        return;
     }
+
+    // Loop dari pertandingan terakhir ke pertama agar yang terbaru di atas
+    for (let i = matches.length - 1; i >= 0; i--) {
+        const match = matches[i];
+        const row = document.createElement('tr');
+        row.className = 'border-b hover:bg-gray-50'; // Tambahkan efek hover
+
+        let resultClass = '';
+        if (match.homeScore > match.awayScore) resultClass = 'text-green-600';
+        else if (match.homeScore < match.awayScore) resultClass = 'text-red-600';
+
+        // Buat sel untuk setiap kolom
+        row.innerHTML = `
+            <td class="px-4 py-3">${matches.length - i}</td>
+            <td class="px-4 py-3 font-medium">${match.homeTeam}</td>
+            <td class="px-4 py-3 text-center font-bold ${resultClass}">${match.homeScore} - ${match.awayScore}</td>
+            <td class="px-4 py-3 font-medium">${match.awayTeam}</td>
+            <td class="px-4 py-3 text-center text-gray-600">
+                <span class="text-yellow-500 font-bold">🟨</span> ${match.homeYellow + match.awayYellow}
+                <span class="text-red-600 font-bold ml-2">🟥</span> ${match.homeRed + match.awayRed}
+            </td>
+            <td class="px-4 py-3 text-center">
+                <div class="flex space-x-2 justify-center admin-buttons" style="display:flex;">
+                    <button onclick="editMatch(${i})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors">✏️ Edit</button>
+                    <button onclick="deleteMatch(${i})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors">🗑️ Hapus</button>
+                </div>
+            </td>
+        `;
+        tableBody.appendChild(row);
+    }
+}
+
+    
 
     function initializeSampleData() {
         const participatingTeams = ['Arema FC', 'Bali United FC', 'Bhayangkara Presisi Lampung FC', 'Borneo FC Samarinda', 'Dewa United FC', 'Madura United FC', 'Malut United FC', 'PERSEBAYA Surabaya', 'PERSIB Bandung', 'PERSIJA Jakarta', 'PERSIJAP Jepara', 'PERSIK Kediri', 'PERSIS Solo', 'PERSITA', 'PSBS Biak', 'PSIM Yogyakarta', 'PSM Makassar', 'Semen Padang FC'];
@@ -510,6 +526,7 @@
     
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96d870b7b69f9d1d',t:'MTc1NDkyMjcyNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
