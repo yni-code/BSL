@@ -77,6 +77,7 @@
                             <th class="px-4 py-3 text-center font-semibold">SG</th>
                             <th class="px-4 py-3 text-center font-semibold">Poin</th>
                             <th class="px-4 py-3 text-center font-semibold">Fair Play</th>
+                            <th class="px-4 py-3 text-center font-semibold">Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="standingsTable">
@@ -301,25 +302,27 @@
         else if (index >= sortedTeams.length - 3) positionClass = 'text-red-600 font-bold';
         
         // ▼▼▼ PERBARUI BAGIAN row.innerHTML ▼▼▼
-        row.innerHTML = `
-            <td class="px-4 py-3 ${positionClass}">${index + 1}</td>
-            <td class="px-4 py-3 font-medium">${team.name}</td>
-            <td class="px-4 py-3 text-center">${team.played}</td>
-            <td class="px-4 py-3 text-center">${team.won}</td>
-            <td class="px-4 py-3 text-center">${team.drawn}</td>
-            <td class="px-4 py-3 text-center">${team.lost}</td>
-            <td class="px-4 py-3 text-center">${team.goalsFor}</td>
-            <td class="px-4 py-3 text-center">${team.goalsAgainst}</td>
-            <td class="px-4 py-3 text-center ${team.goalDifference >= 0 ? 'text-green-600' : 'text-red-600'}">${team.goalDifference >= 0 ? '+' : ''}${team.goalDifference}</td>
-            <td class="px-4 py-3 text-center font-bold text-blue-600">${team.points}</td>
-            <td class="px-4 py-3 text-center">
-                ${
-                    // Jika tim terikat dan merupakan tim pertama dalam grupnya, tampilkan tombol
-                    isTied && pointGroups[team.points][0].name === team.name 
-                    ? `<button onclick="showH2HDetails(${team.points})" class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 text-xs rounded">Lihat H2H</button>`
-                    : team.fairPlayScore
-                }
-            </td>`;
+       row.innerHTML = `
+    <td class="px-4 py-3 ${positionClass}">${index + 1}</td>
+    <td class="px-4 py-3 font-medium">${team.name}</td>
+    <td class="px-4 py-3 text-center">${team.played}</td>
+    <td class="px-4 py-3 text-center">${team.won}</td>
+    <td class="px-4 py-3 text-center">${team.drawn}</td>
+    <td class="px-4 py-3 text-center">${team.lost}</td>
+    <td class="px-4 py-3 text-center">${team.goalsFor}</td>
+    <td class="px-4 py-3 text-center">${team.goalsAgainst}</td>
+    <td class="px-4 py-3 text-center ${team.goalDifference >= 0 ? 'text-green-600' : 'text-red-600'}">${team.goalDifference >= 0 ? '+' : ''}${team.goalDifference}</td>
+    <td class="px-4 py-3 text-center font-bold text-blue-600">${team.points}</td>
+    
+    <td class="px-4 py-3 text-center">${team.fairPlayScore}</td>
+    
+    <td class="px-4 py-3 text-center">
+        ${
+            isTied && pointGroups[team.points][0].name === team.name 
+            ? `<button onclick="showH2HDetails(${team.points})" class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 text-xs rounded">Lihat H2H</button>`
+            : '' // Biarkan kosong jika tidak ada H2H
+        }
+    </td>`;
         tableBody.appendChild(row);
     });
 }
@@ -632,6 +635,7 @@ function closeH2HModal() {
 {var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function()
 {};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
