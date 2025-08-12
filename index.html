@@ -97,7 +97,7 @@
     // ===================================================================
     //  PENTING: TEMPELKAN URL WEB APP GOOGLE SCRIPT ANDA DI SINI
     // ===================================================================
-    const googleScriptURL = 'https://script.google.com/macros/s/AKfycby9jFbOLk444ZpAp96XrWCnQ4FeyVQBgsBg9VwlJMjbjE3TKyqAyCm9Um0PPBchdFzW/exec';
+    const googleScriptURL = 'https://script.google.com/macros/s/AKfycbxYc4f2JHo9zGD_AtgvcpkkO7l-nVjzch9Rsa2ufJ3yO9cXf_SAE47Jk_qjgG4r2dHf/exec';
     // ===================================================================
 
     let teams = [];
@@ -252,55 +252,69 @@
         return h2hStats;
     }
 
-   function updateStandings() {
+    function updateStandings() {
     const sortedTeams = [...teams].sort((a, b) => {
-        // ... (seluruh logika sorting Anda yang sudah diperbaiki sebelumnya tetap di sini) ...
-        // Kriteria 1: Poin Keseluruhan
-        if (a.points !== b.points) return b.points - a.points;
-        // Kriteria 2: Head-to-Head
+        // Kriteria 1: Poin Keseluruhan (Tidak berubah)
+        if (a.points !== b.points) {
+            return b.points - a.points;
+        }
+
+        // ▼▼▼ BLOK HEAD-TO-HEAD YANG DIPERBAIKI ▼▼▼
+
+        // Ambil semua tim yang memiliki poin yang sama dengan tim 'a' dan 'b'
         const tiedTeams = teams.filter(t => t.points === a.points);
+
+        // Kriteria 2: Head-to-Head untuk 2 tim atau lebih
         if (tiedTeams.length >= 2) {
+            // Ambil nama dari semua tim yang terikat
             const tiedTeamNames = tiedTeams.map(t => t.name);
+            
+            // Buat "klasemen kecil" dari tim-tim tersebut
             const h2hStats = getHeadToHeadStats(tiedTeamNames);
+            
             const aH2H = h2hStats[a.name];
             const bH2H = h2hStats[b.name];
-            if (aH2H.points !== bH2H.points) return bH2H.points - aH2H.points;
-            if (aH2H.goalDifference !== bH2H.goalDifference) return bH2H.goalDifference - aH2H.goalDifference;
-            if (aH2H.goalsFor !== bH2H.goalsFor) return bH2H.goalsFor - aH2H.goalsFor;
+
+            // Urutkan berdasarkan kriteria head-to-head:
+            // 2a. Poin Head-to-Head
+            if (aH2H.points !== bH2H.points) {
+                return bH2H.points - aH2H.points;
+            }
+            // 2b. Selisih Gol Head-to-Head
+            if (aH2H.goalDifference !== bH2H.goalDifference) {
+                return bH2H.goalDifference - aH2H.goalDifference;
+            }
+            // 2c. Jumlah Gol Head-to-Head
+            if (aH2H.goalsFor !== bH2H.goalsFor) {
+                return bH2H.goalsFor - aH2H.goalsFor;
+            }
         }
-        // Kriteria 3, 4, 5...
-        if (a.goalDifference !== b.goalDifference) return b.goalDifference - a.goalDifference;
-        if (a.goalsFor !== b.goalsFor) return b.goalsFor - a.goalsFor;
+        // ▲▲▲ AKHIR BLOK PERBAIKAN ▲▲▲
+
+
+        // Kriteria 3: Selisih Gol Keseluruhan (Jika head-to-head masih sama)
+        if (a.goalDifference !== b.goalDifference) {
+            return b.goalDifference - a.goalDifference;
+        }
+
+        // Kriteria 4: Jumlah Gol Keseluruhan
+        if (a.goalsFor !== b.goalsFor) {
+            return b.goalsFor - a.goalsFor;
+        }
+
+        // Kriteria 5: Poin Fair Play (Poin lebih rendah lebih baik)
         return a.fairPlayScore - b.fairPlayScore;
     });
 
+    // Bagian untuk render tabel tidak perlu diubah
     const tableBody = document.getElementById('standingsTable');
     tableBody.innerHTML = '';
-
-    // Deteksi grup tim dengan poin yang sama
-    const pointGroups = {};
-    sortedTeams.forEach(team => {
-        if (!pointGroups[team.points]) {
-            pointGroups[team.points] = [];
-        }
-        pointGroups[team.points].push(team);
-    });
-
     sortedTeams.forEach((team, index) => {
         const row = document.createElement('tr');
-        row.className = 'border-b'; // Hapus bg-white/gray-50 agar bisa ditimpa
-        
-        // Cek apakah tim ini bagian dari grup yang poinnya sama (lebih dari 1 tim)
-        const isTied = pointGroups[team.points] && pointGroups[team.points].length > 1;
-        
-        // Beri warna latar belakang untuk menandai grup yang sama
-        row.className += isTied ? ' bg-yellow-50' : (index % 2 === 0 ? ' bg-gray-50' : ' bg-white');
-        
+        row.className = index % 2 === 0 ? 'bg-gray-50' : 'bg-white';
         let positionClass = '';
         if (index < 3) positionClass = 'text-green-600 font-bold';
         else if (index >= sortedTeams.length - 3) positionClass = 'text-red-600 font-bold';
-        
-        // ▼▼▼ PERBARUI BAGIAN row.innerHTML ▼▼▼
         row.innerHTML = `
             <td class="px-4 py-3 ${positionClass}">${index + 1}</td>
             <td class="px-4 py-3 font-medium">${team.name}</td>
@@ -312,14 +326,7 @@
             <td class="px-4 py-3 text-center">${team.goalsAgainst}</td>
             <td class="px-4 py-3 text-center ${team.goalDifference >= 0 ? 'text-green-600' : 'text-red-600'}">${team.goalDifference >= 0 ? '+' : ''}${team.goalDifference}</td>
             <td class="px-4 py-3 text-center font-bold text-blue-600">${team.points}</td>
-            <td class="px-4 py-3 text-center">
-                ${
-                    // Jika tim terikat dan merupakan tim pertama dalam grupnya, tampilkan tombol
-                    isTied && pointGroups[team.points][0].name === team.name 
-                    ? `<button onclick="showH2HDetails(${team.points})" class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 text-xs rounded">Lihat H2H</button>`
-                    : team.fairPlayScore
-                }
-            </td>`;
+            <td class="px-4 py-3 text-center">${team.fairPlayScore}</td>`;
         tableBody.appendChild(row);
     });
 }
@@ -554,85 +561,11 @@
     }
 </style>
 
-// ▼▼▼ TAMBAHKAN DUA FUNGSI BARU INI DI SCRIPT ANDA ▼▼▼
-
-function showH2HDetails(points) {
-    // 1. Dapatkan semua data yang relevan
-    const tiedTeams = teams.filter(t => t.points === points);
-    const tiedTeamNames = tiedTeams.map(t => t.name);
-    const h2hMatches = matches.filter(match => 
-        tiedTeamNames.includes(match.homeTeam) && tiedTeamNames.includes(match.awayTeam)
-    );
-    const h2hStats = getHeadToHeadStats(tiedTeamNames);
-
-    // 2. Buat tabel untuk "Klasemen Kecil"
-    let miniLeagueHtml = `
-        <table class="w-full text-xs border">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th class="px-2 py-2 text-left font-semibold">Tim</th>
-                    <th class="px-2 py-2 text-center font-semibold">Poin</th>
-                    <th class="px-2 py-2 text-center font-semibold">SG</th>
-                    <th class="px-2 py-2 text-center font-semibold">GM</th>
-                </tr>
-            </thead>
-            <tbody>
-    `;
-    // Urutkan tim di klasemen kecil
-    const sortedTiedTeams = tiedTeams.sort((a, b) => {
-        const aH2H = h2hStats[a.name];
-        const bH2H = h2hStats[b.name];
-        if (aH2H.points !== bH2H.points) return bH2H.points - aH2H.points;
-        if (aH2H.goalDifference !== bH2H.goalDifference) return bH2H.goalDifference - aH2H.goalDifference;
-        return bH2H.goalsFor - aH2H.goalsFor;
-    });
-
-    sortedTiedTeams.forEach(team => {
-        const stats = h2hStats[team.name];
-        miniLeagueHtml += `
-            <tr class="border-b">
-                <td class="px-2 py-2 font-medium">${team.name}</td>
-                <td class="px-2 py-2 text-center">${stats.points}</td>
-                <td class="px-2 py-2 text-center">${stats.goalDifference > 0 ? '+' : ''}${stats.goalDifference}</td>
-                <td class="px-2 py-2 text-center">${stats.goalsFor}</td>
-            </tr>
-        `;
-    });
-    miniLeagueHtml += '</tbody></table>';
-
-    // 3. Buat daftar untuk "Riwayat Pertandingan"
-    let matchListHtml = '';
-    h2hMatches.forEach(match => {
-        matchListHtml += `
-            <div class="bg-gray-50 rounded-md p-2 text-sm flex justify-between items-center">
-                <span>${match.homeTeam}</span>
-                <span class="font-bold">${match.homeScore} - ${match.awayScore}</span>
-                <span>${match.awayTeam}</span>
-            </div>
-        `;
-    });
-    if(h2hMatches.length === 0) {
-        matchListHtml = '<p class="text-sm text-gray-500">Belum ada pertandingan di antara tim-tim ini.</p>';
-    }
-
-    // 4. Masukkan HTML ke dalam modal dan tampilkan
-    document.getElementById('h2hMiniLeague').innerHTML = miniLeagueHtml;
-    document.getElementById('h2hMatchList').innerHTML = matchListHtml;
-    document.getElementById('h2hModal').style.display = 'flex';
-}
-
-function closeH2HModal() {
-    document.getElementById('h2hModal').style.display = 'none';
-}
-
-    
 </script>
 
     
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96d870b7b69f9d1d',t:'MTc1NDkyMjcyNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
-
-
 
 
 
