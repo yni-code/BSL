@@ -24,17 +24,15 @@
     </div>
     
       <!-- login -->
-<div id="loginSection" class="container mx-auto px-4 pt-8 text-center">
-        <div class="bg-white rounded-xl card-shadow p-6 max-w-md mx-auto">
-            <h2 class="text-xl font-semibold mb-4 text-gray-700">Area Admin</h2>
-            <div class="flex flex-col sm:flex-row gap-2 justify-center">
-                <input type="password" id="adminPassword" placeholder="Masukkan Password" class="border border-gray-300 rounded-lg px-4 py-2 flex-grow focus:ring-2 focus:ring-blue-500">
-                <button onclick="adminLogin()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
-                    Login
-                </button>
-            </div>
-        </div>
+<!-- Ganti blok login lama Anda dengan yang ini -->
+<div id="loginSection" class="container mx-auto px-4 py-6 text-center">
+    <div class="flex justify-center items-center gap-2">
+        <input type="password" id="adminPassword" placeholder="Password Admin" class="border border-gray-300 rounded-lg px-4 py-2 w-full max-w-xs focus:ring-2 focus:ring-blue-500">
+        <button onclick="adminLogin()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+            Login
+        </button>
     </div>
+</div>
     
         <!-- Klasemen -->
         <div class="bg-white rounded-xl card-shadow p-6 mb-8">
@@ -69,6 +67,8 @@
                 </table>
             </div>
         </div>
+
+    
  <!-- logout -->
     <div id="adminArea" style="display:none;">
     <div class="bg-white rounded-xl card-shadow p-4 mb-8 flex justify-between items-center">
@@ -709,6 +709,7 @@ function adminLogin() {
 {var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function()
 {};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
