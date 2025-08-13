@@ -22,10 +22,22 @@
             <p class="text-center text-blue-100">Sistem peringkat sesuai regulasi resmi sepak bola Indonesia</p>
         </div>
     </div>
+    
+      <!-- login -->
+<div id="loginSection" class="container mx-auto px-4 pt-8 text-center">
+        <div class="bg-white rounded-xl card-shadow p-6 max-w-md mx-auto">
+            <h2 class="text-xl font-semibold mb-4 text-gray-700">Area Admin</h2>
+            <div class="flex flex-col sm:flex-row gap-2 justify-center">
+                <input type="password" id="adminPassword" placeholder="Masukkan Password" class="border border-gray-300 rounded-lg px-4 py-2 flex-grow focus:ring-2 focus:ring-blue-500">
+                <button onclick="adminLogin()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                    Login
+                </button>
+            </div>
+        </div>
+    </div>
 
     <div class="container mx-auto px-4 py-8">
-      
-
+        <div id="adminArea" style="display:none;">
         <!-- Input Pertandingan -->
         <div class="bg-white rounded-xl card-shadow p-6 mb-8">
             <h2 class="text-2xl font-semibold mb-4 text-gray-800">⚽ Tambah Hasil Pertandingan</h2>
@@ -50,8 +62,15 @@
             </button>
         </div>
 
-     
+               <!-- Riwayat Pertandingan -->
+        <div class="bg-white rounded-xl card-shadow p-6">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">📋 Riwayat Pertandingan</h2>
+            <div id="matchHistory" class="space-y-2">
+            </div>
+        </div>
+    </div>
 
+    
         <!-- Klasemen -->
         <div class="bg-white rounded-xl card-shadow p-6 mb-8">
             <div class="flex justify-between items-center mb-4">
@@ -86,13 +105,15 @@
             </div>
         </div>
 
-        <!-- Riwayat Pertandingan -->
-        <div class="bg-white rounded-xl card-shadow p-6">
-            <h2 class="text-2xl font-semibold mb-4 text-gray-800">📋 Riwayat Pertandingan</h2>
-            <div id="matchHistory" class="space-y-2">
-            </div>
-        </div>
+     
+
+    <div class="container mx-auto px-4">
+        <h1 class="text-4xl font-bold text-center mb-2">⚽ Kalkulator Klasemen BRI SUPER LEAGUE 2025/26</h1>
+        <p class="text-center text-blue-100">Sistem peringkat sesuai regulasi resmi sepak bola Indonesia</p>
     </div>
+</div>
+
+  
 
 <script>
     // ===================================================================
@@ -635,6 +656,7 @@ function closeH2HModal() {
 {var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function()
 {};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
