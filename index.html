@@ -665,13 +665,18 @@ function adminLogin() {
             updateTeamSelects();
             updateStandings();
             updateMatchHistory();
-        } else {
-            // Jika gagal load atau sheet kosong, inisialisasi dengan data contoh
-            initializeSampleData();
-            // Simpan data contoh ini ke sheet untuk pertama kali
-            saveData();
-        }
-    });
+        } else if (dataLoaded && teams.length === 0) {
+        // Jika berhasil terhubung tapi database memang kosong,
+        // buat data contoh tapi JANGAN langsung simpan.
+        // Beri kesempatan pada admin untuk menyimpannya secara manual.
+        initializeSampleData();
+        updateTeamSelects();
+        updateStandings();
+        showNotification('Database kosong. Data contoh telah dibuat. Klik Simpan untuk menginisialisasi.', 'info');
+    }
+    // Jika 'dataLoaded' adalah false (gagal terhubung), kita tidak melakukan apa-apa
+    // untuk mencegah data hilang. Cukup tampilkan notifikasi error dari fungsi loadData().
+});
 
 </script>
 <div id="h2hModal" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50" style="display: none;">
@@ -709,6 +714,7 @@ function adminLogin() {
 {var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function()
 {};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
