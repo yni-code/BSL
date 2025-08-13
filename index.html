@@ -112,10 +112,6 @@
 <div class="bg-white rounded-xl card-shadow p-6 mb-8">
     <h2 class="text-2xl font-semibold mb-4 text-gray-800">📋 Riwayat Pertandingan</h2>
 
-    <!-- Kolom Pencarian -->
-    <div class="mb-4">
-        <input type="text" id="matchSearchInput" onkeyup="updateMatchHistory()" placeholder="Cari nama tim..." class="border border-gray-300 rounded-lg px-4 py-2 w-full focus:ring-2 focus:ring-blue-500">
-    </div>
 
     <!-- Kerangka Tabel -->
     <div class="overflow-x-auto">
@@ -410,39 +406,24 @@
         }
     }
 
-   // GANTI FUNGSI LAMA ANDA DENGAN VERSI BARU INI
+   // GANTI FUNGSI updateMatchHistory LAMA ANDA DENGAN VERSI BARU INI
 
 function updateMatchHistory() {
-    // 1. Ambil kata kunci dari kolom pencarian
-    const searchQuery = document.getElementById('matchSearchInput').value.toLowerCase();
-    
-    // 2. Saring pertandingan jika ada kata kunci
-    let matchesToDisplay;
-    if (searchQuery) {
-        matchesToDisplay = matches.filter(match =>
-            match.homeTeam.toLowerCase().includes(searchQuery) ||
-            match.awayTeam.toLowerCase().includes(searchQuery)
-        );
-    } else {
-        matchesToDisplay = [...matches]; // Jika tidak, tampilkan semua
-    }
-
-    // 3. Targetkan body tabel dan kosongkan isinya
     const tableBody = document.getElementById('matchHistoryTableBody');
     tableBody.innerHTML = '';
 
-    // 4. Tampilkan pesan jika tidak ada hasil
-    if (matchesToDisplay.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-gray-500 py-4">Pertandingan tidak ditemukan.</td></tr>';
+    // Tampilkan pesan jika tidak ada pertandingan
+    if (matches.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-gray-500 py-4">Belum ada pertandingan yang diinput.</td></tr>';
         return;
     }
 
-    // 5. Loop melalui data dan buat baris tabel untuk setiap pertandingan
-    const reversedMatches = matchesToDisplay.reverse(); // Agar yang terbaru di atas
+    // Buat salinan terbalik dari array `matches` utama agar yang terbaru di atas
+    const reversedMatches = [...matches].reverse();
 
     reversedMatches.forEach((match, displayIndex) => {
-        // Cari indeks asli agar tombol Edit/Hapus berfungsi dengan benar
-        const originalIndex = matches.findIndex(globalMatch => globalMatch === match);
+        // Dapatkan indeks asli dari pertandingan agar tombol Edit/Hapus berfungsi
+        const originalIndex = matches.indexOf(match);
         
         const row = document.createElement('tr');
         row.className = 'border-b hover:bg-gray-50';
@@ -451,7 +432,7 @@ function updateMatchHistory() {
         if (match.homeScore > match.awayScore) resultClass = 'text-green-600';
         else if (match.homeScore < match.awayScore) resultClass = 'text-red-600';
 
-        // Isi baris dengan sel-sel (kolom)
+        // Isi baris tabel dengan data pertandingan
         row.innerHTML = `
             <td class="px-4 py-3">${displayIndex + 1}</td>
             <td class="px-4 py-3 font-medium">${match.homeTeam}</td>
@@ -478,6 +459,7 @@ function updateMatchHistory() {
         });
     }
 }
+
 
     function initializeSampleData() {
         const participatingTeams = ['Arema FC', 'Bali United FC', 'Bhayangkara Presisi Lampung FC', 'Borneo FC Samarinda', 'Dewa United FC', 'Madura United FC', 'Malut United FC', 'PERSEBAYA Surabaya', 'PERSIB Bandung', 'PERSIJA Jakarta', 'PERSIJAP Jepara', 'PERSIK Kediri', 'PERSIS Solo', 'PERSITA', 'PSBS Biak', 'PSIM Yogyakarta', 'PSM Makassar', 'Semen Padang FC'];
@@ -765,4 +747,5 @@ function adminLogin() {
 {var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function()
 {};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
