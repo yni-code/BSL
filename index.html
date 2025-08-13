@@ -107,12 +107,33 @@
         </div> 
 
         
-         <!-- Riwayat Pertandingan --> 
-        <div class="bg-white rounded-xl card-shadow p-6">
-            <h2 class="text-2xl font-semibold mb-4 text-gray-800">📋 Riwayat Pertandingan</h2>
-            <div id="matchHistory" class="space-y-2">
-            </div>
-        </div>
+         
+       <!-- Riwayat Pertandingan -->
+<div class="bg-white rounded-xl card-shadow p-6 mb-8">
+    <h2 class="text-2xl font-semibold mb-4 text-gray-800">📋 Riwayat Pertandingan</h2>
+
+    <!-- Kolom Pencarian -->
+    <div class="mb-4">
+        <input type="text" id="matchSearchInput" onkeyup="updateMatchHistory()" placeholder="Cari nama tim..." class="border border-gray-300 rounded-lg px-4 py-2 w-full focus:ring-2 focus:ring-blue-500">
+    </div>
+
+    <!-- Kerangka Tabel -->
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-4 py-3 text-left font-semibold">No</th>
+                    <th class="px-4 py-3 text-left font-semibold">Tim Tuan Rumah</th>
+                    <th class="px-4 py-3 text-center font-semibold">Skor</th>
+                    <th class="px-4 py-3 text-left font-semibold">Tim Tamu</th>
+                    <th class="px-4 py-3 text-center font-semibold">Kartu</th>
+                    <th class="px-4 py-3 text-center font-semibold">Aksi</th>
+                </tr>
+            </thead>
+            <!-- Data akan dimasukkan di sini -->
+            <tbody id="matchHistoryTableBody">
+            </tbody>
+        </table>
     </div>
 </div>
             
@@ -389,39 +410,74 @@
         }
     }
 
-    function updateMatchHistory() {
-        const historyDiv = document.getElementById('matchHistory');
-        historyDiv.innerHTML = '';
-        if (matches.length === 0) {
-            historyDiv.innerHTML = '<p class="text-gray-500 text-center py-4">Belum ada pertandingan yang diinput</p>';
-            return;
-        }
-        matches.slice().reverse().forEach((match, index) => {
-            const matchDiv = document.createElement('div');
-            matchDiv.className = 'bg-gray-50 rounded-lg p-4 hover-scale';
-            let resultClass = '';
-            if (match.homeScore > match.awayScore) resultClass = 'text-green-600';
-            else if (match.homeScore < match.awayScore) resultClass = 'text-red-600';
-            else resultClass = 'text-yellow-600';
-            matchDiv.innerHTML = `
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center space-x-4">
-                        <span class="font-medium">${match.homeTeam}</span>
-                        <span class="text-2xl font-bold ${resultClass}">${match.homeScore} - ${match.awayScore}</span>
-                        <span class="font-medium">${match.awayTeam}</span>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <div class="text-sm text-gray-500">
-                            🟨${match.homeYellow + match.awayYellow} 🟥${match.homeRed + match.awayRed}
-                        </div>
-                            <button onclick="editMatch(${index})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors">✏️ Edit</button>
-                            <button onclick="deleteMatch(${index})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors">🗑️ Hapus</button>
-                        </div>
-                    </div>
-                </div>`;
-            historyDiv.appendChild(matchDiv);
+   // GANTI FUNGSI LAMA ANDA DENGAN VERSI BARU INI
+
+function updateMatchHistory() {
+    // 1. Ambil kata kunci dari kolom pencarian
+    const searchQuery = document.getElementById('matchSearchInput').value.toLowerCase();
+    
+    // 2. Saring pertandingan jika ada kata kunci
+    let matchesToDisplay;
+    if (searchQuery) {
+        matchesToDisplay = matches.filter(match =>
+            match.homeTeam.toLowerCase().includes(searchQuery) ||
+            match.awayTeam.toLowerCase().includes(searchQuery)
+        );
+    } else {
+        matchesToDisplay = [...matches]; // Jika tidak, tampilkan semua
+    }
+
+    // 3. Targetkan body tabel dan kosongkan isinya
+    const tableBody = document.getElementById('matchHistoryTableBody');
+    tableBody.innerHTML = '';
+
+    // 4. Tampilkan pesan jika tidak ada hasil
+    if (matchesToDisplay.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-gray-500 py-4">Pertandingan tidak ditemukan.</td></tr>';
+        return;
+    }
+
+    // 5. Loop melalui data dan buat baris tabel untuk setiap pertandingan
+    const reversedMatches = matchesToDisplay.reverse(); // Agar yang terbaru di atas
+
+    reversedMatches.forEach((match, displayIndex) => {
+        // Cari indeks asli agar tombol Edit/Hapus berfungsi dengan benar
+        const originalIndex = matches.findIndex(globalMatch => globalMatch === match);
+        
+        const row = document.createElement('tr');
+        row.className = 'border-b hover:bg-gray-50';
+
+        let resultClass = '';
+        if (match.homeScore > match.awayScore) resultClass = 'text-green-600';
+        else if (match.homeScore < match.awayScore) resultClass = 'text-red-600';
+
+        // Isi baris dengan sel-sel (kolom)
+        row.innerHTML = `
+            <td class="px-4 py-3">${displayIndex + 1}</td>
+            <td class="px-4 py-3 font-medium">${match.homeTeam}</td>
+            <td class="px-4 py-3 text-center font-bold ${resultClass}">${match.homeScore} - ${match.awayScore}</td>
+            <td class="px-4 py-3 font-medium">${match.awayTeam}</td>
+            <td class="px-4 py-3 text-center text-gray-600">
+                <span class="text-yellow-500 font-bold">🟨</span> ${match.homeYellow + match.awayYellow}
+                <span class="text-red-600 font-bold ml-2">🟥</span> ${match.homeRed + match.awayRed}
+            </td>
+            <td class="px-4 py-3 text-center">
+                <div class="admin-buttons flex space-x-2 justify-center">
+                    <button onclick="editMatch(${originalIndex})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors">✏️ Edit</button>
+                    <button onclick="deleteMatch(${originalIndex})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors">🗑️ Hapus</button>
+                </div>
+            </td>
+        `;
+        tableBody.appendChild(row);
+    });
+
+    // Pastikan tombol admin disembunyikan jika belum login
+    if (localStorage.getItem('isAdminLoggedIn') !== 'true') {
+        document.querySelectorAll('.admin-buttons').forEach(buttonDiv => {
+            buttonDiv.style.display = 'none';
         });
     }
+}
 
     function initializeSampleData() {
         const participatingTeams = ['Arema FC', 'Bali United FC', 'Bhayangkara Presisi Lampung FC', 'Borneo FC Samarinda', 'Dewa United FC', 'Madura United FC', 'Malut United FC', 'PERSEBAYA Surabaya', 'PERSIB Bandung', 'PERSIJA Jakarta', 'PERSIJAP Jepara', 'PERSIK Kediri', 'PERSIS Solo', 'PERSITA', 'PSBS Biak', 'PSIM Yogyakarta', 'PSM Makassar', 'Semen Padang FC'];
@@ -709,3 +765,4 @@ function adminLogin() {
 {var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function()
 {};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
