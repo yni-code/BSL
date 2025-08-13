@@ -113,7 +113,7 @@
 
     <!-- ▼▼▼ TAMBAHKAN KOLOM PENCARIAN DI SINI ▼▼▼ -->
     <div class="mb-4">
-        <input type="text" id="matchSearchInput" onkeyup="searchMatches()" placeholder="Cari nama tim..." class="border border-gray-300 rounded-lg px-4 py-2 w-full focus:ring-2 focus:ring-blue-500">
+        <input type="text" id="matchSearchInput" onkeyup="updateMatchHistory()" placeholder="Cari nama tim..." class="border border-gray-300 rounded-lg px-4 py-2 w-full focus:ring-2 focus:ring-blue-500">
     </div>
     <!-- ▲▲▲ SELESAI ▲▲▲ -->
 
@@ -410,7 +410,25 @@
         }
     }
 
-   function updateMatchHistory(matchesToDisplay = matches) { // Default ke semua pertandingan jika tidak ada filter
+   // HAPUS FUNGSI searchMatches() LAMA ANDA, LALU GANTI updateMatchHistory() DENGAN INI:
+function updateMatchHistory() {
+    // 1. Ambil kata kunci dari kolom pencarian
+    const searchQuery = document.getElementById('matchSearchInput').value.toLowerCase();
+    
+    // 2. Tentukan daftar pertandingan yang akan ditampilkan
+    let matchesToDisplay;
+    if (searchQuery) {
+        // Jika ada teks di kolom pencarian, saring pertandingannya
+        matchesToDisplay = matches.filter(match =>
+            match.homeTeam.toLowerCase().includes(searchQuery) ||
+            match.awayTeam.toLowerCase().includes(searchQuery)
+        );
+    } else {
+        // Jika kolom pencarian kosong, tampilkan semua pertandingan
+        matchesToDisplay = [...matches]; // Gunakan salinan
+    }
+
+    // 3. Proses dan tampilkan data ke tabel (logika dari sebelumnya)
     const tableBody = document.getElementById('matchHistoryTableBody');
     tableBody.innerHTML = '';
 
@@ -419,13 +437,10 @@
         return;
     }
 
-    // Buat salinan terbalik agar yang terbaru di atas
-    const reversedMatches = [...matchesToDisplay].reverse();
+    const reversedMatches = matchesToDisplay.reverse();
 
     reversedMatches.forEach((match, displayIndex) => {
-        // Cari indeks asli dari pertandingan ini di array utama agar tombol Edit/Hapus berfungsi
         const originalIndex = matches.findIndex(globalMatch => globalMatch === match);
-
         const row = document.createElement('tr');
         row.className = 'border-b hover:bg-gray-50';
 
@@ -452,7 +467,7 @@
         tableBody.appendChild(row);
     });
 
-    // Pastikan tombol admin disembunyikan jika belum login
+    // Pastikan tombol admin disembunyikan/ditampilkan sesuai status login
     if (localStorage.getItem('isAdminLoggedIn') !== 'true') {
         document.querySelectorAll('.admin-buttons').forEach(buttonDiv => {
             buttonDiv.style.display = 'none';
@@ -751,6 +766,7 @@ function adminLogin() {
 {var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function()
 {};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
