@@ -36,6 +36,25 @@
         </div>
     </div>
 
+
+    <!-- logout -->
+    <div id="adminArea" style="display:none;">
+    <div class="bg-white rounded-xl card-shadow p-4 mb-8 flex justify-between items-center">
+        <p class="text-md font-semibold text-gray-700">🔑 Anda login sebagai Admin.</p>
+        <button onclick="adminLogout()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm">
+            Logout
+        </button>
+    </div>
+    <div class="bg-white rounded-xl card-shadow p-6 mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-gray-800">⚽ Tambah Hasil Pertandingan</h2>
+        </div>
+
+    <div class="bg-white rounded-xl card-shadow p-6 mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-gray-800">📋 Riwayat Pertandingan</h2>
+        </div>
+
+</div>
+
     <div class="container mx-auto px-4 py-8">
         <div id="adminArea" style="display:none;">
         <!-- Input Pertandingan -->
@@ -60,15 +79,10 @@
             <button onclick="addMatch()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
                 ⚽ Tambah Pertandingan
             </button>
+        </div> 
         </div>
 
-               <!-- Riwayat Pertandingan -->
-        <div class="bg-white rounded-xl card-shadow p-6">
-            <h2 class="text-2xl font-semibold mb-4 text-gray-800">📋 Riwayat Pertandingan</h2>
-            <div id="matchHistory" class="space-y-2">
-            </div>
-        </div>
-    </div>
+           
 
     
         <!-- Klasemen -->
@@ -105,6 +119,16 @@
             </div>
         </div>
 
+            
+    <!-- Riwayat Pertandingan -->
+            <div id="adminArea" style="display:none;">
+        <div class="bg-white rounded-xl card-shadow p-6">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">📋 Riwayat Pertandingan</h2>
+            <div id="matchHistory" class="space-y-2">
+            </div>
+        </div>
+    </div>
+             </div>
      
 
     <div class="container mx-auto px-4">
@@ -418,6 +442,12 @@
         updateStandings();
     }
 
+    // ▼▼▼ TAMBAHKAN FUNGSI INI DI DALAM SCRIPT ANDA ▼▼▼
+function adminLogout() {
+    location.reload();
+}
+// ▲▲▲ SELESAI ▲▲▲
+
     function copyToClipboard() {
         let textData = 'KLASEMEN BRI SUPER LEAGUE 2025/26\n';
         textData += '='.repeat(80) + '\n';
@@ -672,6 +702,7 @@ function adminLogin() {
 {var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function()
 {};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
