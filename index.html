@@ -35,9 +35,41 @@
             </div>
         </div>
     </div>
-
-
-    <!-- logout -->
+    
+        <!-- Klasemen -->
+        <div class="bg-white rounded-xl card-shadow p-6 mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-semibold text-gray-800">🏆 Klasemen BRI SUPER LEAGUE 2025/26</h2>
+                <div class="flex space-x-2">
+                    <button onclick="copyToClipboard()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm">
+                        📋 Copy Klasemen
+                    </button>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="px-4 py-3 text-left font-semibold">Pos</th>
+                            <th class="px-4 py-3 text-left font-semibold">Tim</th>
+                            <th class="px-4 py-3 text-center font-semibold">Main</th>
+                            <th class="px-4 py-3 text-center font-semibold">M</th>
+                            <th class="px-4 py-3 text-center font-semibold">S</th>
+                            <th class="px-4 py-3 text-center font-semibold">K</th>
+                            <th class="px-4 py-3 text-center font-semibold">GM</th>
+                            <th class="px-4 py-3 text-center font-semibold">GK</th>
+                            <th class="px-4 py-3 text-center font-semibold">SG</th>
+                            <th class="px-4 py-3 text-center font-semibold">Poin</th>
+                            <th class="px-4 py-3 text-center font-semibold">Fair Play</th>
+                            <th class="px-4 py-3 text-center font-semibold">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="standingsTable">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+ <!-- logout -->
     <div id="adminArea" style="display:none;">
     <div class="bg-white rounded-xl card-shadow p-4 mb-8 flex justify-between items-center">
         <p class="text-md font-semibold text-gray-700">🔑 Anda login sebagai Admin.</p>
@@ -73,8 +105,9 @@
                 ⚽ Tambah Pertandingan
             </button>
         </div> 
-         <!-- Riwayat Pertandingan -->
-           
+
+        
+         <!-- Riwayat Pertandingan --> 
         <div class="bg-white rounded-xl card-shadow p-6">
             <h2 class="text-2xl font-semibold mb-4 text-gray-800">📋 Riwayat Pertandingan</h2>
             <div id="matchHistory" class="space-y-2">
@@ -82,49 +115,15 @@
         </div>
     </div>
 </div>
-        <!-- Klasemen -->
-        <div class="bg-white rounded-xl card-shadow p-6 mb-8">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-semibold text-gray-800">🏆 Klasemen BRI SUPER LEAGUE 2025/26</h2>
-                <div class="flex space-x-2">
-                    <button onclick="copyToClipboard()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm">
-                        📋 Copy Klasemen
-                    </button>
-                </div>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm">
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="px-4 py-3 text-left font-semibold">Pos</th>
-                            <th class="px-4 py-3 text-left font-semibold">Tim</th>
-                            <th class="px-4 py-3 text-center font-semibold">Main</th>
-                            <th class="px-4 py-3 text-center font-semibold">M</th>
-                            <th class="px-4 py-3 text-center font-semibold">S</th>
-                            <th class="px-4 py-3 text-center font-semibold">K</th>
-                            <th class="px-4 py-3 text-center font-semibold">GM</th>
-                            <th class="px-4 py-3 text-center font-semibold">GK</th>
-                            <th class="px-4 py-3 text-center font-semibold">SG</th>
-                            <th class="px-4 py-3 text-center font-semibold">Poin</th>
-                            <th class="px-4 py-3 text-center font-semibold">Fair Play</th>
-                            <th class="px-4 py-3 text-center font-semibold">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="standingsTable">
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
             
     <!-- Riwayat Pertandingan -->
            
-        <div class="bg-white rounded-xl card-shadow p-6">
+        <!--div class="bg-white rounded-xl card-shadow p-6">
             <h2 class="text-2xl font-semibold mb-4 text-gray-800">📋 Riwayat Pertandingan</h2>
             <div id="matchHistory" class="space-y-2">
             </div>
         </div>
-    </div>
+           </div-->
            
      
 
@@ -699,6 +698,7 @@ function adminLogin() {
 {var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function()
 {};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
