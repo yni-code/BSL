@@ -39,7 +39,7 @@
         <!-- Klasemen -->
         <div class="bg-white rounded-xl card-shadow p-6 mb-8">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-sm mx-auto font-semibold text-gray-800">🏆 Klasemen BRI SUPER LEAGUE 2025/26</h2>
+                <h2 class="text-sm mx-auto font-semibold text-gray-800">Klasemen BRI SUPER LEAGUE 2025/26</h2>
                 <div class="flex space-x-2">
                     <button onclick="copyToClipboard()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm">
                         📋 Copy Klasemen
@@ -440,9 +440,12 @@
 
     // ▼▼▼ TAMBAHKAN FUNGSI INI DI DALAM SCRIPT ANDA ▼▼▼
 function adminLogout() {
+    // ✅ HAPUS STATUS LOGIN DARI LOCALSTORAGE
+    localStorage.removeItem('isAdminLoggedIn');
+    
+    // Muat ulang halaman untuk kembali ke kondisi awal
     location.reload();
 }
-// ▲▲▲ SELESAI ▲▲▲
 
     function copyToClipboard() {
         let textData = 'KLASEMEN BRI SUPER LEAGUE 2025/26\n';
@@ -624,19 +627,20 @@ function closeH2HModal() {
         }
     }
     
+// Ganti fungsi lama dengan yang ini
 function adminLogin() {
-    // Ganti 'sepakbola2025' dengan password yang Anda inginkan
-    const correctPassword = 'yudhajuga';
+    const correctPassword = 'yudhajuga'; // Password Anda
     const enteredPassword = document.getElementById('adminPassword').value;
 
     if (enteredPassword === correctPassword) {
-        // Jika password benar, tampilkan semua area admin
+        // Tampilkan semua area admin
         document.getElementById('adminArea').style.display = 'block';
-        
-        // Dan sembunyikan form login
         document.getElementById('loginSection').style.display = 'none';
+        
+        // ✅ SIMPAN STATUS LOGIN KE LOCALSTORAGE
+        localStorage.setItem('isAdminLoggedIn', 'true');
+
     } else {
-        // Jika password salah, beri peringatan
         alert('Password salah!');
     }
 }
@@ -646,6 +650,13 @@ function adminLogin() {
     // ALUR INISIALISASI APLIKASI YANG BARU
     // ===================================================================
     document.addEventListener('DOMContentLoaded', async () => {
+
+       if (localStorage.getItem('isAdminLoggedIn') === 'true') {
+        // Jika statusnya sudah login, langsung tampilkan area admin
+        document.getElementById('adminArea').style.display = 'block';
+        document.getElementById('loginSection').style.display = 'none';
+         }
+        
         const dataLoaded = await loadData();
 
         if (dataLoaded && teams.length > 0) {
@@ -698,6 +709,7 @@ function adminLogin() {
 {var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function()
 {};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
