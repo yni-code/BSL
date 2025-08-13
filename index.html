@@ -597,7 +597,23 @@ function closeH2HModal() {
             updateAllAndSave(); // Simpan keadaan baru (dengan tim awal) ke sheet
         }
     }
+    
+function adminLogin() {
+    // Ganti 'sepakbola2025' dengan password yang Anda inginkan
+    const correctPassword = 'sepakbola2025';
+    const enteredPassword = document.getElementById('adminPassword').value;
 
+    if (enteredPassword === correctPassword) {
+        // Jika password benar, tampilkan semua area admin
+        document.getElementById('adminArea').style.display = 'block';
+        
+        // Dan sembunyikan form login
+        document.getElementById('loginSection').style.display = 'none';
+    } else {
+        // Jika password salah, beri peringatan
+        alert('Password salah!');
+    }
+}
     
 
     // ===================================================================
@@ -656,6 +672,7 @@ function closeH2HModal() {
 {var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function()
 {};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
