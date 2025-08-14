@@ -405,50 +405,40 @@
         }
     }
 
-    function updateMatchHistory() {
-    const tableBody = document.getElementById('matchHistoryTableBody');
-    tableBody.innerHTML = '';
-
-    // Tampilkan pesan jika tidak ada pertandingan
-    if (matches.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-gray-500 py-4">Belum ada pertandingan yang diinput.</td></tr>';
-        return;
+     function updateMatchHistory() {
+        const historyDiv = document.getElementById('matchHistory');
+        historyDiv.innerHTML = '';
+        if (matches.length === 0) {
+            historyDiv.innerHTML = '<p class="text-gray-500 text-center py-4">Belum ada pertandingan yang diinput</p>';
+            return;
+        }
+        matches.slice().reverse().forEach((match, index) => {
+            const matchDiv = document.createElement('div');
+            matchDiv.className = 'bg-gray-50 rounded-lg p-4 hover-scale';
+            let resultClass = '';
+            if (match.homeScore > match.awayScore) resultClass = 'text-green-600';
+            else if (match.homeScore < match.awayScore) resultClass = 'text-red-600';
+            else resultClass = 'text-yellow-600';
+            matchDiv.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-4">
+                        <span class="font-medium">${match.homeTeam}</span>
+                        <span class="text-2xl font-bold ${resultClass}">${match.homeScore} - ${match.awayScore}</span>
+                        <span class="font-medium">${match.awayTeam}</span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="text-sm text-gray-500">
+                            🟨${match.homeYellow + match.awayYellow} 🟥${match.homeRed + match.awayRed}
+                        </div>
+                            <button onclick="editMatch(${index})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors">✏️ Edit</button>
+                            <button onclick="deleteMatch(${index})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors">🗑️ Hapus</button>
+                        </div>
+                    </div>
+                </div>`;
+            historyDiv.appendChild(matchDiv);
+        });
     }
 
-    // Buat salinan terbalik dari array `matches` utama agar yang terbaru di atas
-    const reversedMatches = [...matches].reverse();
-
-    reversedMatches.forEach((match, displayIndex) => {
-        // Dapatkan indeks asli dari pertandingan agar tombol Edit/Hapus berfungsi
-        const originalIndex = matches.indexOf(match);
-        
-        const row = document.createElement('tr');
-        row.className = 'border-b hover:bg-gray-50';
-
-        let resultClass = '';
-        if (match.homeScore > match.awayScore) resultClass = 'text-green-600';
-        else if (match.homeScore < match.awayScore) resultClass = 'text-red-600';
-
-        // Isi baris tabel dengan data pertandingan
-        row.innerHTML = `
-            <td class="px-4 py-3">${displayIndex + 1}</td>
-            <td class="px-4 py-3 font-medium">${match.homeTeam}</td>
-            <td class="px-4 py-3 text-center font-bold ${resultClass}">${match.homeScore} - ${match.awayScore}</td>
-            <td class="px-4 py-3 font-medium">${match.awayTeam}</td>
-            <td class="px-4 py-3 text-center text-gray-600">
-                <span class="text-yellow-500 font-bold">🟨</span> ${match.homeYellow + match.awayYellow}
-                <span class="text-red-600 font-bold ml-2">🟥</span> ${match.homeRed + match.awayRed}
-            </td>
-            <td class="px-4 py-3 text-center">
-                <div class="admin-buttons flex space-x-2 justify-center">
-                    <button onclick="editMatch(${originalIndex})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors">✏️ Edit</button>
-                    <button onclick="deleteMatch(${originalIndex})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors">🗑️ Hapus</button>
-                </div>
-            </td>
-        `;
-        tableBody.appendChild(row);
-    });
-    }
 
     function initializeSampleData() {
         const participatingTeams = ['Arema FC', 'Bali United FC', 'Bhayangkara Presisi Lampung FC', 'Borneo FC Samarinda', 'Dewa United FC', 'Madura United FC', 'Malut United FC', 'PERSEBAYA Surabaya', 'PERSIB Bandung', 'PERSIJA Jakarta', 'PERSIJAP Jepara', 'PERSIK Kediri', 'PERSIS Solo', 'PERSITA', 'PSBS Biak', 'PSIM Yogyakarta', 'PSM Makassar', 'Semen Padang FC'];
@@ -736,5 +726,6 @@ function adminLogin() {
 {var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function()
 {};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
