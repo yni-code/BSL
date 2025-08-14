@@ -285,6 +285,72 @@
         });
         return h2hStats;
     }
+// PASTIKAN FUNGSI INI ADA DI DALAM SCRIPT ANDA
+
+function updateStandings() {
+    const sortedTeams = [...teams].sort((a, b) => {
+        // Kriteria 1: Poin Keseluruhan
+        if (a.points !== b.points) return b.points - a.points;
+        // Kriteria 2: Head-to-Head
+        const tiedTeams = teams.filter(t => t.points === a.points);
+        if (tiedTeams.length >= 2) {
+            const tiedTeamNames = tiedTeams.map(t => t.name);
+            const h2hStats = getHeadToHeadStats(tiedTeamNames);
+            const aH2H = h2hStats[a.name];
+            const bH2H = h2hStats[b.name];
+            if (aH2H.points !== bH2H.points) return bH2H.points - aH2H.points;
+            if (aH2H.goalDifference !== bH2H.goalDifference) return bH2H.goalDifference - aH2H.goalDifference;
+            if (aH2H.goalsFor !== bH2H.goalsFor) return bH2H.goalsFor - aH2H.goalsFor;
+        }
+        // Kriteria 3, 4, 5...
+        if (a.goalDifference !== b.goalDifference) return b.goalDifference - a.goalDifference;
+        if (a.goalsFor !== b.goalsFor) return b.goalsFor - a.goalsFor;
+        return a.fairPlayScore - b.fairPlayScore;
+    });
+
+    const tableBody = document.getElementById('standingsTable');
+    tableBody.innerHTML = '';
+
+    const pointGroups = {};
+    sortedTeams.forEach(team => {
+        if (!pointGroups[team.points]) {
+            pointGroups[team.points] = [];
+        }
+        pointGroups[team.points].push(team);
+    });
+
+    sortedTeams.forEach((team, index) => {
+        const row = document.createElement('tr');
+        const isTied = pointGroups[team.points] && pointGroups[team.points].length > 1;
+        row.className = 'border-b' + (isTied ? ' bg-yellow-50' : (index % 2 === 0 ? ' bg-gray-50' : ' bg-white'));
+        
+        let positionClass = '';
+        if (index < 3) positionClass = 'text-green-600 font-bold';
+        else if (index >= sortedTeams.length - 3) positionClass = 'text-red-600 font-bold';
+        
+        row.innerHTML = `
+            <td class="px-4 py-3 ${positionClass}">${index + 1}</td>
+            <td class="px-4 py-3 font-medium">${team.name}</td>
+            <td class="px-4 py-3 text-center">${team.played}</td>
+            <td class="px-4 py-3 text-center">${team.won}</td>
+            <td class="px-4 py-3 text-center">${team.drawn}</td>
+            <td class="px-4 py-3 text-center">${team.lost}</td>
+            <td class="px-4 py-3 text-center">${team.goalsFor}</td>
+            <td class="px-4 py-3 text-center">${team.goalsAgainst}</td>
+            <td class="px-4 py-3 text-center ${team.goalDifference >= 0 ? 'text-green-600' : 'text-red-600'}">${team.goalDifference >= 0 ? '+' : ''}${team.goalDifference}</td>
+            <td class="px-4 py-3 text-center font-bold text-blue-600">${team.points}</td>
+            <td class="px-4 py-3 text-center">${team.fairPlayScore}</td>
+            <td class="px-4 py-3 text-center">
+                ${
+                    isTied && pointGroups[team.points][0].name === team.name
+                        ? `<button onclick="showH2HDetails(${team.points})" class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 text-xs rounded">Lihat H2H</button>`
+                        : ''
+                }
+            </td>`;
+        tableBody.appendChild(row);
+    });
+}
+    
 // GANTI FUNGSI LAMA DENGAN VERSI BARU INI
 
 function updateMatchHistory() {
