@@ -313,11 +313,14 @@ c<!DOCTYPE html>
     }
 // GANTI FUNGSI LAMA ANDA DENGAN VERSI LENGKAP DAN BENAR DI BAWAH INI
 
+// GANTI FUNGSI LAMA ANDA DENGAN VERSI LENGKAP INI
+
 function updateStandings() {
+    // Mata-mata 1: Cek apakah fungsi ini dipanggil
+    console.log("Fungsi updateStandings DIPANGGIL!");
+
     const sortedTeams = [...teams].sort((a, b) => {
-        // Kriteria 1: Poin Keseluruhan
         if (a.points !== b.points) return b.points - a.points;
-        // Kriteria 2: Head-to-Head
         const tiedTeams = teams.filter(t => t.points === a.points);
         if (tiedTeams.length >= 2) {
             const tiedTeamNames = tiedTeams.map(t => t.name);
@@ -328,16 +331,23 @@ function updateStandings() {
             if (aH2H.goalDifference !== bH2H.goalDifference) return bH2H.goalDifference - aH2H.goalDifference;
             if (aH2H.goalsFor !== bH2H.goalsFor) return bH2H.goalsFor - aH2H.goalsFor;
         }
-        // Kriteria 3, 4, 5...
         if (a.goalDifference !== b.goalDifference) return b.goalDifference - a.goalDifference;
         if (a.goalsFor !== b.goalsFor) return b.goalsFor - a.goalsFor;
         return a.fairPlayScore - b.fairPlayScore;
     });
 
+    // Mata-mata 2: Cek apakah ada data tim
+    console.log("Jumlah tim yang akan ditampilkan:", sortedTeams.length, sortedTeams);
+
+
     const tableBody = document.getElementById('standingsTable');
+    if (!tableBody) {
+        // Mata-mata 3: Cek apakah elemen tabel ditemukan
+        console.error("ERROR: Elemen dengan ID 'standingsTable' tidak ditemukan!");
+        return;
+    }
     tableBody.innerHTML = '';
 
-    // Deteksi grup tim dengan poin yang sama
     const pointGroups = {};
     sortedTeams.forEach(team => {
         if (!pointGroups[team.points]) {
@@ -347,6 +357,9 @@ function updateStandings() {
     });
 
     sortedTeams.forEach((team, index) => {
+        // Mata-mata 4: Cek apakah perulangan untuk membuat baris berjalan
+        console.log(`Membuat baris untuk tim: ${team.name}`);
+
         const row = document.createElement('tr');
         const isTied = pointGroups[team.points] && pointGroups[team.points].length > 1;
         row.className = 'border-b' + (isTied ? ' bg-yellow-50' : (index % 2 === 0 ? ' bg-gray-50' : ' bg-white'));
@@ -368,13 +381,9 @@ function updateStandings() {
             <td class="px-4 py-3 text-center font-bold text-blue-600">${team.points}</td>
             <td class="px-4 py-3 text-center">${team.fairPlayScore}</td>
             <td class="px-4 py-3 text-center">
-                ${
-                    // ✅ LOGIKA INI TIDAK MEMILIKI PENGECEKAN LOGIN
-                    // Tombol muncul jika ada tim terikat & ini adalah baris pertama dari grup tersebut
-                    isTied && pointGroups[team.points][0].name === team.name
-                        ? `<button onclick="showH2HDetails(${team.points})" class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 text-xs rounded">Lihat H2H</button>`
-                        : ''
-                }
+                <button onclick="showH2HDetails(${team.points})" class="bg-purple-600 hover:bg-purple-700 text-white px-2 py-1 text-xs rounded">
+                    TEST H2H
+                </button>
             </td>`;
         tableBody.appendChild(row);
     });
@@ -743,6 +752,7 @@ function adminLogin() {
 {var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function()
 {};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
