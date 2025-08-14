@@ -631,29 +631,38 @@ function adminLogin() {
     // ===================================================================
     // ALUR INISIALISASI APLIKASI YANG BARU
     // ===================================================================
-    document.addEventListener('DOMContentLoaded', async () => {
+   // GANTI BLOK document.addEventListener('DOMContentLoaded', ...) LAMA ANDA DENGAN INI:
 
-       if (localStorage.getItem('isAdminLoggedIn') === 'true') {
-        // Jika statusnya sudah login, langsung tampilkan area admin
+document.addEventListener('DOMContentLoaded', async () => {
+    // Bagian 1: Pengecekan status login (tidak berubah)
+    if (localStorage.getItem('isAdminLoggedIn') === 'true') {
         document.getElementById('adminArea').style.display = 'block';
         document.getElementById('loginSection').style.display = 'none';
-         }
-        
-        const dataLoaded = await loadData();
+    }
 
-        if (dataLoaded && teams.length > 0) {
-            // Jika data dari sheet berhasil dimuat, langsung update semuanya
-            updateTeamStats();
-            updateTeamSelects();
-            updateStandings();
-            updateMatchHistory();
-        } else {
-            // Jika gagal load atau sheet kosong, inisialisasi dengan data contoh
-            initializeSampleData();
-            // Simpan data contoh ini ke sheet untuk pertama kali
-            saveData();
-        }
-    });
+    // Bagian 2: Logika pemuatan data yang sudah diperbaiki
+    const dataLoaded = await loadData();
+
+    if (dataLoaded && teams.length > 0) {
+        // KASUS 1: Sukses, dan data di database ada isinya.
+        // Tampilkan semua data seperti biasa.
+        updateTeamStats();
+        updateTeamSelects();
+        updateStandings();
+        updateMatchHistory();
+    } else if (dataLoaded && teams.length === 0) {
+        // KASUS 2: Sukses terhubung, tapi database memang kosong.
+        // Buat data contoh di halaman, tapi JANGAN simpan otomatis ke database.
+        initializeSampleData();
+        updateTeamSelects();
+        updateStandings();
+        // Beri tahu admin apa yang terjadi agar mereka bisa menyimpan jika mau.
+        showNotification('Database kosong. Data contoh telah ditampilkan.', 'info');
+    }
+    // KASUS 3: Gagal memuat data (dataLoaded adalah false).
+    // Kita tidak melakukan apa-apa. Ini mencegah data di database tertimpa.
+    // Notifikasi error sudah ditampilkan dari dalam fungsi loadData().
+});
 
 </script>
 <div id="h2hModal" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50" style="display: none;">
@@ -691,6 +700,7 @@ function adminLogin() {
 {var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function()
 {};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
