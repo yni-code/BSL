@@ -371,14 +371,16 @@ c<!DOCTYPE html>
     <td class="px-4 py-3 text-center">${team.goalsAgainst}</td>
     <td class="px-4 py-3 text-center ${team.goalDifference >= 0 ? 'text-green-600' : 'text-red-600'}">${team.goalDifference >= 0 ? '+' : ''}${team.goalDifference}</td>
     <td class="px-4 py-3 text-center font-bold text-blue-600">${team.points}</td>
-    
     <td class="px-4 py-3 text-center">${team.fairPlayScore}</td>
     
     <td class="px-4 py-3 text-center">
         ${
-            isTied && pointGroups[team.points][0].name === team.name 
-            ? `<button onclick="showH2HDetails(${team.points})" class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 text-xs rounded">Lihat H2H</button>`
-            : '' // Biarkan kosong jika tidak ada H2H
+            // Tombol hanya muncul jika KETIGA kondisi ini terpenuhi:
+            isTied &&
+            pointGroups[team.points][0].name === team.name &&
+            localStorage.getItem('isAdminLoggedIn') === 'true' // ✅ KONDISI BARU DITAMBAHKAN
+                ? `<button onclick="showH2HDetails(${team.points})" class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 text-xs rounded">Lihat H2H</button>`
+                : '' // Jika salah satu tidak terpenuhi, biarkan kosong
         }
     </td>`;
         tableBody.appendChild(row);
@@ -679,7 +681,7 @@ function adminLogin() {
         localStorage.setItem('isAdminLoggedIn', 'true');
 
     } else {
-        alert('Password salah!');
+        alert('siapa juaranya ??');
     }
 }
     
@@ -747,6 +749,7 @@ function adminLogin() {
 {var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function()
 {};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
