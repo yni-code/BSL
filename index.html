@@ -27,9 +27,9 @@
 <!-- Ganti blok login lama Anda dengan yang ini -->
 <div id="loginSection" class="container mx-auto px-4 py-6 text-center">
    <div class="flex justify-end items-center gap-2">
-        <input type="password" id="adminPassword" placeholder="" class="border border-gray-300 rounded-lg px-4 py-2 w-full max-w-xs focus:ring-2 focus:ring-blue-500">
+        <input type="password" id="adminPassword" placeholder="Password Admin" class="border border-gray-300 rounded-lg px-4 py-2 w-full max-w-xs focus:ring-2 focus:ring-blue-500">
         <button onclick="adminLogin()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
-            Search
+            Login
         </button>
     </div>
 </div>
@@ -107,28 +107,12 @@
         </div> 
 
         
-        <!-- Riwayat Pertandingan -->
-<div class="bg-white rounded-xl card-shadow p-6 mb-8">
-    <h2 class="text-2xl font-semibold mb-4 text-gray-800">📋 Riwayat Pertandingan</h2>
-
-
-    <!-- Kerangka Tabel -->
-    <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th class="px-4 py-3 text-left font-semibold">No</th>
-                    <th class="px-4 py-3 text-left font-semibold">Tim Tuan Rumah</th>
-                    <th class="px-4 py-3 text-center font-semibold">Skor</th>
-                    <th class="px-4 py-3 text-left font-semibold">Tim Tamu</th>
-                    <th class="px-4 py-3 text-center font-semibold">Kartu</th>
-                    <th class="px-4 py-3 text-center font-semibold">Aksi</th>
-                </tr>
-            </thead>
-            <!-- Data akan dimasukkan di sini -->
-            <tbody id="matchHistoryTableBody">
-            </tbody>
-        </table>
+         <!-- Riwayat Pertandingan --> 
+        <div class="bg-white rounded-xl card-shadow p-6">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">📋 Riwayat Pertandingan</h2>
+            <div id="matchHistory" class="space-y-2">
+            </div>
+        </div>
     </div>
 </div>
             
@@ -405,7 +389,7 @@
         }
     }
 
-     function updateMatchHistory() {
+    function updateMatchHistory() {
         const historyDiv = document.getElementById('matchHistory');
         historyDiv.innerHTML = '';
         if (matches.length === 0) {
@@ -438,7 +422,6 @@
             historyDiv.appendChild(matchDiv);
         });
     }
-
 
     function initializeSampleData() {
         const participatingTeams = ['Arema FC', 'Bali United FC', 'Bhayangkara Presisi Lampung FC', 'Borneo FC Samarinda', 'Dewa United FC', 'Madura United FC', 'Malut United FC', 'PERSEBAYA Surabaya', 'PERSIB Bandung', 'PERSIJA Jakarta', 'PERSIJAP Jepara', 'PERSIK Kediri', 'PERSIS Solo', 'PERSITA', 'PSBS Biak', 'PSIM Yogyakarta', 'PSM Makassar', 'Semen Padang FC'];
@@ -658,7 +641,7 @@ function adminLogin() {
         localStorage.setItem('isAdminLoggedIn', 'true');
 
     } else {
-        alert('Siapa Juaranya ?');
+        alert('Password salah!');
     }
 }
     
@@ -726,6 +709,3 @@ function adminLogin() {
 {var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function()
 {};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
-
-
-
