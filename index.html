@@ -108,14 +108,24 @@
 
         
          <!-- Riwayat Pertandingan --> 
-        <div class="bg-white rounded-xl card-shadow p-6">
-            <h2 class="text-2xl font-semibold mb-4 text-gray-800">📋 Riwayat Pertandingan</h2>
-            <div id="matchHistory" class="space-y-2">
-            </div>
-        </div>
+      <div class="bg-white rounded-xl card-shadow p-6 mb-8"> <h2 class="text-2xl font-semibold mb-4 text-gray-800">📋 Riwayat Pertandingan</h2>
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-4 py-3 text-left font-semibold">No</th>
+                    <th class="px-4 py-3 text-left font-semibold">Tim Tuan Rumah</th>
+                    <th class="px-4 py-3 text-center font-semibold">Skor</th>
+                    <th class="px-4 py-3 text-left font-semibold">Tim Tamu</th>
+                    <th class="px-4 py-3 text-center font-semibold">Kartu</th>
+                    <th class="px-4 py-3 text-center font-semibold">Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="matchHistoryTableBody">
+            </tbody>
+        </table>
     </div>
 </div>
-            
 
 <script>
     // ===================================================================
@@ -275,135 +285,79 @@
         });
         return h2hStats;
     }
+// GANTI FUNGSI LAMA DENGAN VERSI BARU INI
 
-    function updateStandings() {
-    const sortedTeams = [...teams].sort((a, b) => {
-        // ... (seluruh logika sorting Anda yang sudah diperbaiki sebelumnya tetap di sini) ...
-        // Kriteria 1: Poin Keseluruhan
-        if (a.points !== b.points) return b.points - a.points;
-        // Kriteria 2: Head-to-Head
-        const tiedTeams = teams.filter(t => t.points === a.points);
-        if (tiedTeams.length >= 2) {
-            const tiedTeamNames = tiedTeams.map(t => t.name);
-            const h2hStats = getHeadToHeadStats(tiedTeamNames);
-            const aH2H = h2hStats[a.name];
-            const bH2H = h2hStats[b.name];
-            if (aH2H.points !== bH2H.points) return bH2H.points - aH2H.points;
-            if (aH2H.goalDifference !== bH2H.goalDifference) return bH2H.goalDifference - aH2H.goalDifference;
-            if (aH2H.goalsFor !== bH2H.goalsFor) return bH2H.goalsFor - aH2H.goalsFor;
-        }
-        // Kriteria 3, 4, 5...
-        if (a.goalDifference !== b.goalDifference) return b.goalDifference - a.goalDifference;
-        if (a.goalsFor !== b.goalsFor) return b.goalsFor - a.goalsFor;
-        return a.fairPlayScore - b.fairPlayScore;
-    });
-
-    const tableBody = document.getElementById('standingsTable');
+function updateMatchHistory() {
+    const tableBody = document.getElementById('matchHistoryTableBody');
     tableBody.innerHTML = '';
 
-    // Deteksi grup tim dengan poin yang sama
-    const pointGroups = {};
-    sortedTeams.forEach(team => {
-        if (!pointGroups[team.points]) {
-            pointGroups[team.points] = [];
-        }
-        pointGroups[team.points].push(team);
-    });
+    if (matches.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-gray-500 py-4">Belum ada pertandingan yang diinput.</td></tr>';
+        return;
+    }
 
-    sortedTeams.forEach((team, index) => {
+    const reversedMatches = [...matches].reverse();
+
+    reversedMatches.forEach((match, displayIndex) => {
+        const originalIndex = matches.indexOf(match);
         const row = document.createElement('tr');
-        row.className = 'border-b'; // Hapus bg-white/gray-50 agar bisa ditimpa
-        
-        // Cek apakah tim ini bagian dari grup yang poinnya sama (lebih dari 1 tim)
-        const isTied = pointGroups[team.points] && pointGroups[team.points].length > 1;
-        
-        // Beri warna latar belakang untuk menandai grup yang sama
-        row.className += isTied ? ' bg-yellow-50' : (index % 2 === 0 ? ' bg-gray-50' : ' bg-white');
-        
-        let positionClass = '';
-        if (index < 3) positionClass = 'text-green-600 font-bold';
-        else if (index >= sortedTeams.length - 3) positionClass = 'text-red-600 font-bold';
-        
-        // ▼▼▼ PERBARUI BAGIAN row.innerHTML ▼▼▼
-       row.innerHTML = `
-    <td class="px-4 py-3 ${positionClass}">${index + 1}</td>
-    <td class="px-4 py-3 font-medium">${team.name}</td>
-    <td class="px-4 py-3 text-center">${team.played}</td>
-    <td class="px-4 py-3 text-center">${team.won}</td>
-    <td class="px-4 py-3 text-center">${team.drawn}</td>
-    <td class="px-4 py-3 text-center">${team.lost}</td>
-    <td class="px-4 py-3 text-center">${team.goalsFor}</td>
-    <td class="px-4 py-3 text-center">${team.goalsAgainst}</td>
-    <td class="px-4 py-3 text-center ${team.goalDifference >= 0 ? 'text-green-600' : 'text-red-600'}">${team.goalDifference >= 0 ? '+' : ''}${team.goalDifference}</td>
-    <td class="px-4 py-3 text-center font-bold text-blue-600">${team.points}</td>
-    
-    <td class="px-4 py-3 text-center">${team.fairPlayScore}</td>
-    
-    <td class="px-4 py-3 text-center">
-        ${
-            isTied && pointGroups[team.points][0].name === team.name 
-            ? `<button onclick="showH2HDetails(${team.points})" class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 text-xs rounded">Lihat H2H</button>`
-            : '' // Biarkan kosong jika tidak ada H2H
-        }
-    </td>`;
+        row.className = 'border-b hover:bg-gray-50';
+
+        let resultClass = '';
+        if (match.homeScore > match.awayScore) resultClass = 'text-green-600';
+        else if (match.homeScore < match.awayScore) resultClass = 'text-red-600';
+
+        row.innerHTML = `
+            <td class="px-4 py-3">${displayIndex + 1}</td>
+            <td class="px-4 py-3 font-medium">${match.homeTeam}</td>
+            <td class="px-4 py-3 text-center font-bold ${resultClass}">${match.homeScore} - ${match.awayScore}</td>
+            <td class="px-4 py-3 font-medium">${match.awayTeam}</td>
+            <td class="px-4 py-3 text-center text-gray-600">
+                <span class="text-yellow-500 font-bold">🟨</span> ${match.homeYellow + match.awayYellow}
+                <span class="text-red-600 font-bold ml-2">🟥</span> ${match.homeRed + match.awayRed}
+            </td>
+            <td class="px-4 py-3 text-center">
+                <div class="admin-buttons flex space-x-2 justify-center">
+                    <button onclick="editMatch(${originalIndex})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors">✏️ Edit</button>
+                    <button onclick="deleteMatch(${originalIndex})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors">🗑️ Hapus</button>
+                </div>
+            </td>
+        `;
         tableBody.appendChild(row);
     });
-}
-    function editMatch(matchIndex) {
-        const match = matches[matches.length - 1 - matchIndex];
-        document.getElementById('homeTeam').value = match.homeTeam;
-        document.getElementById('awayTeam').value = match.awayTeam;
-        document.getElementById('homeScore').value = match.homeScore;
-        document.getElementById('awayScore').value = match.awayScore;
-        document.getElementById('homeYellow').value = match.homeYellow;
-        document.getElementById('homeRed').value = match.homeRed;
-        document.getElementById('awayYellow').value = match.awayYellow;
-        document.getElementById('awayRed').value = match.awayRed;
-        matches.splice(matches.length - 1 - matchIndex, 1);
-        updateAllAndSave();
-        document.querySelector('.bg-white.rounded-xl.card-shadow').scrollIntoView({ behavior: 'smooth' });
-    }
 
-    function deleteMatch(matchIndex) {
-        if (confirm('Apakah Anda yakin ingin menghapus pertandingan ini?')) {
-            matches.splice(matches.length - 1 - matchIndex, 1);
-            updateAllAndSave();
-        }
-    }
-
-    function updateMatchHistory() {
-        const historyDiv = document.getElementById('matchHistory');
-        historyDiv.innerHTML = '';
-        if (matches.length === 0) {
-            historyDiv.innerHTML = '<p class="text-gray-500 text-center py-4">Belum ada pertandingan yang diinput</p>';
-            return;
-        }
-        matches.slice().reverse().forEach((match, index) => {
-            const matchDiv = document.createElement('div');
-            matchDiv.className = 'bg-gray-50 rounded-lg p-4 hover-scale';
-            let resultClass = '';
-            if (match.homeScore > match.awayScore) resultClass = 'text-green-600';
-            else if (match.homeScore < match.awayScore) resultClass = 'text-red-600';
-            else resultClass = 'text-yellow-600';
-            matchDiv.innerHTML = `
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center space-x-4">
-                        <span class="font-small">${match.homeTeam}</span>
-                        <span class="text-2xl font-bold ${resultClass}">${match.homeScore} - ${match.awayScore}</span>
-                        <span class="font-medium">${match.awayTeam}</span>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <div class="text-sm text-gray-500">
-                            🟨${match.homeYellow + match.awayYellow} 🟥${match.homeRed + match.awayRed}
-                        </div>
-                            <button onclick="editMatch(${index})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors">✏️ Edit</button>
-                            <button onclick="deleteMatch(${index})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors">🗑️ Hapus</button>
-                        </div>
-                    </div>
-                </div>`;
-            historyDiv.appendChild(matchDiv);
+    if (localStorage.getItem('isAdminLoggedIn') !== 'true') {
+        document.querySelectorAll('.admin-buttons').forEach(buttonDiv => {
+            buttonDiv.style.display = 'none';
         });
     }
+}
+
+function editMatch(index) { // Menggunakan index langsung
+    const match = matches[index]; 
+    
+    document.getElementById('homeTeam').value = match.homeTeam;
+    document.getElementById('awayTeam').value = match.awayTeam;
+    document.getElementById('homeScore').value = match.homeScore;
+    document.getElementById('awayScore').value = match.awayScore;
+    document.getElementById('homeYellow').value = match.homeYellow;
+    document.getElementById('homeRed').value = match.homeRed;
+    document.getElementById('awayYellow').value = match.awayYellow;
+    document.getElementById('awayRed').value = match.awayRed;
+    
+    matches.splice(index, 1);
+    
+    updateAllAndSave();
+    
+    document.querySelector('.bg-white.rounded-xl.card-shadow').scrollIntoView({ behavior: 'smooth' });
+}
+
+function deleteMatch(index) { // Menggunakan index langsung
+    if (confirm('Apakah Anda yakin ingin menghapus pertandingan ini?')) {
+        matches.splice(index, 1);
+        updateAllAndSave();
+    }
+}
 
     function initializeSampleData() {
         const participatingTeams = ['AREMA FC', 'BALI UNITED FC', 'BHAYANGKARA PRESISI LAMPUNG FC', 'BORNEO FC SAMARINDA', 'DEWA UNITED BANTEN FC', 'MADURA UNITED FC', 'MALUT UNITED FC', 'PERSEBAYA SURABAYA', 'PERSIB BANDUNG', 'PERSIJA JAKARTA', 'PERSIJAP JEPARA', 'PERSIK KEDIRI', 'PERSIS SOLO', 'PERSITA', 'PSBS BIAK', 'PSIM YOGYAKARTA', 'PSM MAKASSAR', 'SEMEN PADANG FC'];
@@ -700,6 +654,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 {var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function()
 {};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
