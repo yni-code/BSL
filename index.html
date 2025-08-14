@@ -20,6 +20,7 @@
         <div class="container mx-auto px-4">
             <h1 class="text-4xl font-bold text-center mb-2">⚽ Klasemen BRI SUPER LEAGUE 2025/26</h1>
             <p class="text-center text-blue-100">Sistem peringkat sesuai regulasi resmi sepak bola Indonesia</p>
+             <p class="text-center text-blue-100">versi 9.1</p>
         </div>
     </div>
     
@@ -108,24 +109,14 @@
 
         
          <!-- Riwayat Pertandingan --> 
-      <div class="bg-white rounded-xl card-shadow p-6 mb-8"> <h2 class="text-2xl font-semibold mb-4 text-gray-800">📋 Riwayat Pertandingan</h2>
-    <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th class="px-4 py-3 text-left font-semibold">No</th>
-                    <th class="px-4 py-3 text-left font-semibold">Tim Tuan Rumah</th>
-                    <th class="px-4 py-3 text-center font-semibold">Skor</th>
-                    <th class="px-4 py-3 text-left font-semibold">Tim Tamu</th>
-                    <th class="px-4 py-3 text-center font-semibold">Kartu</th>
-                    <th class="px-4 py-3 text-center font-semibold">Aksi</th>
-                </tr>
-            </thead>
-            <tbody id="matchHistoryTableBody">
-            </tbody>
-        </table>
+        <div class="bg-white rounded-xl card-shadow p-6">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">📋 Riwayat Pertandingan</h2>
+            <div id="matchHistory" class="space-y-2">
+            </div>
+        </div>
     </div>
 </div>
+            
 
 <script>
     // ===================================================================
@@ -133,134 +124,165 @@
     // ===================================================================
     const googleScriptURL = 'https://script.google.com/macros/s/AKfycbxYc4f2JHo9zGD_AtgvcpkkO7l-nVjzch9Rsa2ufJ3yO9cXf_SAE47Jk_qjgG4r2dHf/exec';
     // ===================================================================
-const adminPassword = 'yudhajuga'; // Ganti password admin di sini
 
-// ===================================================================
-// VARIABEL GLOBAL
-// ===================================================================
-let teams = [];
-let matches = [];
+    let teams = [];
+    let matches = [];
 
-// ===================================================================
-// FUNGSI UTAMA (ADMIN)
-// ===================================================================
+    // --- FUNGSI-FUNGSI DARI KODE ASLI ANDA (dengan sedikit penyesuaian) ---
 
-function addMatch() {
-    const homeTeam = document.getElementById('homeTeam').value;
-    const awayTeam = document.getElementById('awayTeam').value;
-    const homeScore = parseInt(document.getElementById('homeScore').value) || 0;
-    const awayScore = parseInt(document.getElementById('awayScore').value) || 0;
-    const homeYellow = parseInt(document.getElementById('homeYellow').value) || 0;
-    const homeRed = parseInt(document.getElementById('homeRed').value) || 0;
-    const awayYellow = parseInt(document.getElementById('awayYellow').value) || 0;
-    const awayRed = parseInt(document.getElementById('awayRed').value) || 0;
-
-    if (!homeTeam || !awayTeam) {
-        alert('Pilih kedua tim!');
-        return;
-    }
-    if (homeTeam === awayTeam) {
-        alert('Tim tidak boleh sama!');
-        return;
-    }
-
-    const match = { homeTeam, awayTeam, homeScore, awayScore, homeYellow, homeRed, awayYellow, awayRed };
-    matches.push(match);
-    updateAllAndSave();
-    clearMatchForm();
-}
-
-function editMatch(index) {
-    const match = matches[index]; 
-    document.getElementById('homeTeam').value = match.homeTeam;
-    document.getElementById('awayTeam').value = match.awayTeam;
-    document.getElementById('homeScore').value = match.homeScore;
-    document.getElementById('awayScore').value = match.awayScore;
-    document.getElementById('homeYellow').value = match.homeYellow;
-    document.getElementById('homeRed').value = match.homeRed;
-    document.getElementById('awayYellow').value = match.awayYellow;
-    document.getElementById('awayRed').value = match.awayRed;
-    
-    matches.splice(index, 1);
-    updateAllAndSave();
-    document.querySelector('.bg-white.rounded-xl.card-shadow').scrollIntoView({ behavior: 'smooth' });
-}
-
-function deleteMatch(index) {
-    if (confirm('Apakah Anda yakin ingin menghapus pertandingan ini?')) {
-        matches.splice(index, 1);
-        updateAllAndSave();
-    }
-}
-
-// ===================================================================
-// FUNGSI PERHITUNGAN & TAMPILAN
-// ===================================================================
-
-function updateTeamStats() {
-    teams.forEach(team => {
-        team.played = 0; team.won = 0; team.drawn = 0; team.lost = 0;
-        team.goalsFor = 0; team.goalsAgainst = 0; team.points = 0;
-        team.yellowCards = 0; team.redCards = 0;
-    });
-
-    matches.forEach(match => {
-        const homeTeam = teams.find(t => t.name === match.homeTeam);
-        const awayTeam = teams.find(t => t.name === match.awayTeam);
-        if (!homeTeam || !awayTeam) return;
-
-        homeTeam.played++; awayTeam.played++;
-        homeTeam.goalsFor += match.homeScore;
-        homeTeam.goalsAgainst += match.awayScore;
-        awayTeam.goalsFor += match.awayScore;
-        awayTeam.goalsAgainst += match.homeScore;
-        homeTeam.yellowCards += match.homeYellow;
-        homeTeam.redCards += match.homeRed;
-        awayTeam.yellowCards += match.awayYellow;
-        awayTeam.redCards += match.awayRed;
-
-        if (match.homeScore > match.awayScore) {
-            homeTeam.won++; homeTeam.points += 3; awayTeam.lost++;
-        } else if (match.homeScore < match.awayScore) {
-            awayTeam.won++; awayTeam.points += 3; homeTeam.lost++;
-        } else {
-            homeTeam.drawn++; awayTeam.drawn++;
-            homeTeam.points += 1; awayTeam.points += 1;
+    function addTeam() {
+        const teamName = document.getElementById('teamName').value.trim();
+        if (!teamName) {
+            alert('Masukkan nama tim!');
+            return;
         }
-    });
+        
+        if (teams.find(team => team.name === teamName)) {
+            alert('Tim sudah ada!');
+            return;
+        }
 
-    teams.forEach(team => {
-        team.goalDifference = team.goalsFor - team.goalsAgainst;
-        team.fairPlayScore = team.yellowCards + (team.redCards * 3);
-    });
-}
+        teams.push({
+            name: teamName, played: 0, won: 0, drawn: 0, lost: 0,
+            goalsFor: 0, goalsAgainst: 0, goalDifference: 0, points: 0,
+            yellowCards: 0, redCards: 0, fairPlayScore: 0
+        });
 
-function getHeadToHeadStats(teamNames) {
-    const h2hMatches = matches.filter(match => teamNames.includes(match.homeTeam) && teamNames.includes(match.awayTeam));
-    const h2hStats = {};
-    teamNames.forEach(teamName => {
-        h2hStats[teamName] = { points: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 };
-    });
-    h2hMatches.forEach(match => {
-        const homeStats = h2hStats[match.homeTeam];
-        const awayStats = h2hStats[match.awayTeam];
-        homeStats.goalsFor += match.homeScore;
-        homeStats.goalsAgainst += match.awayScore;
-        awayStats.goalsFor += match.awayScore;
-        awayStats.goalsAgainst += match.homeScore;
-        if (match.homeScore > match.awayScore) homeStats.points += 3;
-        else if (match.homeScore < match.awayScore) awayStats.points += 3;
-        else { homeStats.points += 1; awayStats.points += 1; }
-    });
-    Object.keys(h2hStats).forEach(teamName => {
-        h2hStats[teamName].goalDifference = h2hStats[teamName].goalsFor - h2hStats[teamName].goalsAgainst;
-    });
-    return h2hStats;
-}
+        document.getElementById('teamName').value = '';
+        updateTeamSelects();
+        updateStandings();
+        saveData(); // Simpan perubahan ke Google Sheet
+    }
 
-function updateStandings() {
+    function updateTeamSelects() {
+        const homeSelect = document.getElementById('homeTeam');
+        const awaySelect = document.getElementById('awayTeam');
+        
+        homeSelect.innerHTML = '<option value="">Tim Tuan Rumah</option>';
+        awaySelect.innerHTML = '<option value="">Tim Tamu</option>';
+        
+        const sortedTeamsForSelect = [...teams].sort((a, b) => a.name.localeCompare(b.name));
+
+        sortedTeamsForSelect.forEach(team => {
+            homeSelect.innerHTML += `<option value="${team.name}">${team.name}</option>`;
+            awaySelect.innerHTML += `<option value="${team.name}">${team.name}</option>`;
+        });
+    }
+
+    function addMatch() {
+        const homeTeam = document.getElementById('homeTeam').value;
+        const awayTeam = document.getElementById('awayTeam').value;
+        const homeScore = parseInt(document.getElementById('homeScore').value) || 0;
+        const awayScore = parseInt(document.getElementById('awayScore').value) || 0;
+        const homeYellow = parseInt(document.getElementById('homeYellow').value) || 0;
+        const homeRed = parseInt(document.getElementById('homeRed').value) || 0;
+        const awayYellow = parseInt(document.getElementById('awayYellow').value) || 0;
+        const awayRed = parseInt(document.getElementById('awayRed').value) || 0;
+
+        if (!homeTeam || !awayTeam) {
+            alert('Pilih kedua tim!');
+            return;
+        }
+
+        if (homeTeam === awayTeam) {
+            alert('Tim tidak boleh sama!');
+            return;
+        }
+
+        const match = { homeTeam, awayTeam, homeScore, awayScore, homeYellow, homeRed, awayYellow, awayRed };
+        matches.push(match);
+
+        updateAllAndSave();
+        clearMatchForm();
+    }
+
+    function clearMatchForm() {
+        document.getElementById('homeTeam').value = '';
+        document.getElementById('awayTeam').value = '';
+        document.getElementById('homeScore').value = '';
+        document.getElementById('awayScore').value = '';
+        document.getElementById('homeYellow').value = '';
+        document.getElementById('homeRed').value = '';
+        document.getElementById('awayYellow').value = '';
+        document.getElementById('awayRed').value = '';
+    }
+
+    // Helper function untuk update semua tampilan dan simpan data
+    function updateAllAndSave() {
+        updateTeamStats();
+        updateStandings();
+        updateMatchHistory();
+        saveData();
+    }
+
+    function updateTeamStats() {
+        teams.forEach(team => {
+            team.played = 0; team.won = 0; team.drawn = 0; team.lost = 0;
+            team.goalsFor = 0; team.goalsAgainst = 0; team.points = 0;
+            team.yellowCards = 0; team.redCards = 0;
+        });
+
+        matches.forEach(match => {
+            const homeTeam = teams.find(t => t.name === match.homeTeam);
+            const awayTeam = teams.find(t => t.name === match.awayTeam);
+            
+            if (!homeTeam || !awayTeam) return;
+
+            homeTeam.played++; awayTeam.played++;
+            homeTeam.goalsFor += match.homeScore;
+            homeTeam.goalsAgainst += match.awayScore;
+            awayTeam.goalsFor += match.awayScore;
+            awayTeam.goalsAgainst += match.homeScore;
+            homeTeam.yellowCards += match.homeYellow;
+            homeTeam.redCards += match.homeRed;
+            awayTeam.yellowCards += match.awayYellow;
+            awayTeam.redCards += match.awayRed;
+
+            if (match.homeScore > match.awayScore) {
+                homeTeam.won++; homeTeam.points += 3; awayTeam.lost++;
+            } else if (match.homeScore < match.awayScore) {
+                awayTeam.won++; awayTeam.points += 3; homeTeam.lost++;
+            } else {
+                homeTeam.drawn++; awayTeam.drawn++;
+                homeTeam.points += 1; awayTeam.points += 1;
+            }
+        });
+
+        teams.forEach(team => {
+            team.goalDifference = team.goalsFor - team.goalsAgainst;
+            team.fairPlayScore = team.yellowCards + (team.redCards * 3);
+        });
+    }
+
+    function getHeadToHeadStats(teamNames) {
+        const h2hMatches = matches.filter(match => teamNames.includes(match.homeTeam) && teamNames.includes(match.awayTeam));
+        const h2hStats = {};
+        teamNames.forEach(teamName => {
+            h2hStats[teamName] = { points: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 };
+        });
+        h2hMatches.forEach(match => {
+            const homeStats = h2hStats[match.homeTeam];
+            const awayStats = h2hStats[match.awayTeam];
+            homeStats.goalsFor += match.homeScore;
+            homeStats.goalsAgainst += match.awayScore;
+            awayStats.goalsFor += match.awayScore;
+            awayStats.goalsAgainst += match.homeScore;
+            if (match.homeScore > match.awayScore) homeStats.points += 3;
+            else if (match.homeScore < match.awayScore) awayStats.points += 3;
+            else { homeStats.points += 1; awayStats.points += 1; }
+        });
+        Object.keys(h2hStats).forEach(teamName => {
+            h2hStats[teamName].goalDifference = h2hStats[teamName].goalsFor - h2hStats[teamName].goalsAgainst;
+        });
+        return h2hStats;
+    }
+
+    function updateStandings() {
     const sortedTeams = [...teams].sort((a, b) => {
+        // ... (seluruh logika sorting Anda yang sudah diperbaiki sebelumnya tetap di sini) ...
+        // Kriteria 1: Poin Keseluruhan
         if (a.points !== b.points) return b.points - a.points;
+        // Kriteria 2: Head-to-Head
         const tiedTeams = teams.filter(t => t.points === a.points);
         if (tiedTeams.length >= 2) {
             const tiedTeamNames = tiedTeams.map(t => t.name);
@@ -271,6 +293,7 @@ function updateStandings() {
             if (aH2H.goalDifference !== bH2H.goalDifference) return bH2H.goalDifference - aH2H.goalDifference;
             if (aH2H.goalsFor !== bH2H.goalsFor) return bH2H.goalsFor - aH2H.goalsFor;
         }
+        // Kriteria 3, 4, 5...
         if (a.goalDifference !== b.goalDifference) return b.goalDifference - a.goalDifference;
         if (a.goalsFor !== b.goalsFor) return b.goalsFor - a.goalsFor;
         return a.fairPlayScore - b.fairPlayScore;
@@ -279,103 +302,203 @@ function updateStandings() {
     const tableBody = document.getElementById('standingsTable');
     tableBody.innerHTML = '';
 
+    // Deteksi grup tim dengan poin yang sama
     const pointGroups = {};
     sortedTeams.forEach(team => {
-        if (!pointGroups[team.points]) pointGroups[team.points] = [];
+        if (!pointGroups[team.points]) {
+            pointGroups[team.points] = [];
+        }
         pointGroups[team.points].push(team);
     });
 
     sortedTeams.forEach((team, index) => {
         const row = document.createElement('tr');
+        row.className = 'border-b'; // Hapus bg-white/gray-50 agar bisa ditimpa
+        
+        // Cek apakah tim ini bagian dari grup yang poinnya sama (lebih dari 1 tim)
         const isTied = pointGroups[team.points] && pointGroups[team.points].length > 1;
-        row.className = 'border-b' + (isTied ? ' bg-yellow-50' : (index % 2 === 0 ? ' bg-gray-50' : ' bg-white'));
+        
+        // Beri warna latar belakang untuk menandai grup yang sama
+        row.className += isTied ? ' bg-yellow-50' : (index % 2 === 0 ? ' bg-gray-50' : ' bg-white');
         
         let positionClass = '';
         if (index < 3) positionClass = 'text-green-600 font-bold';
         else if (index >= sortedTeams.length - 3) positionClass = 'text-red-600 font-bold';
         
-        row.innerHTML = `
-            <td class="px-4 py-3 ${positionClass}">${index + 1}</td>
-            <td class="px-4 py-3 font-medium">${team.name}</td>
-            <td class="px-4 py-3 text-center">${team.played}</td>
-            <td class="px-4 py-3 text-center">${team.won}</td>
-            <td class="px-4 py-3 text-center">${team.drawn}</td>
-            <td class="px-4 py-3 text-center">${team.lost}</td>
-            <td class="px-4 py-3 text-center">${team.goalsFor}</td>
-            <td class="px-4 py-3 text-center">${team.goalsAgainst}</td>
-            <td class="px-4 py-3 text-center ${team.goalDifference >= 0 ? 'text-green-600' : 'text-red-600'}">${team.goalDifference >= 0 ? '+' : ''}${team.goalDifference}</td>
-            <td class="px-4 py-3 text-center font-bold text-blue-600">${team.points}</td>
-            <td class="px-4 py-3 text-center">${team.fairPlayScore}</td>
-            <td class="px-4 py-3 text-center">
-                ${
-                    isTied && pointGroups[team.points][0].name === team.name
-                        ? `<button onclick="showH2HDetails(${team.points})" class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 text-xs rounded">Lihat H2H</button>`
-                        : ''
-                }
-            </td>`;
+        // ▼▼▼ PERBARUI BAGIAN row.innerHTML ▼▼▼
+       row.innerHTML = `
+    <td class="px-4 py-3 ${positionClass}">${index + 1}</td>
+    <td class="px-4 py-3 font-medium">${team.name}</td>
+    <td class="px-4 py-3 text-center">${team.played}</td>
+    <td class="px-4 py-3 text-center">${team.won}</td>
+    <td class="px-4 py-3 text-center">${team.drawn}</td>
+    <td class="px-4 py-3 text-center">${team.lost}</td>
+    <td class="px-4 py-3 text-center">${team.goalsFor}</td>
+    <td class="px-4 py-3 text-center">${team.goalsAgainst}</td>
+    <td class="px-4 py-3 text-center ${team.goalDifference >= 0 ? 'text-green-600' : 'text-red-600'}">${team.goalDifference >= 0 ? '+' : ''}${team.goalDifference}</td>
+    <td class="px-4 py-3 text-center font-bold text-blue-600">${team.points}</td>
+    
+    <td class="px-4 py-3 text-center">${team.fairPlayScore}</td>
+    
+    <td class="px-4 py-3 text-center">
+        ${
+            isTied && pointGroups[team.points][0].name === team.name 
+            ? `<button onclick="showH2HDetails(${team.points})" class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 text-xs rounded">Lihat H2H</button>`
+            : '' // Biarkan kosong jika tidak ada H2H
+        }
+    </td>`;
         tableBody.appendChild(row);
     });
 }
-
-function updateMatchHistory() {
-    const tableBody = document.getElementById('matchHistoryTableBody');
-    tableBody.innerHTML = '';
-
-    if (matches.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-gray-500 py-4">Belum ada pertandingan yang diinput.</td></tr>';
-        return;
+    function editMatch(matchIndex) {
+        const match = matches[matches.length - 1 - matchIndex];
+        document.getElementById('homeTeam').value = match.homeTeam;
+        document.getElementById('awayTeam').value = match.awayTeam;
+        document.getElementById('homeScore').value = match.homeScore;
+        document.getElementById('awayScore').value = match.awayScore;
+        document.getElementById('homeYellow').value = match.homeYellow;
+        document.getElementById('homeRed').value = match.homeRed;
+        document.getElementById('awayYellow').value = match.awayYellow;
+        document.getElementById('awayRed').value = match.awayRed;
+        matches.splice(matches.length - 1 - matchIndex, 1);
+        updateAllAndSave();
+        document.querySelector('.bg-white.rounded-xl.card-shadow').scrollIntoView({ behavior: 'smooth' });
     }
 
-    const reversedMatches = [...matches].reverse();
-    reversedMatches.forEach((match, displayIndex) => {
-        const originalIndex = matches.indexOf(match);
-        const row = document.createElement('tr');
-        row.className = 'border-b hover:bg-gray-50';
-        let resultClass = '';
-        if (match.homeScore > match.awayScore) resultClass = 'text-green-600';
-        else if (match.homeScore < match.awayScore) resultClass = 'text-red-600';
+    function deleteMatch(matchIndex) {
+        if (confirm('Apakah Anda yakin ingin menghapus pertandingan ini?')) {
+            matches.splice(matches.length - 1 - matchIndex, 1);
+            updateAllAndSave();
+        }
+    }
 
-        row.innerHTML = `
-            <td class="px-4 py-3">${displayIndex + 1}</td>
-            <td class="px-4 py-3 font-medium">${match.homeTeam}</td>
-            <td class="px-4 py-3 text-center font-bold ${resultClass}">${match.homeScore} - ${match.awayScore}</td>
-            <td class="px-4 py-3 font-medium">${match.awayTeam}</td>
-            <td class="px-4 py-3 text-center text-gray-600">
-                <span class="text-yellow-500 font-bold">🟨</span> ${match.homeYellow + match.awayYellow}
-                <span class="text-red-600 font-bold ml-2">🟥</span> ${match.homeRed + match.awayRed}
-            </td>
-            <td class="px-4 py-3 text-center">
-                <div class="admin-buttons flex space-x-2 justify-center">
-                    <button onclick="editMatch(${originalIndex})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors">✏️ Edit</button>
-                    <button onclick="deleteMatch(${originalIndex})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors">🗑️ Hapus</button>
-                </div>
-            </td>
-        `;
-        tableBody.appendChild(row);
-    });
-
-    if (localStorage.getItem('isAdminLoggedIn') !== 'true') {
-        document.querySelectorAll('.admin-buttons').forEach(buttonDiv => {
-            buttonDiv.style.display = 'none';
+    function updateMatchHistory() {
+        const historyDiv = document.getElementById('matchHistory');
+        historyDiv.innerHTML = '';
+        if (matches.length === 0) {
+            historyDiv.innerHTML = '<p class="text-gray-500 text-center py-4">Belum ada pertandingan yang diinput</p>';
+            return;
+        }
+        matches.slice().reverse().forEach((match, index) => {
+            const matchDiv = document.createElement('div');
+            matchDiv.className = 'bg-gray-50 rounded-lg p-4 hover-scale';
+            let resultClass = '';
+            if (match.homeScore > match.awayScore) resultClass = 'text-green-600';
+            else if (match.homeScore < match.awayScore) resultClass = 'text-red-600';
+            else resultClass = 'text-yellow-600';
+            matchDiv.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-4">
+                        <span class="font-small">${match.homeTeam}</span>
+                        <span class="text-2xl font-bold ${resultClass}">${match.homeScore} - ${match.awayScore}</span>
+                        <span class="font-medium">${match.awayTeam}</span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="text-sm text-gray-500">
+                            🟨${match.homeYellow + match.awayYellow} 🟥${match.homeRed + match.awayRed}
+                        </div>
+                            <button onclick="editMatch(${index})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors">✏️ Edit</button>
+                            <button onclick="deleteMatch(${index})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors">🗑️ Hapus</button>
+                        </div>
+                    </div>
+                </div>`;
+            historyDiv.appendChild(matchDiv);
         });
     }
+
+    function initializeSampleData() {
+        const participatingTeams = ['AREMA FC', 'BALI UNITED FC', 'BHAYANGKARA PRESISI LAMPUNG FC', 'BORNEO FC SAMARINDA', 'DEWA UNITED BANTEN FC', 'MADURA UNITED FC', 'MALUT UNITED FC', 'PERSEBAYA SURABAYA', 'PERSIB BANDUNG', 'PERSIJA JAKARTA', 'PERSIJAP JEPARA', 'PERSIK KEDIRI', 'PERSIS SOLO', 'PERSITA', 'PSBS BIAK', 'PSIM YOGYAKARTA', 'PSM MAKASSAR', 'SEMEN PADANG FC'];
+        participatingTeams.forEach(teamName => {
+            if (!teams.find(t => t.name === teamName)) {
+                teams.push({
+                    name: teamName, played: 0, won: 0, drawn: 0, lost: 0,
+                    goalsFor: 0, goalsAgainst: 0, goalDifference: 0, points: 0,
+                    yellowCards: 0, redCards: 0, fairPlayScore: 0
+                });
+            }
+        });
+        updateTeamSelects();
+        updateStandings();
+    }
+
+    // ▼▼▼ TAMBAHKAN FUNGSI INI DI DALAM SCRIPT ANDA ▼▼▼
+function adminLogout() {
+    // ✅ HAPUS STATUS LOGIN DARI LOCALSTORAGE
+    localStorage.removeItem('isAdminLoggedIn');
+    
+    // Muat ulang halaman untuk kembali ke kondisi awal
+    location.reload();
 }
 
-// ===================================================================
-// FUNGSI MODAL H2H (UNTUK PUBLIK)
-// ===================================================================
+    function copyToClipboard() {
+        let textData = 'KLASEMEN BRI SUPER LEAGUE 2025/26\n';
+        textData += '='.repeat(80) + '\n';
+        textData += 'Pos\tTim\t\t\tMain\tM\tS\tK\tGM\tGK\tSG\tPoin\tFP\n';
+        textData += '-'.repeat(80) + '\n';
+        const sortedTeams = [...teams].sort((a, b) => {
+            if (a.points !== b.points) return b.points - a.points;
+            if (a.goalDifference !== b.goalDifference) return b.goalDifference - a.goalDifference;
+            if (a.goalsFor !== b.goalsFor) return b.goalsFor - a.goalsFor;
+            return a.fairPlayScore - b.fairPlayScore;
+        });
+        sortedTeams.forEach((team, index) => {
+            const teamName = team.name.padEnd(20);
+            textData += `${(index + 1).toString().padStart(2)}\t${teamName}\t${team.played}\t${team.won}\t${team.drawn}\t${team.lost}\t${team.goalsFor}\t${team.goalsAgainst}\t${team.goalDifference >= 0 ? '+' : ''}${team.goalDifference}\t${team.points}\t${team.fairPlayScore}\n`;
+        });
+        textData += '\n\nRIWAYAT PERTANDINGAN\n';
+        textData += '='.repeat(80) + '\n';
+        matches.forEach((match, index) => {
+            textData += `${index + 1}. ${match.homeTeam} ${match.homeScore} - ${match.awayScore} ${match.awayTeam}\n`;
+            if (match.homeYellow + match.homeRed + match.awayYellow + match.awayRed > 0) {
+                textData += `    Kartu: ${match.homeYellow + match.awayYellow} Kuning, ${match.homeRed + match.awayRed} Merah\n`;
+            }
+        });
+        navigator.clipboard.writeText(textData).then(() => {
+            showNotification('Klasemen berhasil disalin ke clipboard!', 'success');
+        }).catch(() => {
+            const textArea = document.createElement('textarea');
+            textArea.value = textData;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            showNotification('Klasemen berhasil disalin ke clipboard!', 'success');
+        });
+    }
+
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white z-50 shadow-lg ${type === 'success' ? 'bg-green-600' : (type === 'error' ? 'bg-red-600' : 'bg-blue-600')}`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        setTimeout(() => { notification.remove(); }, 3000);
+    }
+
+    // ▼▼▼ TAMBAHKAN DUA FUNGSI BARU INI DI SCRIPT ANDA ▼▼▼
 
 function showH2HDetails(points) {
+    // 1. Dapatkan semua data yang relevan
     const tiedTeams = teams.filter(t => t.points === points);
     const tiedTeamNames = tiedTeams.map(t => t.name);
-    const h2hMatches = matches.filter(match => tiedTeamNames.includes(match.homeTeam) && tiedTeamNames.includes(match.awayTeam));
+    const h2hMatches = matches.filter(match => 
+        tiedTeamNames.includes(match.homeTeam) && tiedTeamNames.includes(match.awayTeam)
+    );
     const h2hStats = getHeadToHeadStats(tiedTeamNames);
 
-    let miniLeagueHtml = `<table class="w-full text-xs border"><thead class="bg-gray-100"><tr>
-        <th class="px-2 py-2 text-left font-semibold">Tim</th><th class="px-2 py-2 text-center font-semibold">Poin</th>
-        <th class="px-2 py-2 text-center font-semibold">SG</th><th class="px-2 py-2 text-center font-semibold">GM</th>
-        </tr></thead><tbody>`;
-
+    // 2. Buat tabel untuk "Klasemen Kecil"
+    let miniLeagueHtml = `
+        <table class="w-full text-xs border">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-2 py-2 text-left font-semibold">Tim</th>
+                    <th class="px-2 py-2 text-center font-semibold">Poin</th>
+                    <th class="px-2 py-2 text-center font-semibold">SG</th>
+                    <th class="px-2 py-2 text-center font-semibold">GM</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+    // Urutkan tim di klasemen kecil
     const sortedTiedTeams = tiedTeams.sort((a, b) => {
         const aH2H = h2hStats[a.name];
         const bH2H = h2hStats[b.name];
@@ -386,23 +509,33 @@ function showH2HDetails(points) {
 
     sortedTiedTeams.forEach(team => {
         const stats = h2hStats[team.name];
-        miniLeagueHtml += `<tr class="border-b"><td class="px-2 py-2 font-medium">${team.name}</td>
-            <td class="px-2 py-2 text-center">${stats.points}</td>
-            <td class="px-2 py-2 text-center">${stats.goalDifference > 0 ? '+' : ''}${stats.goalDifference}</td>
-            <td class="px-2 py-2 text-center">${stats.goalsFor}</td></tr>`;
+        miniLeagueHtml += `
+            <tr class="border-b">
+                <td class="px-2 py-2 font-medium">${team.name}</td>
+                <td class="px-2 py-2 text-center">${stats.points}</td>
+                <td class="px-2 py-2 text-center">${stats.goalDifference > 0 ? '+' : ''}${stats.goalDifference}</td>
+                <td class="px-2 py-2 text-center">${stats.goalsFor}</td>
+            </tr>
+        `;
     });
     miniLeagueHtml += '</tbody></table>';
 
+    // 3. Buat daftar untuk "Riwayat Pertandingan"
     let matchListHtml = '';
     h2hMatches.forEach(match => {
-        matchListHtml += `<div class="bg-gray-50 rounded-md p-2 text-sm flex justify-between items-center">
-            <span>${match.homeTeam}</span><span class="font-bold">${match.homeScore} - ${match.awayScore}</span>
-            <span>${match.awayTeam}</span></div>`;
+        matchListHtml += `
+            <div class="bg-gray-50 rounded-md p-2 text-sm flex justify-between items-center">
+                <span>${match.homeTeam}</span>
+                <span class="font-bold">${match.homeScore} - ${match.awayScore}</span>
+                <span>${match.awayTeam}</span>
+            </div>
+        `;
     });
     if(h2hMatches.length === 0) {
         matchListHtml = '<p class="text-sm text-gray-500">Belum ada pertandingan di antara tim-tim ini.</p>';
     }
 
+    // 4. Masukkan HTML ke dalam modal dan tampilkan
     document.getElementById('h2hMiniLeague').innerHTML = miniLeagueHtml;
     document.getElementById('h2hMatchList').innerHTML = matchListHtml;
     document.getElementById('h2hModal').style.display = 'flex';
@@ -412,163 +545,126 @@ function closeH2HModal() {
     document.getElementById('h2hModal').style.display = 'none';
 }
 
-// ===================================================================
-// FUNGSI LOGIN & LOGOUT
-// ===================================================================
+    
+    // ===================================================================
+    // FUNGSI BARU UNTUK GOOGLE SHEET (PENGGANTI localStorage)
+    // ===================================================================
 
-function adminLogin() {
-    const enteredPassword = document.getElementById('adminPassword').value;
-    if (enteredPassword === adminPassword) {
-        document.getElementById('adminArea').style.display = 'block';
-        document.getElementById('loginSection').style.display = 'none';
-        localStorage.setItem('isAdminLoggedIn', 'true');
-    } else {
-        alert('Password salah!');
-    }
-}
+    async function saveData() {
+        showNotification('Menyimpan data...', 'info');
+        // Hanya kirim nama tim dan data pertandingan. Statistik akan dihitung ulang.
+        const dataToSave = {
+            teams: teams.map(t => ({ name: t.name })),
+            matches: matches
+        };
 
-function adminLogout() {
-    localStorage.removeItem('isAdminLoggedIn');
-    location.reload();
-}
-
-// ===================================================================
-// FUNGSI PEMBANTU (UTILITIES)
-// ===================================================================
-
-function clearMatchForm() {
-    document.getElementById('homeTeam').value = '';
-    document.getElementById('awayTeam').value = '';
-    document.getElementById('homeScore').value = '';
-    document.getElementById('awayScore').value = '';
-    document.getElementById('homeYellow').value = '';
-    document.getElementById('homeRed').value = '';
-    document.getElementById('awayYellow').value = '';
-    document.getElementById('awayRed').value = '';
-}
-
-function updateTeamSelects() {
-    const homeSelect = document.getElementById('homeTeam');
-    const awaySelect = document.getElementById('awayTeam');
-    homeSelect.innerHTML = '<option value="">Tim Tuan Rumah</option>';
-    awaySelect.innerHTML = '<option value="">Tim Tamu</option>';
-    const sortedTeamsForSelect = [...teams].sort((a, b) => a.name.localeCompare(b.name));
-    sortedTeamsForSelect.forEach(team => {
-        homeSelect.innerHTML += `<option value="${team.name}">${team.name}</option>`;
-        awaySelect.innerHTML += `<option value="${team.name}">${team.name}</option>`;
-    });
-}
-
-function showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white z-50 shadow-lg ${type === 'success' ? 'bg-green-600' : (type === 'error' ? 'bg-red-600' : 'bg-blue-600')}`;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-    setTimeout(() => { notification.remove(); }, 3000);
-}
-
-function copyToClipboard() {
-    // Fungsi ini bisa Anda isi kembali jika diperlukan
-    showNotification('Fitur copy belum diimplementasikan di versi ini.', 'info');
-}
-
-// ===================================================================
-// FUNGSI KONEKSI DATABASE (GOOGLE SCRIPT)
-// ===================================================================
-
-async function saveData() {
-    showNotification('Menyimpan data...', 'info');
-    const dataToSave = {
-        teams: teams.map(t => ({ name: t.name })),
-        matches: matches
-    };
-    try {
-        const response = await fetch(googleScriptURL, {
-            method: 'POST',
-            body: JSON.stringify(dataToSave),
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        });
-        const result = await response.json();
-        if (result.status === 'success') {
-            showNotification('Data berhasil disimpan!', 'success');
-        } else {
-            throw new Error(result.message);
+        try {
+            const response = await fetch(googleScriptURL, {
+                method: 'POST',
+                body: JSON.stringify(dataToSave),
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            });
+            const result = await response.json();
+            if (result.status === 'success') {
+                showNotification('Data berhasil disimpan!', 'success');
+            } else {
+                throw new Error(result.message);
+            }
+        } catch (error) {
+            console.error('Gagal menyimpan data:', error);
+            showNotification('Gagal menyimpan data!', 'error');
         }
-    } catch (error) {
-        console.error('Gagal menyimpan data:', error);
-        showNotification('Gagal menyimpan data!', 'error');
     }
-}
 
-async function loadData() {
-    showNotification('Memuat data dari cloud...', 'info');
-    try {
-        const response = await fetch(googleScriptURL);
-        const data = await response.json();
-        if (data.error) throw new Error(data.error);
-        teams = (data.teams || []).map(t => ({
-            name: t.name, played: 0, won: 0, drawn: 0, lost: 0,
-            goalsFor: 0, goalsAgainst: 0, goalDifference: 0, points: 0,
-            yellowCards: 0, redCards: 0, fairPlayScore: 0
-        }));
-        matches = data.matches || [];
-        showNotification('Data berhasil dimuat!', 'success');
-        return true;
-    } catch (error) {
-        console.error('Gagal memuat data:', error);
-        showNotification('Gagal memuat data dari cloud!', 'error');
-        return false;
-    }
-}
+    async function loadData() {
+        showNotification('Memuat data dari cloud...', 'info');
+        try {
+            const response = await fetch(googleScriptURL);
+            const data = await response.json();
+            if (data.error) throw new Error(data.error);
 
-function updateAllAndSave() {
-    updateTeamStats();
-    updateStandings();
-    updateMatchHistory();
-    saveData();
-}
-
-function initializeSampleData() {
-    const participatingTeams = ['AREMA FC', 'BALI UNITED FC', 'BHAYANGKARA FC', 'BORNEO FC', 'DEWA UNITED FC', 'MADURA UNITED FC', 'MALUT UNITED FC', 'PERSEBAYA', 'PERSIB BANDUNG', 'PERSIJA JAKARTA', 'PERSIJAP JEPARA', 'PERSIK KEDIRI', 'PERSIS SOLO', 'PERSITA', 'PSBS BIAK', 'PSIM YOGYAKARTA', 'PSM MAKASSAR', 'SEMEN PADANG FC'];
-    participatingTeams.forEach(teamName => {
-        if (!teams.find(t => t.name === teamName)) {
-            teams.push({
-                name: teamName, played: 0, won: 0, drawn: 0, lost: 0,
+            // Jika ada data tim dari sheet, gunakan itu. Jika tidak, biarkan kosong.
+            teams = (data.teams || []).map(t => ({
+                name: t.name, played: 0, won: 0, drawn: 0, lost: 0,
                 goalsFor: 0, goalsAgainst: 0, goalDifference: 0, points: 0,
                 yellowCards: 0, redCards: 0, fairPlayScore: 0
-            });
+            }));
+
+            matches = data.matches || [];
+            
+            showNotification('Data berhasil dimuat!', 'success');
+            return true;
+        } catch (error) {
+            console.error('Gagal memuat data:', error);
+            showNotification('Gagal memuat data dari cloud!', 'error');
+            return false;
         }
-    });
+    }
+
+    function clearAllData() {
+        if (confirm('Yakin ingin menghapus SEMUA data tim dan pertandingan? Tindakan ini akan menghapus data di Google Sheet.')) {
+            teams = [];
+            matches = [];
+            initializeSampleData(); // Buat daftar tim awal lagi
+            updateAllAndSave(); // Simpan keadaan baru (dengan tim awal) ke sheet
+        }
+    }
+    
+// Ganti fungsi lama dengan yang ini
+function adminLogin() {
+    const correctPassword = 'yudhajuga'; // Password Anda
+    const enteredPassword = document.getElementById('adminPassword').value;
+
+    if (enteredPassword === correctPassword) {
+        // Tampilkan semua area admin
+        document.getElementById('adminArea').style.display = 'block';
+        document.getElementById('loginSection').style.display = 'none';
+        
+        // ✅ SIMPAN STATUS LOGIN KE LOCALSTORAGE
+        localStorage.setItem('isAdminLoggedIn', 'true');
+
+    } else {
+        alert('Siapa Juaranya ?');
+    }
 }
+    
 
-
-// ===================================================================
-// INISIALISASI APLIKASI SAAT HALAMAN DIMUAT
-// ===================================================================
+    // ===================================================================
+    // ALUR INISIALISASI APLIKASI YANG BARU
+    // ===================================================================
+   // GANTI BLOK document.addEventListener('DOMContentLoaded', ...) LAMA ANDA DENGAN INI:
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // Pengecekan status login
+    // Bagian 1: Pengecekan status login (tidak berubah)
     if (localStorage.getItem('isAdminLoggedIn') === 'true') {
         document.getElementById('adminArea').style.display = 'block';
         document.getElementById('loginSection').style.display = 'none';
     }
 
-    // Logika pemuatan data yang aman
+    // Bagian 2: Logika pemuatan data yang sudah diperbaiki
     const dataLoaded = await loadData();
+
     if (dataLoaded && teams.length > 0) {
+        // KASUS 1: Sukses, dan data di database ada isinya.
+        // Tampilkan semua data seperti biasa.
         updateTeamStats();
         updateTeamSelects();
         updateStandings();
         updateMatchHistory();
     } else if (dataLoaded && teams.length === 0) {
+        // KASUS 2: Sukses terhubung, tapi database memang kosong.
+        // Buat data contoh di halaman, tapi JANGAN simpan otomatis ke database.
         initializeSampleData();
         updateTeamSelects();
         updateStandings();
+        // Beri tahu admin apa yang terjadi agar mereka bisa menyimpan jika mau.
         showNotification('Database kosong. Data contoh telah ditampilkan.', 'info');
     }
+    // KASUS 3: Gagal memuat data (dataLoaded adalah false).
+    // Kita tidak melakukan apa-apa. Ini mencegah data di database tertimpa.
+    // Notifikasi error sudah ditampilkan dari dalam fungsi loadData().
 });
-  
-    
+
 </script>
 <div id="h2hModal" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50" style="display: none;">
     <div class="bg-white rounded-xl shadow-2xl p-6 w-11/12 md:w-2/3 lg:w-1/2 max-w-4xl animate-fade-in-up">
@@ -605,10 +701,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 {var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function()
 {};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
-
-
-
-
 
 
 
