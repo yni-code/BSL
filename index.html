@@ -587,6 +587,38 @@ function adminLogin() {
     // ===================================================================
    // GANTI BLOK document.addEventListener('DOMContentLoaded', ...) LAMA ANDA DENGAN INI:
 
+//document.addEventListener('DOMContentLoaded', async () => {
+  //  // Bagian 1: Pengecekan status login (tidak berubah)
+  //  if (localStorage.getItem('isAdminLoggedIn') === 'true') {
+    //    document.getElementById('adminArea').style.display = 'block';
+      //  document.getElementById('loginSection').style.display = 'none';
+   // }
+
+    //// Bagian 2: Logika pemuatan data yang sudah diperbaiki
+    //const dataLoaded = await loadData();
+
+    //if (dataLoaded && teams.length > 0) {
+      //  // KASUS 1: Sukses, dan data di database ada isinya.
+        //// Tampilkan semua data seperti biasa.
+      //  updateTeamStats();
+        //updateTeamSelects();
+        //updateStandings();
+        //updateMatchHistory();
+    //} else if (dataLoaded && teams.length === 0) {
+        //// KASUS 2: Sukses terhubung, tapi database memang kosong.
+        // //Buat data contoh di halaman, tapi JANGAN simpan otomatis ke database.
+      //  initializeSampleData();
+        //updateTeamSelects();
+        //updateStandings();
+        // //Beri tahu admin apa yang terjadi agar mereka bisa menyimpan jika mau.
+        //howNotification('Database kosong. Data contoh telah ditampilkan.', 'info');
+    //}
+    // //KASUS 3: Gagal memuat data (dataLoaded adalah false).
+    // //Kita tidak melakukan apa-apa. Ini mencegah data di database tertimpa.
+    // //Notifikasi error sudah ditampilkan dari dalam fungsi loadData().
+//});
+// GANTI BLOK document.addEventListener('DOMContentLoaded', ...) LAMA ANDA DENGAN INI:
+
 document.addEventListener('DOMContentLoaded', async () => {
     // Bagian 1: Pengecekan status login (tidak berubah)
     if (localStorage.getItem('isAdminLoggedIn') === 'true') {
@@ -594,30 +626,39 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('loginSection').style.display = 'none';
     }
 
-    // Bagian 2: Logika pemuatan data yang sudah diperbaiki
+    // Bagian 2: Logika pemuatan data
     const dataLoaded = await loadData();
 
+    // ▼▼▼ BAGIAN INVESTIGASI DIMULAI DI SINI ▼▼▼
+
+    console.log("--- HASIL INVESTIGASI DATA ---");
+    console.log("Apakah data berhasil dimuat? (dataLoaded):", dataLoaded);
+    console.log("Jumlah Tim yang diterima (teams.length):", teams.length);
+    console.log("Data Tim yang diterima (teams):", teams);
+    console.log("Jumlah Pertandingan yang diterima (matches.length):", matches.length);
+    console.log("Data Pertandingan yang diterima (matches):", matches);
+    console.log("---------------------------------");
+
+    // ▲▲▲ BAGIAN INVESTIGASI SELESAI ▲▲▲
+
+
     if (dataLoaded && teams.length > 0) {
-        // KASUS 1: Sukses, dan data di database ada isinya.
-        // Tampilkan semua data seperti biasa.
+        // Jika data berhasil dimuat dan ada isinya, tampilkan.
+        console.log("Memulai proses menampilkan data ke tabel...");
         updateTeamStats();
         updateTeamSelects();
         updateStandings();
         updateMatchHistory();
     } else if (dataLoaded && teams.length === 0) {
-        // KASUS 2: Sukses terhubung, tapi database memang kosong.
-        // Buat data contoh di halaman, tapi JANGAN simpan otomatis ke database.
+        // Jika berhasil terhubung tapi database memang kosong.
+        console.log("Terhubung ke database, tetapi tidak ada data tim. Menampilkan data contoh.");
         initializeSampleData();
         updateTeamSelects();
         updateStandings();
-        // Beri tahu admin apa yang terjadi agar mereka bisa menyimpan jika mau.
         showNotification('Database kosong. Data contoh telah ditampilkan.', 'info');
     }
-    // KASUS 3: Gagal memuat data (dataLoaded adalah false).
-    // Kita tidak melakukan apa-apa. Ini mencegah data di database tertimpa.
-    // Notifikasi error sudah ditampilkan dari dalam fungsi loadData().
 });
-
+    
 </script>
 <div id="h2hModal" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50" style="display: none;">
     <div class="bg-white rounded-xl shadow-2xl p-6 w-11/12 md:w-2/3 lg:w-1/2 max-w-4xl animate-fade-in-up">
@@ -654,6 +695,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 {var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function()
 {};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
