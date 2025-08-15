@@ -615,7 +615,8 @@ function closeH2HModal() {
         }
     }
 
-    // FUNGSI BARU UNTUK MENGAMBIL DAN MEMPERBARUI SEMUA DATA
+// GANTI FUNGSI LAMA ANDA DENGAN VERSI BARU INI
+
 async function fetchAndUpdateData(isInitialLoad = false) {
     // Tampilkan notifikasi "memuat" hanya saat pertama kali halaman dibuka
     if (isInitialLoad) {
@@ -630,7 +631,6 @@ async function fetchAndUpdateData(isInitialLoad = false) {
         if (data.error) throw new Error(data.error);
 
         // Cek apakah ada perubahan sebelum memperbarui layar
-        // Ini mencegah layar "berkedip" jika datanya sama
         const currentDataString = JSON.stringify({ teams: teams.map(t => t.name), matches });
         const newDataString = JSON.stringify({ teams: data.teams, matches: data.matches });
 
@@ -645,18 +645,21 @@ async function fetchAndUpdateData(isInitialLoad = false) {
 
             // Panggil semua fungsi untuk memperbarui tampilan
             updateTeamStats();
-            updateTeamSelects(); // Penting jika admin menambah tim baru
+            updateTeamSelects(); // Dropdowns dibuat ulang di sini
             updateStandings();
             updateMatchHistory();
 
+            // ✅ SOLUSI: Panggil loadFormState() di sini untuk memuat ulang "draft"
+            // setelah dropdown di-refresh.
+            loadFormState(); 
+
             if (!isInitialLoad) {
-                showNotification('Klasemen Update', 'success');
+                showNotification('Klasemen telah diperbarui!', 'success');
             }
         }
 
         if (isInitialLoad) {
-             // Jika ini load pertama dan tidak ada tim, inisialisasi data contoh
-            if (teams.length === 0) {
+             if (teams.length === 0) {
                 initializeSampleData();
                 updateTeamSelects();
                 updateStandings();
@@ -762,6 +765,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 {var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function()
 {};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
