@@ -84,29 +84,28 @@
     <div class="container mx-auto px-4 py-8">
       
         <!-- Input Pertandingan -->
-        <div class="bg-white rounded-xl card-shadow p-6 mb-8">
-            <h2 class="text-2xl font-semibold mb-4 text-gray-800">⚽ Tambah Hasil Pertandingan</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                <select id="homeTeam" class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
-                    <option value="">Tim Tuan Rumah</option>
-                </select>
-                <select id="awayTeam" class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
-                    <option value="">Tim Tamu</option>
-                </select>
-                <input type="number" id="homeScore" placeholder="Gol Tuan Rumah" min="0" class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
-                <input type="number" id="awayScore" placeholder="Gol Tamu" min="0" class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
-            </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                <input type="number" id="homeYellow" placeholder="Kartu Kuning Tuan Rumah" min="0" class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
-                <input type="number" id="homeRed" placeholder="Kartu Merah Tuan Rumah" min="0" class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
-                <input type="number" id="awayYellow" placeholder="Kartu Kuning Tamu" min="0" class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
-                <input type="number" id="awayRed" placeholder="Kartu Merah Tamu" min="0" class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
-            </div>
-            <button onclick="addMatch()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
-                ⚽ Tambah Pertandingan
-            </button>
-        </div> 
-
+       <div class="bg-white rounded-xl card-shadow p-6 mb-8">
+    <h2 class="text-2xl font-semibold mb-4 text-gray-800">⚽ Tambah Hasil Pertandingan</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+        <select id="homeTeam" onchange="saveFormState()" class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+            <option value="">Tim Tuan Rumah</option>
+        </select>
+        <select id="awayTeam" onchange="saveFormState()" class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+            <option value="">Tim Tamu</option>
+        </select>
+        <input type="number" id="homeScore" onkeyup="saveFormState()" placeholder="Gol Tuan Rumah" min="0" class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+        <input type="number" id="awayScore" onkeyup="saveFormState()" placeholder="Gol Tamu" min="0" class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <input type="number" id="homeYellow" onkeyup="saveFormState()" placeholder="Kartu Kuning Tuan Rumah" min="0" class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+        <input type="number" id="homeRed" onkeyup="saveFormState()" placeholder="Kartu Merah Tuan Rumah" min="0" class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+        <input type="number" id="awayYellow" onkeyup="saveFormState()" placeholder="Kartu Kuning Tamu" min="0" class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+        <input type="number" id="awayRed" onkeyup="saveFormState()" placeholder="Kartu Merah Tamu" min="0" class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+    </div>
+    <button onclick="addMatch()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+        ⚽ Tambah Pertandingan
+    </button>
+</div>
         
          <!-- Riwayat Pertandingan --> 
         <!--div class="bg-white rounded-xl card-shadow p-6"-->
@@ -197,17 +196,51 @@
         clearMatchForm();
     }
 
-    function clearMatchForm() {
-        document.getElementById('homeTeam').value = '';
-        document.getElementById('awayTeam').value = '';
-        document.getElementById('homeScore').value = '';
-        document.getElementById('awayScore').value = '';
-        document.getElementById('homeYellow').value = '';
-        document.getElementById('homeRed').value = '';
-        document.getElementById('awayYellow').value = '';
-        document.getElementById('awayRed').value = '';
-    }
+    // Ganti fungsi lama dengan yang ini
+function clearMatchForm() {
+    document.getElementById('homeTeam').value = '';
+    document.getElementById('awayTeam').value = '';
+    document.getElementById('homeScore').value = '';
+    document.getElementById('awayScore').value = '';
+    document.getElementById('homeYellow').value = '';
+    document.getElementById('homeRed').value = '';
+    document.getElementById('awayYellow').value = '';
+    document.getElementById('awayRed').value = '';
+    
+    // Hapus 'draft' dari localStorage
+    localStorage.removeItem('tempMatchData');
+}
 
+    // TAMBAHKAN FUNGSI BARU INI SAVE SEMENTARA EDIT
+function saveFormState() {
+    const formState = {
+        homeTeam: document.getElementById('homeTeam').value,
+        awayTeam: document.getElementById('awayTeam').value,
+        homeScore: document.getElementById('homeScore').value,
+        awayScore: document.getElementById('awayScore').value,
+        homeYellow: document.getElementById('homeYellow').value,
+        homeRed: document.getElementById('homeRed').value,
+        awayYellow: document.getElementById('awayYellow').value,
+        awayRed: document.getElementById('awayRed').value
+    };
+    localStorage.setItem('tempMatchData', JSON.stringify(formState));
+}
+
+    // TAMBAHKAN FUNGSI BARU INI LOAD SEMENTARA
+function loadFormState() {
+    const savedState = localStorage.getItem('tempMatchData');
+    if (savedState) {
+        const formState = JSON.parse(savedState);
+        document.getElementById('homeTeam').value = formState.homeTeam;
+        document.getElementById('awayTeam').value = formState.awayTeam;
+        document.getElementById('homeScore').value = formState.homeScore;
+        document.getElementById('awayScore').value = formState.awayScore;
+        document.getElementById('homeYellow').value = formState.homeYellow;
+        document.getElementById('homeRed').value = formState.homeRed;
+        document.getElementById('awayYellow').value = formState.awayYellow;
+        document.getElementById('awayRed').value = formState.awayRed;
+    }
+}
     // Helper function untuk update semua tampilan dan simpan data
     function updateAllAndSave() {
         updateTeamStats();
@@ -684,9 +717,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 1. Lakukan pemuatan data pertama kali saat halaman dibuka
     await fetchAndUpdateData(true);
 
+    // Panggil fungsi untuk memuat 'draft' form setelah data utama ada
+    loadFormState(); // <-- TAMBAHKAN BARIS INI
+
     // 2. Atur interval untuk melakukan auto-refresh setiap 30 detik
-    // Angka 30000 adalah dalam milidetik (30 * 1000 = 30 detik)
-    // Anda bisa mengubahnya jika mau (misal 15000 untuk 15 detik)
     setInterval(fetchAndUpdateData, 30000); 
 });
 
@@ -726,6 +760,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 {var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function()
 {};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
