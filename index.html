@@ -59,7 +59,11 @@
                             <th class="px-4 py-2 text-center font-semibold">GK</th>
                             <th class="px-4 py-2 text-center font-semibold">SG</th>
                             <th class="px-4 py-2 text-center font-semibold">Poin</th>
-                            <th class="px-4 py-2 text-center font-semibold">Fair Play</th>
+                            <th class="px-4 py-2 text-center font-semibold fair-play-col">
+                               <button onclick="toggleFairPlayColumn()" class="font-semibold uppercase tracking-wider">
+                                      Fair Play
+                               </button>
+                        </th>
                             <th class="px-4 py-2 text-center font-semibold">Aksi</th>
                         </tr>
                     </thead>
@@ -389,12 +393,13 @@ function updateStandings() {
             <td class="px-4 py-2 text-center">${team.goalsAgainst}</td>
             <td class="px-4 py-2 text-center ${team.goalDifference >= 0 ? 'text-green-600' : 'text-red-600'}">${team.goalDifference >= 0 ? '+' : ''}${team.goalDifference}</td>
             <td class="px-4 py-2 text-center font-bold text-blue-600">${team.points}</td>
-            <td class="px-4 py-2 text-center">${team.fairPlayScore}</td>
+            <td class="px-4 py-2 text-center fair-play-col">${team.fairPlayScore}</td>
             <td class="px-4 py-2 text-center">
                 ${ isTied && pointGroups[team.points][0].name === team.name ? `<button onclick="showH2HDetails(${team.points})" class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 text-xs rounded">Lihat H2H</button>` : '' }
             </td>`;
         tableBody.appendChild(row);
     });
+    applyColumnVisibility();
 }
     
     function editMatch(matchIndex) {
@@ -413,6 +418,34 @@ function updateStandings() {
         updateAllAndSave();   
            document.getElementById('riwayatContainer').scrollIntoView({ behavior: 'smooth' });
     }
+
+   
+
+// Fungsi ini akan dipanggil saat tombol di header diklik
+function toggleFairPlayColumn() {
+    // Cek status saat ini dari localStorage (defaultnya 'true' atau terlihat)
+    const isVisible = localStorage.getItem('fairPlayVisible') !== 'false';
+
+    // Simpan status kebalikannya
+    localStorage.setItem('fairPlayVisible', !isVisible);
+
+    // Terapkan perubahan tampilan
+    applyColumnVisibility();
+}
+
+// Fungsi ini menerapkan status visible/invisible ke kolom
+function applyColumnVisibility() {
+    // Ambil status terakhir dari localStorage
+    const isVisible = localStorage.getItem('fairPlayVisible') !== 'false';
+    
+    // Cari semua sel dengan class 'fair-play-col'
+    const cells = document.querySelectorAll('.fair-play-col');
+    
+    // Atur properti 'display' berdasarkan status
+    cells.forEach(cell => {
+        cell.style.display = isVisible ? '' : 'none';
+    });
+}
     
     function deleteMatch(matchIndex) {
         if (confirm('Apakah Anda yakin ingin menghapus pertandingan ini?')) {
@@ -729,7 +762,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Panggil fungsi untuk memuat 'draft' form setelah data utama ada
     loadFormState(); // <-- TAMBAHKAN BARIS INI
-
+    applyColumnVisibility();
     // 2. Atur interval untuk melakukan auto-refresh setiap 30 detik
     setInterval(fetchAndUpdateData, 30000); 
 });
@@ -770,6 +803,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 {var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function()
 {};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
