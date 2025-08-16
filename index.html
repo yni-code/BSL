@@ -50,7 +50,7 @@
                     <thead class="bg-gray-100">
                         <tr>
                             <th class="px-4 py-3 text-left font-semibold">Pos</th>
-                            <th class="px-4 py-3 text-left font-semibold">Tim</th>
+                           <th class="px-4 py-3 text-left font-semibold w-2/5">Tim</th>
                             <th class="px-4 py-3 text-center font-semibold">Main</th>
                             <th class="px-4 py-3 text-center font-semibold">M</th>
                             <th class="px-4 py-3 text-center font-semibold">S</th>
@@ -380,7 +380,7 @@ function updateStandings() {
         else if (index >= sortedTeams.length - 3) positionClass = 'text-red-600 font-bold';
         row.innerHTML = `
             <td class="px-4 py-3 ${positionClass}">${index + 1}</td>
-            <td class="px-4 py-3 font-medium">${team.name}</td>
+           <td class="px-4 py-3 font-medium w-2/5">${team.name}</td>
             <td class="px-4 py-3 text-center">${team.played}</td>
             <td class="px-4 py-3 text-center">${team.won}</td>
             <td class="px-4 py-3 text-center">${team.drawn}</td>
@@ -770,6 +770,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 {var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function()
 {};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
