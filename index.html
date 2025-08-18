@@ -473,26 +473,30 @@ function applyColumnVisibility() {
             else if (match.homeScore < match.awayScore) resultClass = 'text-red-600';
             else resultClass = 'text-yellow-600';
             matchDiv.innerHTML = `
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center space-x-4">
-                        <span class="font-small">${match.homeTeam}</span>
-                        <span class="text-2xl font-bold ${resultClass}">${match.homeScore} - ${match.awayScore}</span>
-                        <span class="font-medium">${match.awayTeam}</span>
-                    </div>
-                    <div class="text-sm text-gray-600 text-right">
-                         <span class="text-yellow-500 font-bold">🟨</span> ${match.homeYellow}
-                         <span class="text-red-600 font-bold">🟥</span> ${match.homeRed}
-    
-                         <span class="mx-2 text-gray-300">|</span>
-    
-                         <span class="text-yellow-500 font-bold">🟨</span> ${match.awayYellow}
-                         <span class="text-red-600 font-bold">🟥</span> ${match.awayRed}
-                    </div>
-                            <button onclick="editMatch(${index})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors">✏️ Edit</button>
-                            <button onclick="deleteMatch(${index})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors">🗑️ Hapus</button>
-                        </div>
-                    </div>
-                </div>`;
+    <div class="flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+            <span class="font-medium">${match.homeTeam}</span>
+            <span class="text-2xl font-bold ${resultClass}">${match.homeScore} - ${match.awayScore}</span>
+            <span class="font-medium">${match.awayTeam}</span>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            
+            <div class="text-sm text-gray-600">
+                <span class="text-yellow-500 font-bold">🟨</span> ${match.homeYellow}
+                <span class="text-red-600 font-bold">🟥</span> ${match.homeRed}
+                <span class="mx-2 text-gray-300">|</span>
+                <span class="text-yellow-500 font-bold">🟨</span> ${match.awayYellow}
+                <span class="text-red-600 font-bold">🟥</span> ${match.awayRed}
+            </div>
+
+            <div class="admin-buttons flex space-x-2">
+                <button onclick="editMatch(${index})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors">✏️ Edit</button>
+                <button onclick="deleteMatch(${index})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors">🗑️ Hapus</button>
+            </div>
+
+        </div>
+    </div>`;
             historyDiv.appendChild(matchDiv);
         });
     }
@@ -812,6 +816,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 {var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function()
 {};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
