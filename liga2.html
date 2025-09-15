@@ -3,243 +3,353 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Klasemen Liga 2</title> <script src="https://cdn/tailwindcss.com"></script>
+    <title>Klasemen PEGADAIAN CHAMPIONSHIP 2025-26</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
-    <div class="text-center">
-        <h1 class="text-3xl font-bold text-gray-700 mb-4">Klasemen Liga 2 UNDER CONSTRUCTION !!</h1> <a href="index.html" class="text-blue-500 hover:underline">
-            &larr; Kembali ke BRI SUPER LEAGUE
-        </a>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">Liga 2 Indonesia</h1>
+           
+            <a href="index.html" class="text-blue-500 hover:underline mt-2 inline-block">&larr; Kembali ke BRI SUPER LEAGUE</a>
+        </div>
+
+        <div id="loginSection" class="mb-8">...</div> 
+		<div id="adminArea" class="hidden mb-8 p-6 bg-white rounded-xl shadow-lg">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-700">Panel Admin Liga 2</h2>
+        <button onclick="adminLogout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium text-sm">Logout</button>
     </div>
-</body>
-    <body class="bg-gray-50 min-h-screen">
-    <div class="bg-gray-800 text-white py-6">
-        <div class="container mx-auto px-4 text-center">
-            <h1 class="text-3xl font-bold mb-2">⚽ Klasemen Liga 2 2025/26</h1>
-            <a href="index.html" class="text-blue-300 hover:underline">&larr; Kembali ke BRI SUPER LEAGUE</a>
+    
+    <div class="grid md:grid-cols-2 gap-8">
+        <div id="admin_grupA" class="space-y-4 p-4 border rounded-lg">
+            <h3 class="text-xl font-semibold text-center text-red-600">GRUP 1</h3>
+            <div class="flex gap-2">
+                 <input type="text" id="teamName_grupA" placeholder="Nama Tim Baru" class="border-gray-300 rounded-lg p-2 w-full">
+                 <button onclick="addTeam('grupA')" class="bg-blue-500 text-white p-2 rounded-lg whitespace-nowrap">Tambah Tim</button>
+            </div>
+            <select id="homeTeam_grupA" class="border-gray-300 rounded-lg p-2 w-full"></select>
+            <select id="awayTeam_grupA" class="border-gray-300 rounded-lg p-2 w-full"></select>
+            <div class="grid grid-cols-2 gap-2">
+                <input type="number" id="homeScore_grupA" placeholder="Skor Kandang" class="border-gray-300 rounded-lg p-2">
+                <input type="number" id="awayScore_grupA" placeholder="Skor Tandang" class="border-gray-300 rounded-lg p-2">
+            </div>
+            <div class="grid grid-cols-4 gap-2">
+                <input type="number" id="homeYellow_grupA" placeholder="Kuning (K)" class="border-gray-300 rounded-lg p-2 text-sm">
+                <input type="number" id="homeRed_grupA" placeholder="Merah (K)" class="border-gray-300 rounded-lg p-2 text-sm">
+                <input type="number" id="awayYellow_grupA" placeholder="Kuning (T)" class="border-gray-300 rounded-lg p-2 text-sm">
+                <input type="number" id="awayRed_grupA" placeholder="Merah (T)" class="border-gray-300 rounded-lg p-2 text-sm">
+            </div>
+            <button onclick="addMatch('grupA')" class="bg-green-600 text-white p-2 rounded-lg w-full">Tambah Pertandingan</button>
+        </div>
+
+        <div id="admin_grupB" class="space-y-4 p-4 border rounded-lg">
+            <h3 class="text-xl font-semibold text-center text-blue-600">GRUP 2</h3>
+            <div class="flex gap-2">
+                 <input type="text" id="teamName_grupB" placeholder="Nama Tim Baru" class="border-gray-300 rounded-lg p-2 w-full">
+                 <button onclick="addTeam('grupB')" class="bg-blue-500 text-white p-2 rounded-lg whitespace-nowrap">Tambah Tim</button>
+            </div>
+            <select id="homeTeam_grupB" class="border-gray-300 rounded-lg p-2 w-full"></select>
+            <select id="awayTeam_grupB" class="border-gray-300 rounded-lg p-2 w-full"></select>
+            <div class="grid grid-cols-2 gap-2">
+                <input type="number" id="homeScore_grupB" placeholder="Skor Kandang" class="border-gray-300 rounded-lg p-2">
+                <input type="number" id="awayScore_grupB" placeholder="Skor Tandang" class="border-gray-300 rounded-lg p-2">
+            </div>
+            <div class="grid grid-cols-4 gap-2">
+                <input type="number" id="homeYellow_grupB" placeholder="Kuning (K)" class="border-gray-300 rounded-lg p-2 text-sm">
+                <input type="number" id="homeRed_grupB" placeholder="Merah (K)" class="border-gray-300 rounded-lg p-2 text-sm">
+                <input type="number" id="awayYellow_grupB" placeholder="Kuning (T)" class="border-gray-300 rounded-lg p-2 text-sm">
+                <input type="number" id="awayRed_grupB" placeholder="Merah (T)" class="border-gray-300 rounded-lg p-2 text-sm">
+            </div>
+            <button onclick="addMatch('grupB')" class="bg-green-600 text-white p-2 rounded-lg w-full">Tambah Pertandingan</button>
         </div>
     </div>
-
-    <div class="container mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
+</div>
         
-        <div id="group1_container" class="space-y-6">
-            <h2 class="text-2xl font-bold text-center text-gray-800">GRUP 1</h2>
-
-            <div class="bg-white rounded-xl card-shadow p-6">
-                <h3 class="text-xl font-semibold mb-4">📝 Tambah Tim (Grup 1)</h3>
-                <div class="flex gap-2">
-                    <input type="text" id="teamName_group1" placeholder="Nama Tim Grup 1" class="border border-gray-300 rounded-lg px-4 py-2 w-full">
-                    <button onclick="addTeam('group1')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium whitespace-nowrap">Tambah Tim</button>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-xl card-shadow p-6">
-                <h3 class="text-xl font-semibold mb-4">⚽ Tambah Pertandingan (Grup 1)</h3>
-                <div class="space-y-4">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <select id="homeTeam_group1" class="border border-gray-300 rounded-lg px-4 py-2"></select>
-                        <select id="awayTeam_group1" class="border border-gray-300 rounded-lg px-4 py-2"></select>
-                    </div>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                        <input type="number" id="homeScore_group1" placeholder="Gol Tuan Rumah" class="border border-gray-300 rounded-lg px-4 py-2">
-                        <input type="number" id="awayScore_group1" placeholder="Gol Tamu" class="border border-gray-300 rounded-lg px-4 py-2">
-                        <input type="number" id="homeYellow_group1" placeholder="Kuning" class="border border-gray-300 rounded-lg px-4 py-2">
-                        <input type="number" id="homeRed_group1" placeholder="Merah" class="border border-gray-300 rounded-lg px-4 py-2">
-                        <input type="number" id="awayYellow_group1" placeholder="Kuning" class="border border-gray-300 rounded-lg px-4 py-2">
-                        <input type="number" id="awayRed_group1" placeholder="Merah" class="border border-gray-300 rounded-lg px-4 py-2">
-                    </div>
-                    <button onclick="addMatch('group1')" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium">Tambah</button>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-xl card-shadow p-6">
-                <h3 class="text-xl font-semibold mb-4">🏆 Klasemen Grup 1</h3>
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="bg-gradient-to-r from-red-500 to-red-600 text-white p-4"><h2 class="text-2xl font-bold text-center">GRUP 1</h2></div>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
-                        <thead>...</thead> <tbody id="standingsTable_group1"></tbody>
-                    </table>
+                    <table class="w-full"><thead class="bg-gray-50"></thead><tbody id="grupA"></tbody></table>
                 </div>
             </div>
-        </div>
-
-        <div id="group2_container" class="space-y-6">
-            <h2 class="text-2xl font-bold text-center text-gray-800">GRUP 2</h2>
-            
-            <div class="bg-white rounded-xl card-shadow p-6">
-                <h3 class="text-xl font-semibold mb-4">📝 Tambah Tim (Grup 2)</h3>
-                <div class="flex gap-2">
-                    <input type="text" id="teamName_group2" placeholder="Nama Tim Grup 2" class="border border-gray-300 rounded-lg px-4 py-2 w-full">
-                    <button onclick="addTeam('group2')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium whitespace-nowrap">Tambah Tim</button>
-                </div>
-            </div>
-            
-            <div class="bg-white rounded-xl card-shadow p-6">
-                <h3 class="text-xl font-semibold mb-4">⚽ Tambah Pertandingan (Grup 2)</h3>
-                <div class="space-y-4">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <select id="homeTeam_group2" class="border border-gray-300 rounded-lg px-4 py-2"></select>
-                        <select id="awayTeam_group2" class="border border-gray-300 rounded-lg px-4 py-2"></select>
-                    </div>
-                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                        <input type="number" id="homeScore_group2" placeholder="Gol Tuan Rumah" class="border border-gray-300 rounded-lg px-4 py-2">
-                        <input type="number" id="awayScore_group2" placeholder="Gol Tamu" class="border border-gray-300 rounded-lg px-4 py-2">
-                        <input type="number" id="homeYellow_group2" placeholder="Kuning" class="border border-gray-300 rounded-lg px-4 py-2">
-                        <input type="number" id="homeRed_group2" placeholder="Merah" class="border border-gray-300 rounded-lg px-4 py-2">
-                        <input type="number" id="awayYellow_group2" placeholder="Kuning" class="border border-gray-300 rounded-lg px-4 py-2">
-                        <input type="number" id="awayRed_group2" placeholder="Merah" class="border border-gray-300 rounded-lg px-4 py-2">
-                    </div>
-                    <button onclick="addMatch('group2')" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium">Tambah</button>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-xl card-shadow p-6">
-                <h3 class="text-xl font-semibold mb-4">🏆 Klasemen Grup 2</h3>
+			 <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="bg-gradient-to-r from-red-500 to-red-600 text-white p-4"><h2 class="text-2xl font-bold text-center">GRUP 2</h2></div>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
-                        <thead>...</thead> <tbody id="standingsTable_group2"></tbody>
-                    </table>
+                    <table class="w-full"><thead class="bg-gray-50"></thead><tbody id="grupB"></tbody></table>
                 </div>
             </div>
+          
         </div>
-
     </div>
 
-<script>
-    // ===================================================================
-    // KONFIGURASI
-    // ===================================================================
-    const googleScriptURL = 'MASUKKAN_URL_WEB_APP_LIGA_2_ANDA_DI_SINI';
+    <script>
+       // ▼▼▼ GANTI SELURUH ISI SCRIPT ANDA DENGAN KODE DI BAWAH INI ▼▼▼
 
-    // ===================================================================
-    // STRUKTUR DATA BARU
-    // ===================================================================
-    let leagueData = {
-        group1: { teams: [], matches: [] },
-        group2: { teams: [], matches: [] }
+// ===================================================================
+// KONFIGURASI
+// ===================================================================
+const googleScriptURL = 'https://script.google.com/macros/s/AKfycbyNM3JZcjs6EwHpigFxYi461V1hyI4mUuM2eeN26DcAZiCNGkkeGbKDkyHpfgs8bc8s/exec';
+const adminPassword = 'liga2aman'; // Ganti password admin Liga 2
+
+// ===================================================================
+// DATA & STATE
+// ===================================================================
+let leagueData = {
+    grupA: { teams: [], matches: [] },
+    grupB: { teams: [], matches: [] }
+};
+const groupIds = ['grupA', 'grupB'];
+
+// ===================================================================
+// FUNGSI INTI (Sudah diubah untuk menangani 2 grup)
+// ===================================================================
+
+function addTeam(groupId) {
+    const teamNameInput = document.getElementById(`teamName_${groupId}`);
+    const teamName = teamNameInput.value.trim();
+    if (!teamName) return alert('Masukkan nama tim!');
+    if (leagueData[groupId].teams.find(t => t.name === teamName)) return alert('Tim sudah ada!');
+    
+    leagueData[groupId].teams.push({ name: teamName });
+    teamNameInput.value = '';
+    updateAll(groupId);
+    saveData();
+}
+
+function addMatch(groupId) {
+    const homeTeam = document.getElementById(`homeTeam_${groupId}`).value;
+    const awayTeam = document.getElementById(`awayTeam_${groupId}`).value;
+    if (!homeTeam || !awayTeam || homeTeam === awayTeam) return alert('Pilih dua tim yang berbeda!');
+
+    const match = {
+        homeTeam, awayTeam,
+        homeScore: parseInt(document.getElementById(`homeScore_${groupId}`).value) || 0,
+        awayScore: parseInt(document.getElementById(`awayScore_${groupId}`).value) || 0,
+        homeYellow: parseInt(document.getElementById(`homeYellow_${groupId}`).value) || 0,
+        homeRed: parseInt(document.getElementById(`homeRed_${groupId}`).value) || 0,
+        awayYellow: parseInt(document.getElementById(`awayYellow_${groupId}`).value) || 0,
+        awayRed: parseInt(document.getElementById(`awayRed_${groupId}`).value) || 0
     };
+    leagueData[groupId].matches.push(match);
+    // Kosongkan form setelah submit (opsional)
+    document.getElementById(`homeScore_${groupId}`).value = '';
+    document.getElementById(`awayScore_${groupId}`).value = '';
+    document.getElementById(`homeYellow_${groupId}`).value = '';
+    document.getElementById(`homeRed_${groupId}`).value = '';
+    document.getElementById(`awayYellow_${groupId}`).value = '';
+    document.getElementById(`awayRed_${groupId}`).value = '';
+    
+    updateAll(groupId);
+    saveData();
+}
 
-    // ===================================================================
-    // FUNGSI-FUNGSI YANG SUDAH DIUBAH (REFACTORED)
-    // ===================================================================
+function updateAll(groupId) {
+    updateTeamStats(groupId);
+    updateStandings(groupId);
+    updateTeamSelects(groupId);
+}
 
-    function addTeam(groupId) {
-        const teamNameInput = document.getElementById(`teamName_${groupId}`);
-        const teamName = teamNameInput.value.trim();
-        if (!teamName) return alert('Masukkan nama tim!');
-        if (leagueData[groupId].teams.find(t => t.name === teamName)) return alert('Tim sudah ada!');
+// ===================================================================
+// FUNGSI PERHITUNGAN & TAMPILAN
+// ===================================================================
+
+function updateTeamStats(groupId) {
+    const { teams, matches } = leagueData[groupId];
+    // Reset statistik, termasuk kartu
+    teams.forEach(t => { t.played=0; t.won=0; t.drawn=0; t.lost=0; t.goalsFor=0; t.goalsAgainst=0; t.points=0; t.yellowCards=0; t.redCards=0; });
+    
+    matches.forEach(m => {
+        const home = teams.find(t => t.name === m.homeTeam);
+        const away = teams.find(t => t.name === m.awayTeam);
+        if (!home || !away) return;
+        home.played++; away.played++;
+        home.goalsFor += m.homeScore; home.goalsAgainst += m.awayScore;
+        away.goalsFor += m.awayScore; away.goalsAgainst += m.homeScore;
         
-        leagueData[groupId].teams.push({
-            name: teamName, played: 0, won: 0, drawn: 0, lost: 0,
-            goalsFor: 0, goalsAgainst: 0, goalDifference: 0, points: 0,
-            yellowCards: 0, redCards: 0, fairPlayScore: 0
-        });
-        
-        teamNameInput.value = '';
-        updateAll(groupId);
-        saveData();
-    }
+        // Akumulasi kartu
+        home.yellowCards += m.homeYellow; home.redCards += m.homeRed;
+        away.yellowCards += m.awayYellow; away.redCards += m.awayRed;
+
+        if (m.homeScore > m.awayScore) { home.won++; home.points += 3; away.lost++; }
+        else if (m.awayScore > m.homeScore) { away.won++; away.points += 3; home.lost++; }
+        else { home.drawn++; away.drawn++; home.points++; away.points++; }
+    });
     
-    function addMatch(groupId) {
-        const homeTeam = document.getElementById(`homeTeam_${groupId}`).value;
-        const awayTeam = document.getElementById(`awayTeam_${groupId}`).value;
-        if (!homeTeam || !awayTeam) return alert('Pilih kedua tim!');
-        if (homeTeam === awayTeam) return alert('Tim tidak boleh sama!');
+    // Hitung selisih gol dan skor fair play
+    teams.forEach(t => { 
+        t.goalDifference = t.goalsFor - t.goalsAgainst;
+        // Skor Fair Play: Kuning = 1 poin, Merah = 3 poin (skor lebih kecil lebih baik)
+        t.fairPlayScore = (t.yellowCards * 1) + (t.redCards * 3);
+    });
+}
 
-        const match = {
-            homeTeam, awayTeam,
-            homeScore: parseInt(document.getElementById(`homeScore_${groupId}`).value) || 0,
-            awayScore: parseInt(document.getElementById(`awayScore_${groupId}`).value) || 0,
-            homeYellow: parseInt(document.getElementById(`homeYellow_${groupId}`).value) || 0,
-            homeRed: parseInt(document.getElementById(`homeRed_${groupId}`).value) || 0,
-            awayYellow: parseInt(document.getElementById(`awayYellow_${groupId}`).value) || 0,
-            awayRed: parseInt(document.getElementById(`awayRed_${groupId}`).value) || 0
-        };
+function getHeadToHeadStats(matches, teamNames) {
+    const h2hMatches = matches.filter(m => teamNames.includes(m.homeTeam) && teamNames.includes(m.awayTeam));
+    const h2hStats = {};
+    teamNames.forEach(name => { h2hStats[name] = { points: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }; });
+    h2hMatches.forEach(m => {
+        const home = h2hStats[m.homeTeam], away = h2hStats[m.awayTeam];
+        home.goalsFor += m.homeScore; home.goalsAgainst += m.awayScore;
+        away.goalsFor += m.awayScore; away.goalsAgainst += m.homeScore;
+        if (m.homeScore > m.awayScore) home.points += 3;
+        else if (m.awayScore > m.homeScore) away.points += 3;
+        else { home.points++; away.points++; }
+    });
+    Object.keys(h2hStats).forEach(name => { h2hStats[name].goalDifference = h2hStats[name].goalsFor - h2hStats[name].goalsAgainst; });
+    return h2hStats;
+}
 
-        leagueData[groupId].matches.push(match);
-        updateAll(groupId);
-        saveData();
-    }
-    
-    function updateTeamStats(groupId) {
-        const { teams, matches } = leagueData[groupId];
-        teams.forEach(team => { /* Reset stats */ });
-        matches.forEach(match => { /* Calculate stats */ });
-        teams.forEach(team => { /* Calculate GD and Fair Play */ });
-    }
-
-    function updateStandings(groupId) {
-        const { teams } = leagueData[groupId];
-        const sortedTeams = [...teams].sort((a, b) => { /* Logika sorting Anda */ });
-        const tableBody = document.getElementById(`standingsTable_${groupId}`);
-        tableBody.innerHTML = '';
-        sortedTeams.forEach((team, index) => {
-            // Kode untuk membuat row (<tr>) klasemen
-        });
-    }
-
-    function updateTeamSelects(groupId) {
-        const { teams } = leagueData[groupId];
-        const homeSelect = document.getElementById(`homeTeam_${groupId}`);
-        const awaySelect = document.getElementById(`awayTeam_${groupId}`);
-        homeSelect.innerHTML = '<option value="">Tim Tuan Rumah</option>';
-        awaySelect.innerHTML = '<option value="">Tim Tamu</option>';
-        teams.forEach(team => {
-            homeSelect.innerHTML += `<option value="${team.name}">${team.name}</option>`;
-            awaySelect.innerHTML += `<option value="${team.name}">${team.name}</option>`;
-        });
-    }
-
-    function updateAll(groupId) {
-        updateTeamStats(groupId);
-        updateStandings(groupId);
-        updateTeamSelects(groupId);
-        // Anda juga bisa menambahkan updateMatchHistory(groupId) di sini
-    }
-
-    async function loadData() {
-        try {
-            const response = await fetch(googleScriptURL);
-            const data = await response.json();
-            leagueData.group1 = data.group1 || { teams: [], matches: [] };
-            leagueData.group2 = data.group2 || { teams: [], matches: [] };
-            // Inisialisasi properti statistik untuk setiap tim
-            Object.values(leagueData).forEach(group => {
-                group.teams = group.teams.map(t => ({...t, played: 0, won: 0, /* dll */}));
-            });
-            updateAll('group1');
-            updateAll('group2');
-        } catch (error) {
-            console.error("Gagal memuat data:", error);
+function updateStandings(groupId) {
+    const { teams, matches } = leagueData[groupId];
+    const sortedTeams = [...teams].sort((a, b) => {
+        if (a.points !== b.points) return b.points - a.points;
+        const tiedTeams = teams.filter(t => t.points === a.points);
+        if (tiedTeams.length >= 2) {
+            const tiedTeamNames = tiedTeams.map(t => t.name);
+            const h2hStats = getHeadToHeadStats(matches, tiedTeamNames);
+            const aH2H = h2hStats[a.name], bH2H = h2hStats[b.name];
+            if (aH2H.points !== bH2H.points) return bH2H.points - aH2H.points;
+            if (aH2H.goalDifference !== bH2H.goalDifference) return bH2H.goalDifference - aH2H.goalDifference;
+            if (aH2H.goalsFor !== bH2H.goalsFor) return bH2H.goalsFor - aH2H.goalsFor;
         }
-    }
+        if (a.goalDifference !== b.goalDifference) return b.goalDifference - a.goalDifference;
+        if (a.goalsFor !== b.goalsFor) return b.goalsFor - a.goalsFor;
+        // Tie-breaker terakhir: Fair Play (skor lebih kecil lebih baik)
+        return a.fairPlayScore - b.fairPlayScore;
+    });
     
-    async function saveData() {
-        try {
-            // Hanya kirim nama tim, bukan semua statistik
-            const dataToSave = {
-                group1: {
-                    teams: leagueData.group1.teams.map(t => ({name: t.name})),
-                    matches: leagueData.group1.matches
-                },
-                group2: {
-                    teams: leagueData.group2.teams.map(t => ({name: t.name})),
-                    matches: leagueData.group2.matches
-                }
-            };
-            await fetch(googleScriptURL, {
-                method: 'POST',
-                body: JSON.stringify(dataToSave),
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            });
-        } catch (error) {
-            console.error("Gagal menyimpan data:", error);
-        }
+    // Sisa fungsi untuk menampilkan tabel (tidak ada perubahan)
+    const tableBody = document.getElementById(groupId);
+    tableBody.innerHTML = '';
+    sortedTeams.forEach((team, index) => {
+        const row = document.createElement('tr');
+        row.className = 'hover:bg-gray-50';
+        row.innerHTML = `
+            <td class="px-4 py-3 font-medium text-gray-900">${index + 1}</td>
+            <td class="px-4 py-3 text-gray-700">${team.name}</td>
+            <td class="px-4 py-3 text-center text-gray-600">${team.played}</td>
+            <td class="px-4 py-3 text-center text-gray-600">${team.won}</td>
+            <td class="px-4 py-3 text-center text-gray-600">${team.drawn}</td>
+            <td class="px-4 py-3 text-center text-gray-600">${team.lost}</td>
+            <td class="px-4 py-3 text-center text-gray-600">${team.goalsFor}</td>
+            <td class="px-4 py-3 text-center text-gray-600">${team.goalsAgainst}</td>
+            <td class="px-4 py-3 text-center text-gray-600">${team.goalDifference > 0 ? '+' : ''}${team.goalDifference}</td>
+            <td class="px-4 py-3 text-center font-bold text-gray-800">${team.points}</td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
+
+function updateTeamSelects(groupId) {
+    const { teams } = leagueData[groupId];
+    const home = document.getElementById(`homeTeam_${groupId}`);
+    const away = document.getElementById(`awayTeam_${groupId}`);
+    home.innerHTML = '<option value="">Pilih Tim Kandang</option>';
+    away.innerHTML = '<option value="">Pilih Tim Tandang</option>';
+    [...teams].sort((a,b) => a.name.localeCompare(b.name)).forEach(t => {
+        home.innerHTML += `<option value="${t.name}">${t.name}</option>`;
+        away.innerHTML += `<option value="${t.name}">${t.name}</option>`;
+    });
+}
+
+// ===================================================================
+// FUNGSI LOGIN & DATABASE
+// ===================================================================
+
+function adminLogin() {
+    const pass = document.getElementById('adminPassword').value;
+    if (pass === adminPassword) {
+        localStorage.setItem('isAdminLoggedIn_liga2', 'true');
+        checkLoginStatus();
+    } else {
+        alert('Password salah!');
     }
+}
 
-    // Panggil loadData saat halaman dibuka
-    document.addEventListener('DOMContentLoaded', loadData);
+function adminLogout() {
+    localStorage.removeItem('isAdminLoggedIn_liga2');
+    checkLoginStatus();
+}
 
-</script>
+function checkLoginStatus() {
+    if (localStorage.getItem('isAdminLoggedIn_liga2') === 'true') {
+        document.getElementById('adminArea').classList.remove('hidden');
+        document.getElementById('loginSection').classList.add('hidden');
+    } else {
+        document.getElementById('adminArea').classList.add('hidden');
+        document.getElementById('loginSection').classList.remove('hidden');
+    }
+}
+
+async function saveData() {
+    const dataToSave = {
+        grupA: { teams: leagueData.grupA.teams.map(t => ({ name: t.name })), matches: leagueData.grupA.matches },
+        grupB: { teams: leagueData.grupB.teams.map(t => ({ name: t.name })), matches: leagueData.grupB.matches }
+    };
+    try {
+        await fetch(googleScriptURL, {
+            method: 'POST',
+            body: JSON.stringify(dataToSave),
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        });
+        console.log("Data berhasil disimpan.");
+    } catch (error) {
+        console.error("Gagal menyimpan data:", error);
+    }
+}
+
+async function loadData() {
+    try {
+        const response = await fetch(googleScriptURL);
+        const data = await response.json();
+        if (data.error) throw new Error(data.error);
+
+        leagueData.grupA.teams = (data.grupA.teams || []).map(t => ({...t}));
+        leagueData.grupA.matches = data.grupA.matches || [];
+        leagueData.grupB.teams = (data.grupB.teams || []).map(t => ({...t}));
+        leagueData.grupB.matches = data.grupB.matches || [];
+
+        groupIds.forEach(id => updateAll(id));
+    } catch (error) {
+        console.error("Gagal memuat data:", error);
+        alert("Gagal memuat data dari database. Cek console untuk detail.");
+    }
+}
+
+// ===================================================================
+// INISIALISASI
+// ===================================================================
+document.addEventListener('DOMContentLoaded', () => {
+    // Buat form login secara dinamis
+    document.getElementById('loginSection').innerHTML = `
+        <div class="flex justify-center items-center gap-2">
+            <input type="password" id="adminPassword" placeholder="Password Admin" class="border-gray-300 rounded-lg p-2 w-full max-w-xs">
+            <button onclick="adminLogin()" class="bg-gray-700 text-white p-2 rounded-lg">Login</button>
+        </div>`;
+    
+    // Salin header tabel dari HTML ke JS (agar tidak duplikat kode)
+    const headerHTML = `<tr>
+        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pos</th>
+        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/5">Tim</th>
+        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Main</th>
+        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">M</th>
+        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">S</th>
+        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">K</th>
+        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">GM</th>
+        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">GK</th>
+        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">SG</th>
+        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider font-bold">Poin</th>
+    </tr>`;
+    document.querySelectorAll('thead').forEach(thead => thead.innerHTML = headerHTML);
+
+    checkLoginStatus();
+    loadData();
+});
+    </script>
 </body>
-</html>
 </html>
