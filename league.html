@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Klasemen BRI SUPER LEAGUE 2025/26</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -18,8 +19,8 @@
 <body class="bg-gray-50 min-h-screen">
     <div class="gradient-bg text-white py-8">
         <div class="container mx-auto px-4">
-            <h1 class="text-4xl font-bold text-center mb-2">⚽ Klasemen BRI SUPER LEAGUE 2025/26</h1>
-             <p class="text-center text-blue-100">versi 9.9</p>
+            <h1 class="text-4xl font-bold text-center mb-2">⚽ KLASEMEN </P> BRI SUPER LEAGUE 2025/26</h1>
+             <p class="text-center text-blue-100">versi 10.0.0</p>
         </div>
     </div>
     
@@ -27,23 +28,44 @@
 <!-- Ganti blok login lama Anda dengan yang ini -->
 <div id="loginSection" class="container mx-auto px-4 py-6 text-center">
    <div class="flex justify-end items-center gap-2">
-        <input type="text" id="adminPassword" placeholder="" class="border border-gray-300 rounded-lg px-4 py-2 w-full max-w-xs focus:ring-2 focus:ring-blue-500">
-        <button onclick="adminLogin()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+       
+         <div class="flex items-center space-x-2">
+    <input type="text" id="adminPassword" placeholder="" class="border border-gray-300 rounded px-2 py-1 text-sm w-24">
+        <button onclick="adminLogin()"  class="bg-blue-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm">
             Search
         </button>
-        <a href="liga2.html" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+        </div>
+        <a href="liga2.html" class="bg-green-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm">
            Liga 2 Klasemen
         </a>
-        </div>
+    </div>
 </div>
 
-   <div class="max-w-7xl mx-auto px-4">
+<div class="max-w-7xl mx-auto px-4">
 
   <div class="grid grid-cols-[280px_1fr] gap-4 items-start">
 
     <!-- KOLOM KIRI: HASIL PERTANDINGAN -->
+     
     <div class="bg-white rounded-xl shadow p-4">
-      <h2 class="text-sm font-semibold mb-4 text-gray-700">
+         <div class="flex items-center justify-between bg-green-50 border border-green-100 rounded-lg px-4 py-3 mb-5  ">
+            <div class="flex items-center space-x-2">
+                <label class="text-sm font-medium">GAME WEEK</label>
+                        <input 
+                type="number" 
+                id="matchFilter" 
+                min="1" 
+                placeholder="Contoh: 34"
+                onchange="applyMatchFilter()"
+                class="border border-gray-300 rounded px-2 py-1 text-sm w-24 text-center">
+            <button onclick="resetMatchFilter()" 
+                class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm">
+                Reset
+            </button>
+           </div>
+        </div>
+        
+      <h2 class="text-sm font-semibold mb-4 text-gray-700 text-center" >
         Hasil Pertandingan Saat Ini
       </h2>
 
@@ -52,16 +74,65 @@
           Belum ada pertandingan Saat ini
         </p>
       </div>
+     <!-- PANEL INFORMASI STATISTIK -->
+<div id="matchStatsPanel" class="mt-4 border-t pt-3 text-xs text-gray-700 space-y-1">
+    <div class="flex justify-between">
+        <span>🏟️ Total Match</span>
+        <span id="statMatches" class="font-semibold">0</span>
+    </div>
+    <div class="flex justify-between">
+        <span>⚽ Total Gol</span>
+        <span id="statGoals" class="font-semibold">0</span>
+    </div>
+    <div class="flex justify-between">
+        <span>✅ Total Win</span>
+        <span id="statWins" class="font-semibold">0</span>
+    </div>
+    <div class="flex justify-between">
+        <span>➖ Total Draw</span>
+        <span id="statDraws" class="font-semibold">0</span>
+    </div>
+</div>
+
+<!-- STATISTIK HOME & AWAY -->
+<div class="mt-4 space-y-3 text-sm">
+
+    <!-- BEST HOME -->
+    <div class="flex items-center justify-between bg-green-50 border border-green-100 rounded-lg px-4 py-3">
+        <div>
+            <div class="text-xs text-gray-500">MOST HOME WINS</div>
+            <div id="bestHomeTeam" class="font-semibold text-gray-800">
+                -
+            </div>
+        </div>
+        <div id="bestHomeCount" class="text-xl font-bold text-green-600">
+            0
+        </div>
+    </div>
+
+    <!-- BEST AWAY -->
+    <div class="flex items-center justify-between bg-blue-50 border border-blue-100 rounded-lg px-4 py-3">
+        <div>
+            <div class="text-xs text-gray-500">MOST AWAY WINS</div>
+            <div id="bestAwayTeam" class="font-semibold text-gray-800">
+                -
+            </div>
+        </div>
+        <div id="bestAwayCount" class="text-xl font-bold text-blue-600">
+            0
+        </div>
+    </div>
+
+</div>
+
     </div>
    
     
          <!-- KOLOM KANAN: KLASEMEN -->
     <div class="bg-white rounded-xl shadow p-4">
       <h2 class="text-sm font-semibold mb-4 text-center">
-        Klasemen BRI Super League 2025/26
+         KLASEMEN </P> BRI SUPER LEAGUE 2025/26
       </h2>
-               
-            
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead class="bg-gray-100">
@@ -154,7 +225,10 @@
 
     let teams = [];
     let matches = [];
-
+    let filteredMatches = null;
+    let lastStandingsOrder = null;
+    let standingsSnapshotLocked = false;
+   
     document.addEventListener('DOMContentLoaded', () => {
     fetch('/matches.json')
         .then(res => res.json())
@@ -169,6 +243,176 @@
 
 
     // --- FUNGSI-FUNGSI DARI KODE ASLI ANDA (dengan sedikit penyesuaian) ---
+
+    function updateHomeAwayStats() {
+    const sourceMatches = filteredMatches || matches;
+
+    const homeWins = {};
+    const awayWins = {};
+
+    sourceMatches.forEach(match => {
+        // Home win
+        if (match.homeScore > match.awayScore) {
+            homeWins[match.homeTeam] = 
+                (homeWins[match.homeTeam] || 0) + 1;
+        }
+
+        // Away win
+        if (match.awayScore > match.homeScore) {
+            awayWins[match.awayTeam] = 
+                (awayWins[match.awayTeam] || 0) + 1;
+        }
+    });
+
+    // Cari tertinggi home
+    let bestHomeTeam = "-";
+    let bestHomeCount = 0;
+
+    for (let team in homeWins) {
+        if (homeWins[team] > bestHomeCount) {
+            bestHomeCount = homeWins[team];
+            bestHomeTeam = team;
+        }
+    }
+
+    // Cari tertinggi away
+    let bestAwayTeam = "-";
+    let bestAwayCount = 0;
+
+    for (let team in awayWins) {
+        if (awayWins[team] > bestAwayCount) {
+            bestAwayCount = awayWins[team];
+            bestAwayTeam = team;
+        }
+    }
+
+    document.getElementById('bestHomeTeam').textContent = bestHomeTeam;
+    document.getElementById('bestHomeCount').textContent = bestHomeCount;
+
+    document.getElementById('bestAwayTeam').textContent = bestAwayTeam;
+    document.getElementById('bestAwayCount').textContent = bestAwayCount;
+}
+
+    function updateMatchStats() {
+    const sourceMatches = filteredMatches || matches;
+
+    let totalMatches = sourceMatches.length;
+    let totalGoals = 0;
+    let totalWins = 0;
+    let totalDraws = 0;
+
+    sourceMatches.forEach(match => {
+        totalGoals += match.homeScore + match.awayScore;
+
+        if (match.homeScore === match.awayScore) {
+            totalDraws++;
+        } else {
+            totalWins++;
+        }
+    });
+
+    document.getElementById('statMatches').textContent = totalMatches;
+    document.getElementById('statGoals').textContent = totalGoals;
+    document.getElementById('statWins').textContent = totalWins;
+    document.getElementById('statDraws').textContent = totalDraws;
+}
+
+
+
+    function applyMatchFilter() {
+    const input = document.getElementById('matchFilter').value;
+
+    if (!input || input <= 0) {
+        resetMatchFilter();
+        return;
+    }
+
+    const maxPlayed = parseInt(input);
+
+    const tempTeams = {};
+    teams.forEach(team => {
+        tempTeams[team.name] = 0;
+    });
+
+    const limitedMatches = [];
+
+    for (let match of matches) {
+        const homeCount = tempTeams[match.homeTeam];
+        const awayCount = tempTeams[match.awayTeam];
+
+        if (homeCount < maxPlayed && awayCount < maxPlayed) {
+            limitedMatches.push(match);
+            tempTeams[match.homeTeam]++;
+            tempTeams[match.awayTeam]++;
+        }
+    }
+
+    filteredMatches = limitedMatches;
+
+    updateTeamStatsFiltered();
+    updateStandings();
+    updateMatchStats();
+    updateHomeAwayStats();
+}
+
+function updateTeamStatsFiltered() {
+    teams.forEach(team => {
+        team.played = 0;
+        team.won = 0;
+        team.drawn = 0;
+        team.lost = 0;
+        team.goalsFor = 0;
+        team.goalsAgainst = 0;
+        team.points = 0;
+        team.yellowCards = 0;
+        team.redCards = 0;
+    });
+
+    const matchSource = filteredMatches || matches;
+
+    matchSource.forEach(match => {
+        const homeTeam = teams.find(t => t.name === match.homeTeam);
+        const awayTeam = teams.find(t => t.name === match.awayTeam);
+
+        if (!homeTeam || !awayTeam) return;
+
+        homeTeam.played++;
+        awayTeam.played++;
+
+        homeTeam.goalsFor += match.homeScore;
+        homeTeam.goalsAgainst += match.awayScore;
+        awayTeam.goalsFor += match.awayScore;
+        awayTeam.goalsAgainst += match.homeScore;
+
+        if (match.homeScore > match.awayScore) {
+            homeTeam.won++;
+            homeTeam.points += 3;
+            awayTeam.lost++;
+        } else if (match.homeScore < match.awayScore) {
+            awayTeam.won++;
+            awayTeam.points += 3;
+            homeTeam.lost++;
+        } else {
+            homeTeam.drawn++;
+            awayTeam.drawn++;
+            homeTeam.points += 1;
+            awayTeam.points += 1;
+        }
+    });
+
+    teams.forEach(team => {
+        team.goalDifference = team.goalsFor - team.goalsAgainst;
+        team.fairPlayScore = team.yellowCards + (team.redCards * 3);
+    });
+}
+
+function resetMatchFilter() {
+    document.getElementById('matchFilter').value = '';
+    filteredMatches = null;
+    updateTeamStats();
+    updateStandings();
+    updateMatchStats();
+}
 
  function updateTodayResults() {
     const container = document.getElementById('todayResults');
@@ -335,7 +579,10 @@ function loadFormState() {
         updateStandings();
         updateMatchHistory();
         updateTodayResults();
+        updateMatchStats(); 
         saveData();
+        updateHomeAwayStats();
+        
     }
 
     function updateTeamStats() {
@@ -402,8 +649,10 @@ function loadFormState() {
 
     // GANTI FUNGSI LAMA DENGAN VERSI BARU INI
 function updateStandings() {
+   
     const sortedTeams = [...teams].sort((a, b) => {
         // Kriteria 1: Poin Keseluruhan
+
         if (a.points !== b.points) return b.points - a.points;
 
         // Kriteria 2: Head-to-Head (dengan validasi baru)
@@ -456,6 +705,20 @@ function updateStandings() {
         pointGroups[team.points].push(team);
     });
     sortedTeams.forEach((team, index) => {
+       let arrowIcon = '';
+
+if (lastStandingsOrder) {
+    const oldIndex = lastStandingsOrder.indexOf(team.name);
+
+    if (oldIndex !== -1) {
+        if (oldIndex > index) {
+            arrowIcon = '<span class="ml-1 text-green-600 font-bold">▲</span>';
+        } else if (oldIndex < index) {
+            arrowIcon = '<span class="ml-1 text-red-600 font-bold">▼</span>';
+        }
+    }
+}
+
         const row = document.createElement('tr');
         const isTied = pointGroups[team.points] && pointGroups[team.points].length > 1;
         row.className = 'border-b' + (isTied ? ' bg-yellow-50' : (index % 2 === 0 ? ' bg-gray-50' : ' bg-white'));
@@ -463,8 +726,15 @@ function updateStandings() {
         if (index < 3) positionClass = 'text-green-600 font-bold';
         else if (index >= sortedTeams.length - 3) positionClass = 'text-red-600 font-bold';
         row.innerHTML = `
-            <td class="px-4 py-2 ${positionClass}">${index + 1}</td>
-            <td class="px-4 py-2 font-medium">${team.name}</td>
+            <td class="px-4 py-2 ${positionClass}">
+            <div class="flex items-center gap-3">
+             <span>${index + 1}</span>
+                 ${arrowIcon}
+                    </div>
+                        </td>
+            <td class="px-4 py-2 font-medium">
+                 ${team.name}
+                </td>
             <td class="px-4 py-2 text-center">${team.played}</td>
             <td class="px-4 py-2 text-center">${team.won}</td>
             <td class="px-4 py-2 text-center">${team.drawn}</td>
@@ -474,13 +744,14 @@ function updateStandings() {
             <td class="px-4 py-2 text-center ${team.goalDifference >= 0 ? 'text-green-600' : 'text-red-600'}">${team.goalDifference >= 0 ? '+' : ''}${team.goalDifference}</td>
             <td class="px-4 py-2 text-center font-bold text-blue-600">${team.points}</td>
             <td class="px-4 py-2 text-center">
-                ${ isTied && pointGroups[team.points][0].name === team.name ? `<button onclick="showH2HDetails(${team.points})" class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 text-xs rounded">Lihat H2H</button>` : '' }</td>
+                ${ isTied && pointGroups[team.points][0].name === team.name ? `<button onclick="showH2HDetails(${team.points})" class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 text-xs rounded">H2H</button>` : '' }</td>
             <td class="px-4 py-2 text-center fair-play-col">${team.fairPlayScore}
             </td>`;
             
         tableBody.appendChild(row);
     });
     applyColumnVisibility();
+    lastStandingsOrder = sortedTeams.map(t => t.name);
 }
     
     function editMatch(matchIndex) {
@@ -776,6 +1047,8 @@ async function fetchAndUpdateData(isInitialLoad = false) {
             updateTeamSelects(); // Dropdowns dibuat ulang di sini
             updateStandings();
             updateMatchHistory();
+            updateMatchStats();
+            updateHomeAwayStats();
             //updateTodayResults();
 
             // ✅ SOLUSI: Panggil loadFormState() di sini untuk memuat ulang "draft"
@@ -834,12 +1107,15 @@ function adminLogin() {
         alert('Siapa Juaranya ?');
     }
 }
-    
+
+
 
     // ===================================================================
     // ALUR INISIALISASI APLIKASI YANG BARU
     // ===================================================================
   // GANTI BLOK document.addEventListener('DOMContentLoaded', ...) LAMA ANDA DENGAN INI
+
+  
 
 document.addEventListener('DOMContentLoaded', async () => {
     // Pengecekan status login (tidak berubah)
