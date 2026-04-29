@@ -1,0 +1,2120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klasemen BRI SUPER LEAGUE 2025/26</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --navy: #09111f;
+            --navy-soft: #13203a;
+            --panel: #f5f7fb;
+            --line: #d5ddea;
+            --red: #e11d48;
+            --gold: #f59e0b;
+            --lime: #84cc16;
+            --ink: #0f172a;
+            --muted: #64748b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at 15% 0%, rgba(225, 29, 72, 0.18), transparent 25%),
+                radial-gradient(circle at 100% 10%, rgba(245, 158, 11, 0.16), transparent 22%),
+                linear-gradient(180deg, #0a1220 0%, #0f1a2f 22%, #eef2f8 22%, #f8fafc 100%);
+        }
+
+        .display-font {
+            font-family: 'Barlow Condensed', sans-serif;
+            letter-spacing: 0.04em;
+        }
+
+        .card-shadow { box-shadow: 0 22px 60px rgba(9, 17, 31, 0.12); }
+
+        .hero-sport {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.08);
+            background:
+                linear-gradient(125deg, rgba(225,29,72,0.92) 0%, rgba(225,29,72,0.92) 16%, rgba(9,17,31,0.98) 16%, rgba(9,17,31,0.98) 100%);
+            box-shadow: 0 34px 90px rgba(2, 6, 23, 0.35);
+        }
+
+        .hero-sport::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                repeating-linear-gradient(90deg, transparent 0 68px, rgba(255,255,255,0.045) 68px 72px),
+                linear-gradient(90deg, transparent 0 62%, rgba(245,158,11,0.18) 62% 100%);
+            mix-blend-mode: screen;
+            pointer-events: none;
+        }
+
+        .control-bar,
+        .panel-shell {
+            background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(244,247,251,0.94) 100%);
+            border: 1px solid var(--line);
+        }
+
+        .section-kicker {
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+        }
+
+        .info-chip {
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(10px);
+        }
+
+        .soft-input {
+            background: #fff;
+            border: 1px solid #cfd8e6;
+            color: var(--ink);
+        }
+
+        .soft-input:focus {
+            outline: none;
+            border-color: rgba(225, 29, 72, 0.55);
+            box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.12);
+        }
+
+        .hover-scale { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .hover-scale:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12); }
+
+        .filter-card {
+            background: linear-gradient(135deg, #fff5f7 0%, #fff 100%);
+            border: 1px solid #fecdd3;
+        }
+
+        .today-results-list {
+            display: grid;
+            gap: 0.9rem;
+        }
+
+        .today-match-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 1.25rem;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: linear-gradient(135deg, #0b1425 0%, #15233f 100%);
+            color: #f8fafc;
+            padding: 1rem;
+            box-shadow: 0 20px 45px rgba(2, 6, 23, 0.26);
+        }
+
+        .today-match-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(225,29,72,0.16) 0 16%, transparent 16% 100%);
+            pointer-events: none;
+        }
+
+        .today-match-card .score-pill {
+            background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.06));
+            border: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .table-shell {
+            border: 1px solid #d6deea;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .table-shell thead th {
+            background: #0d1728;
+            color: #e2e8f0;
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .standing-row {
+            transition: transform 0.16s ease, background-color 0.16s ease;
+        }
+
+        .standing-row:hover {
+            transform: translateX(4px);
+            background-color: #f8fafc;
+        }
+
+        .standing-row.top-tier { background: linear-gradient(90deg, rgba(132,204,22,0.12), transparent 42%); }
+        .standing-row.hot-zone { background: linear-gradient(90deg, rgba(245,158,11,0.12), transparent 42%); }
+        .standing-row.risk-zone { background: linear-gradient(90deg, rgba(225,29,72,0.11), transparent 42%); }
+
+        #matchStatsPanel {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem;
+            border-top: none !important;
+            padding-top: 0 !important;
+            margin-top: 1rem;
+        }
+
+        #matchStatsPanel > div {
+            border-radius: 1rem;
+            background: linear-gradient(135deg, #0b1425 0%, #192746 100%);
+            color: #e2e8f0;
+            padding: 1rem;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        #matchStatsPanel > div span:first-child {
+            display: block;
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: #94a3b8;
+        }
+
+        #matchStatsPanel > div span:last-child {
+            display: block;
+            margin-top: 0.5rem;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 2rem;
+            line-height: 1;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .feature-card-home {
+            background: linear-gradient(135deg, #f7fee7 0%, #ecfccb 100%);
+            border: 1px solid #d9f99d;
+        }
+
+        .feature-card-away {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border: 1px solid #bfdbfe;
+        }
+
+        #matchStatsPanel,
+        .feature-card-home,
+        .feature-card-away {
+            display: none !important;
+        }
+
+        .admin-buttons button:first-child,
+        .action-edit {
+            background: #0f172a;
+            border-radius: 0.8rem;
+            padding: 0.5rem 0.9rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .admin-buttons button:last-child,
+        .action-delete {
+            background: var(--red);
+            border-radius: 0.8rem;
+            padding: 0.5rem 0.9rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .history-card {
+            background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.96) 100%);
+            border: 1px solid #dbe3ef;
+        }
+
+        button[onclick="openAnimationModal()"] {
+            font-size: 0;
+        }
+
+        button[onclick="openAnimationModal()"]::before {
+            content: 'Animasi Klasemen';
+            font-size: 0.875rem;
+            line-height: 1;
+        }
+
+        .hero-sport > h1,
+        .hero-sport > p {
+            display: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 py-6 md:px-6 md:py-8 hidden">
+        <div class="hero-sport rounded-[2rem] p-6 md:p-8 text-white">
+            <div class="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+                <div class="max-w-3xl">
+                    <p class="section-kicker text-rose-100 mb-3">Matchday Center</p>
+                    <h2 class="display-font text-4xl md:text-6xl leading-[0.95]">BRI SUPER LEAGUE</h2>
+                    <p class="text-base md:text-lg text-slate-300 mt-3">Klasemen musim 2025/26 dengan nuansa siaran pertandingan yang lebih tegas, sporty, dan siap tampil di layar besar.</p>
+                </div>
+                <div class="grid grid-cols-3 gap-3 sm:w-auto">
+                    <div class="info-chip rounded-2xl px-4 py-3">
+                        <div class="text-[11px] uppercase tracking-[0.18em] text-slate-300">Season</div>
+                        <div class="display-font text-3xl leading-none mt-1">25/26</div>
+                    </div>
+                    <div class="info-chip rounded-2xl px-4 py-3">
+                        <div class="text-[11px] uppercase tracking-[0.18em] text-slate-300">Edition</div>
+                        <div class="display-font text-3xl leading-none mt-1">10.0</div>
+                    </div>
+                    <div class="info-chip rounded-2xl px-4 py-3">
+                        <div class="text-[11px] uppercase tracking-[0.18em] text-slate-300">Status</div>
+                        <div class="display-font text-3xl leading-none mt-1">LIVE</div>
+                    </div>
+                </div>
+            </div>
+            <h1 class="text-4xl font-bold text-center mb-2">⚽ KLASEMEN </P> BRI SUPER LEAGUE 2025/26</h1>
+             <p class="text-center text-blue-100">versi 10.0.0</p>
+        </div>
+    </div>
+    
+      <!-- login -->
+<!-- Ganti blok login lama Anda dengan yang ini -->
+<div id="loginSection" class="max-w-7xl mx-auto control-bar rounded-[1.5rem] card-shadow p-4 md:p-5 mt-5 hidden">
+   <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+            <p class="section-kicker text-slate-500 mb-2">Navigation</p>
+            <p class="text-slate-900 font-semibold">Akses admin, halaman liga lain, dan mode animasi klasemen.</p>
+        </div>
+        
+         <div class="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-2">
+    <input type="text" id="adminPassword" placeholder="Admin" class="soft-input rounded-xl px-4 py-2 text-sm w-full sm:w-28">
+        <button onclick="adminLogin()"  class="rounded-xl bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 text-sm font-semibold">
+            Search
+        </button>
+        </div>
+        <a href="liga2.html" class="rounded-xl bg-slate-900 hover:bg-slate-800 flex items-center justify-center text-white px-4 py-2 text-sm font-semibold">
+           Liga 2 Klasemen
+        </a>
+        <button onclick="openAnimationModal()" class="rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 px-4 py-2 text-sm flex items-center justify-center font-extrabold border-none">
+           📈 Animasi Klasemen
+        </button>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto mt-5">
+
+    <!-- KOLOM KIRI: HASIL PERTANDINGAN
+    <div class="panel-shell rounded-[1.75rem] card-shadow p-5">
+
+      <div class="mb-4">
+        <p class="section-kicker text-slate-500 mb-2">Live Scoreboard</p>
+        <h2 class="display-font text-4xl leading-none text-slate-900">Hasil Pertandingan Saat Ini</h2>
+      </div>
+
+      <div id="todayResults" class="today-results-list">
+        <p class="text-sm text-slate-500 text-center bg-slate-100 rounded-2xl px-4 py-8">
+          Belum ada pertandingan saat ini
+        </p>
+      </div>
+     <!-- PANEL INFORMASI STATISTIK -->
+<div id="matchStatsPanel" class="mt-4 border-t pt-3 text-xs text-gray-700 space-y-1">
+    <div class="flex justify-between">
+        <span>🏟️ Total Match</span>
+        <span id="statMatches" class="font-semibold">0</span>
+    </div>
+    -->
+    <div class="flex justify-between">
+        <span>⚽ Total Gol</span>
+        <span id="statGoals" class="font-semibold">0</span>
+    </div>
+    <div class="flex justify-between">
+        <span>✅ Total Win</span>
+        <span id="statWins" class="font-semibold">0</span>
+    </div>
+    <div class="flex justify-between">
+        <span>➖ Total Draw</span>
+        <span id="statDraws" class="font-semibold">0</span>
+    </div>
+</div>
+
+<!-- STATISTIK HOME & AWAY -->
+<div class="mt-4 space-y-3 text-sm">
+
+    <!-- BEST HOME -->
+    <div class="feature-card-home flex items-center justify-between rounded-2xl px-4 py-4">
+        <div>
+            <div class="text-xs uppercase tracking-[0.18em] text-emerald-700">MOST HOME WINS</div>
+            <div id="bestHomeTeam" class="font-bold text-slate-900 mt-1">
+                -
+            </div>
+        </div>
+        <div id="bestHomeCount" class="text-3xl font-extrabold text-emerald-600">
+            0
+        </div>
+    </div>
+
+    <!-- BEST AWAY -->
+    <div class="feature-card-away flex items-center justify-between rounded-2xl px-4 py-4">
+        <div>
+            <div class="text-xs uppercase tracking-[0.18em] text-sky-700">MOST AWAY WINS</div>
+            <div id="bestAwayTeam" class="font-bold text-slate-900 mt-1">
+                -
+            </div>
+        </div>
+        <div id="bestAwayCount" class="text-3xl font-extrabold text-sky-600">
+            0
+        </div>
+    </div>
+
+</div>
+
+    </div>
+   
+    
+         <!-- KOLOM KANAN: KLASEMEN -->
+    <div class="panel-shell rounded-[1.75rem] card-shadow p-3 md:p-4">
+      <div class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between mb-3">
+        <div>
+          <p class="section-kicker text-slate-500 mb-1">League Table</p>
+          <h2 class="display-font text-3xl md:text-4xl text-slate-900 leading-none">Klasemen BRI Super League 2025/2026</h2>
+          
+        </div>
+        
+      </div>
+            <div class="overflow-x-auto table-shell bg-white">
+                <table class="w-full text-xs">
+                    <thead>
+                        <tr>
+                            <th class="px-2 py-2 text-left font-semibold">Pos</th>
+                            <th class="px-2 py-2 text-left font-semibold">Tim</th>
+                            <th class="px-2 py-2 text-center font-semibold">Main</th>
+                            <th class="px-2 py-2 text-center font-semibold">M</th>
+                            <th class="px-2 py-2 text-center font-semibold">S</th>
+                            <th class="px-2 py-2 text-center font-semibold">K</th>
+                            <th class="px-2 py-2 text-center font-semibold">GM</th>
+                            <th class="px-2 py-2 text-center font-semibold">GK</th>
+                            <th class="px-2 py-2 text-center font-semibold">SG</th>
+                            <th class="px-2 py-2 text-center font-semibold">Poin</th>
+                            <th class="px-2 py-2 text-center font-semibold">H2H</th>
+                            <th class="px-2 py-2 text-center font-semibold fair-play-col">
+                                <button onclick="toggleFairPlayColumn()" class="font-semibold uppercase tracking-wider">
+                                 Fair Play
+                                 </button>
+                           </th>
+                        </tr>
+                    </thead>
+                    <tbody id="standingsTable">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+      </div>  
+    </div>
+    
+ <!-- logout -->
+    <div id="adminArea" style="display:none;" class="max-w-7xl mx-auto px-4 pb-10 md:px-6">
+    <div class="panel-shell rounded-[1.75rem] card-shadow p-4 mb-8 mt-5 flex justify-between items-center">
+        <p class="text-md font-semibold text-gray-700">🔑 Anda login sebagai Admin.</p>
+        <button onclick="adminLogout()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm">
+            Logout
+        </button>
+    </div>
+
+
+
+    <div class="container mx-auto px-4 py-8">
+      
+        <!-- Input Pertandingan -->
+       <div class="panel-shell rounded-[1.75rem] card-shadow p-6 mb-8">
+    <h2 class="text-2xl font-semibold mb-4 text-gray-800">⚽ Tambah Hasil Pertandingan</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+        <select id="homeTeam" onchange="saveFormState()" class="soft-input rounded-xl px-4 py-2">
+            <option value="">Tim Tuan Rumah</option>
+        </select>
+        <select id="awayTeam" onchange="saveFormState()" class="soft-input rounded-xl px-4 py-2">
+            <option value="">Tim Tamu</option>
+        </select>
+        <input type="number" id="homeScore" onkeyup="saveFormState()" placeholder="Gol Tuan Rumah" min="0" class="soft-input rounded-xl px-4 py-2">
+        <input type="number" id="awayScore" onkeyup="saveFormState()" placeholder="Gol Tamu" min="0" class="soft-input rounded-xl px-4 py-2">
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <input type="number" id="homeYellow" onkeyup="saveFormState()" placeholder="Kartu Kuning Tuan Rumah" min="0" class="soft-input rounded-xl px-4 py-2">
+        <input type="number" id="homeRed" onkeyup="saveFormState()" placeholder="Kartu Merah Tuan Rumah" min="0" class="soft-input rounded-xl px-4 py-2">
+        <input type="number" id="awayYellow" onkeyup="saveFormState()" placeholder="Kartu Kuning Tamu" min="0" class="soft-input rounded-xl px-4 py-2">
+        <input type="number" id="awayRed" onkeyup="saveFormState()" placeholder="Kartu Merah Tamu" min="0" class="soft-input rounded-xl px-4 py-2">
+    </div>
+    <button onclick="addMatch()" class="rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2 font-semibold shadow-lg shadow-emerald-500/20 transition-colors">
+        ⚽ Tambah Pertandingan
+    </button>
+    <button onclick="clearMatchForm()" class="rounded-xl bg-slate-600 hover:bg-slate-700 text-white px-6 py-2 font-semibold transition-colors text-sm">
+        Clear Data
+    </button>
+</div>
+
+        
+        
+         <!-- Riwayat Pertandingan --> 
+        <!--div class="bg-white rounded-xl card-shadow p-6"-->
+        <div id="riwayatContainer" class="panel-shell rounded-[1.75rem] card-shadow p-6 mb-8">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">📋 Riwayat Pertandingan</h2>
+            <div id="matchHistory" class="space-y-2">
+            </div>
+        </div>
+    </div>
+</div>
+            
+
+<script>
+    // ===================================================================
+    //  PENTING: TEMPELKAN URL WEB APP GOOGLE SCRIPT ANDA DI SINI
+    // ===================================================================
+    const googleScriptURL = 'https://script.google.com/macros/s/AKfycbxYc4f2JHo9zGD_AtgvcpkkO7l-nVjzch9Rsa2ufJ3yO9cXf_SAE47Jk_qjgG4r2dHf/exec';
+    // ===================================================================
+
+    let teams = [];
+    let matches = [];
+    let filteredMatches = null;
+    let lastStandingsOrder = null;
+    let standingsSnapshotLocked = false;
+
+    /*
+    document.addEventListener('DOMContentLoaded', () => {
+    fetch('/matches.json')
+        .then(res => res.json())
+        .then(data => {
+            matches = data;
+            updateTodayResults(); // 🔥 WAJIB DI SINI
+        })
+        .catch(err => {
+            console.error(err);
+        });
+});
+    */
+
+
+    // --- FUNGSI-FUNGSI DARI KODE ASLI ANDA (dengan sedikit penyesuaian) ---
+
+    function updateHomeAwayStats() {
+    const sourceMatches = filteredMatches || matches;
+
+    const homeWins = {};
+    const awayWins = {};
+
+    sourceMatches.forEach(match => {
+        // Home win
+        if (match.homeScore > match.awayScore) {
+            homeWins[match.homeTeam] = 
+                (homeWins[match.homeTeam] || 0) + 1;
+        }
+
+        // Away win
+        if (match.awayScore > match.homeScore) {
+            awayWins[match.awayTeam] = 
+                (awayWins[match.awayTeam] || 0) + 1;
+        }
+    });
+
+    // Cari tertinggi home
+    let bestHomeTeam = "-";
+    let bestHomeCount = 0;
+
+    for (let team in homeWins) {
+        if (homeWins[team] > bestHomeCount) {
+            bestHomeCount = homeWins[team];
+            bestHomeTeam = team;
+        }
+    }
+
+    // Cari tertinggi away
+    let bestAwayTeam = "-";
+    let bestAwayCount = 0;
+
+    for (let team in awayWins) {
+        if (awayWins[team] > bestAwayCount) {
+            bestAwayCount = awayWins[team];
+            bestAwayTeam = team;
+        }
+    }
+
+    document.getElementById('bestHomeTeam').textContent = bestHomeTeam;
+    document.getElementById('bestHomeCount').textContent = bestHomeCount;
+
+    document.getElementById('bestAwayTeam').textContent = bestAwayTeam;
+    document.getElementById('bestAwayCount').textContent = bestAwayCount;
+}
+
+    function updateMatchStats() {
+    const sourceMatches = filteredMatches || matches;
+
+    let totalMatches = sourceMatches.length;
+    let totalGoals = 0;
+    let totalWins = 0;
+    let totalDraws = 0;
+
+    sourceMatches.forEach(match => {
+        totalGoals += match.homeScore + match.awayScore;
+
+        if (match.homeScore === match.awayScore) {
+            totalDraws++;
+        } else {
+            totalWins++;
+        }
+    });
+
+    document.getElementById('statMatches').textContent = totalMatches;
+    document.getElementById('statGoals').textContent = totalGoals;
+    document.getElementById('statWins').textContent = totalWins;
+    document.getElementById('statDraws').textContent = totalDraws;
+}
+
+
+
+    function applyMatchFilter() {
+    const filterInput = document.getElementById('matchFilter');
+    if (!filterInput) {
+        filteredMatches = null;
+        updateTeamStats();
+        updateStandings();
+        updateMatchStats();
+        return;
+    }
+
+    const input = filterInput.value;
+
+    if (!input || input <= 0) {
+        resetMatchFilter();
+        return;
+    }
+
+    const maxPlayed = parseInt(input);
+
+    const tempTeams = {};
+    teams.forEach(team => {
+        tempTeams[team.name] = 0;
+    });
+
+    const limitedMatches = [];
+
+    for (let match of matches) {
+        const homeCount = tempTeams[match.homeTeam];
+        const awayCount = tempTeams[match.awayTeam];
+
+        if (homeCount < maxPlayed && awayCount < maxPlayed) {
+            limitedMatches.push(match);
+            tempTeams[match.homeTeam]++;
+            tempTeams[match.awayTeam]++;
+        }
+    }
+
+    filteredMatches = limitedMatches;
+
+    updateTeamStatsFiltered();
+    updateStandings();
+    updateMatchStats();
+    updateHomeAwayStats();
+}
+
+function updateTeamStatsFiltered() {
+    teams.forEach(team => {
+        team.played = 0;
+        team.won = 0;
+        team.drawn = 0;
+        team.lost = 0;
+        team.goalsFor = 0;
+        team.goalsAgainst = 0;
+        team.points = 0;
+        team.yellowCards = 0;
+        team.redCards = 0;
+    });
+
+    const matchSource = filteredMatches || matches;
+
+    matchSource.forEach(match => {
+        const homeTeam = teams.find(t => t.name === match.homeTeam);
+        const awayTeam = teams.find(t => t.name === match.awayTeam);
+
+        if (!homeTeam || !awayTeam) return;
+
+        homeTeam.played++;
+        awayTeam.played++;
+
+        homeTeam.goalsFor += match.homeScore;
+        homeTeam.goalsAgainst += match.awayScore;
+        awayTeam.goalsFor += match.awayScore;
+        awayTeam.goalsAgainst += match.homeScore;
+
+        if (match.homeScore > match.awayScore) {
+            homeTeam.won++;
+            homeTeam.points += 3;
+            awayTeam.lost++;
+        } else if (match.homeScore < match.awayScore) {
+            awayTeam.won++;
+            awayTeam.points += 3;
+            homeTeam.lost++;
+        } else {
+            homeTeam.drawn++;
+            awayTeam.drawn++;
+            homeTeam.points += 1;
+            awayTeam.points += 1;
+        }
+    });
+
+    teams.forEach(team => {
+        team.goalDifference = team.goalsFor - team.goalsAgainst;
+        team.fairPlayScore = team.yellowCards + (team.redCards * 3);
+    });
+}
+
+function resetMatchFilter() {
+    const filterInput = document.getElementById('matchFilter');
+    if (filterInput) {
+        filterInput.value = '';
+    }
+    filteredMatches = null;
+    updateTeamStats();
+    updateStandings();
+    updateMatchStats();
+}
+
+function getJakartaDateString() {
+    const formatter = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Jakarta',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    });
+    const parts = formatter.formatToParts(new Date());
+    const year = parts.find(part => part.type === 'year')?.value;
+    const month = parts.find(part => part.type === 'month')?.value;
+    const day = parts.find(part => part.type === 'day')?.value;
+    return `${year}-${month}-${day}`;
+}
+
+function formatDateToJakarta(dateValue) {
+    const date = new Date(dateValue);
+    if (Number.isNaN(date.getTime())) return '';
+
+    const formatter = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Jakarta',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    });
+    const parts = formatter.formatToParts(date);
+    const year = parts.find(part => part.type === 'year')?.value;
+    const month = parts.find(part => part.type === 'month')?.value;
+    const day = parts.find(part => part.type === 'day')?.value;
+    return `${year}-${month}-${day}`;
+}
+
+function getMatchDateKey(match) {
+    const rawDate = match?.matchDate || match?.date || match?.match_date || match?.tanggal;
+    if (typeof rawDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(rawDate)) {
+        return rawDate;
+    }
+
+    if (rawDate) {
+        const normalized = formatDateToJakarta(rawDate);
+        if (normalized) return normalized;
+    }
+
+    const rawTimestamp = match?.createdAt || match?.created_at || match?.timestamp || match?.savedAt;
+    if (rawTimestamp) {
+        return formatDateToJakarta(rawTimestamp);
+    }
+
+    return '';
+}
+
+ function updateTodayResults() {
+    const container = document.getElementById('todayResults');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    const today = getJakartaDateString();
+    const todayMatches = matches.filter(match => getMatchDateKey(match) === today);
+
+    if (todayMatches.length === 0) {
+        container.innerHTML =
+            '<p class="text-sm text-slate-500 text-center bg-white border border-slate-200 rounded-[1.25rem] px-4 py-8">Belum ada pertandingan hari ini</p>';
+        return;
+    }
+
+    container.className = 'today-results-list';
+
+    todayMatches.forEach(match => {
+        const matchBox = document.createElement('div');
+        matchBox.className = 'today-match-card';
+
+        matchBox.innerHTML = `
+            <div class="flex items-center justify-between text-[11px] uppercase tracking-[0.2em] text-slate-400 mb-4 relative z-10">
+                <span>Live Board</span>
+                <span>Full Time</span>
+            </div>
+            <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-sm font-medium relative z-10">
+                <div class="text-right text-slate-100">
+                    <div class="text-[10px] uppercase tracking-[0.18em] text-slate-400 mb-1">Home</div>
+                    <div>${match.homeTeam}</div>
+                </div>
+                <div class="score-pill rounded-2xl px-4 py-3 text-center min-w-[92px]">
+                    <div class="text-2xl font-extrabold text-white leading-none">${match.homeScore} - ${match.awayScore}</div>
+                </div>
+                <div class="text-left text-slate-100">
+                    <div class="text-[10px] uppercase tracking-[0.18em] text-slate-400 mb-1">Away</div>
+                    <div>${match.awayTeam}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(matchBox);
+    });
+}
+
+    function addTeam() {
+        const teamName = document.getElementById('teamName').value.trim();
+        if (!teamName) {
+            alert('Masukkan nama tim!');
+            return;
+        }
+        
+        if (teams.find(team => team.name === teamName)) {
+            alert('Tim sudah ada!');
+            return;
+        }
+
+        teams.push({
+            name: teamName, played: 0, won: 0, drawn: 0, lost: 0,
+            goalsFor: 0, goalsAgainst: 0, goalDifference: 0, points: 0,
+            yellowCards: 0, redCards: 0, fairPlayScore: 0
+        });
+
+        document.getElementById('teamName').value = '';
+        updateTeamSelects();
+        updateStandings();
+        saveData(); // Simpan perubahan ke Google Sheet
+    }
+
+    function updateTeamSelects() {
+        const homeSelect = document.getElementById('homeTeam');
+        const awaySelect = document.getElementById('awayTeam');
+        
+        homeSelect.innerHTML = '<option value="">Tim Tuan Rumah</option>';
+        awaySelect.innerHTML = '<option value="">Tim Tamu</option>';
+        
+        const sortedTeamsForSelect = [...teams].sort((a, b) => a.name.localeCompare(b.name));
+
+        sortedTeamsForSelect.forEach(team => {
+            homeSelect.innerHTML += `<option value="${team.name}">${team.name}</option>`;
+            awaySelect.innerHTML += `<option value="${team.name}">${team.name}</option>`;
+        });
+    }
+
+    function addMatch() {
+        const homeTeam = document.getElementById('homeTeam').value;
+        const awayTeam = document.getElementById('awayTeam').value;
+        const homeScore = parseInt(document.getElementById('homeScore').value) || 0;
+        const awayScore = parseInt(document.getElementById('awayScore').value) || 0;
+        const homeYellow = parseInt(document.getElementById('homeYellow').value) || 0;
+        const homeRed = parseInt(document.getElementById('homeRed').value) || 0;
+        const awayYellow = parseInt(document.getElementById('awayYellow').value) || 0;
+        const awayRed = parseInt(document.getElementById('awayRed').value) || 0;
+
+        if (!homeTeam || !awayTeam) {
+            alert('Pilih kedua tim!');
+            return;
+        }
+
+        if (homeTeam === awayTeam) {
+            alert('Tim tidak boleh sama!');
+            return;
+        }
+
+        //const match = { homeTeam, awayTeam, homeScore, awayScore, homeYellow, homeRed, awayYellow, awayRed };
+const today = getJakartaDateString(); // YYYY-MM-DD (WIB)
+
+const match = {
+    homeTeam,
+    awayTeam,
+    homeScore,
+    awayScore,
+    homeYellow,
+    homeRed,
+    awayYellow,
+    awayRed,
+    matchDate: today,
+    createdAt: new Date().toISOString()
+};
+
+        matches.push(match);
+
+        updateAllAndSave();
+        clearMatchForm();
+    }
+
+    // Ganti fungsi lama dengan yang ini
+function clearMatchForm() {
+    document.getElementById('homeTeam').value = '';
+    document.getElementById('awayTeam').value = '';
+    document.getElementById('homeScore').value = '';
+    document.getElementById('awayScore').value = '';
+    document.getElementById('homeYellow').value = '';
+    document.getElementById('homeRed').value = '';
+    document.getElementById('awayYellow').value = '';
+    document.getElementById('awayRed').value = '';
+    
+    // Hapus 'draft' dari localStorage
+    localStorage.removeItem('tempMatchData');
+}
+
+    // TAMBAHKAN FUNGSI BARU INI SAVE SEMENTARA EDIT
+function saveFormState() {
+    const formState = {
+        homeTeam: document.getElementById('homeTeam').value,
+        awayTeam: document.getElementById('awayTeam').value,
+        homeScore: document.getElementById('homeScore').value,
+        awayScore: document.getElementById('awayScore').value,
+        homeYellow: document.getElementById('homeYellow').value,
+        homeRed: document.getElementById('homeRed').value,
+        awayYellow: document.getElementById('awayYellow').value,
+        awayRed: document.getElementById('awayRed').value
+    };
+    localStorage.setItem('tempMatchData', JSON.stringify(formState));
+}
+
+    // TAMBAHKAN FUNGSI BARU INI LOAD SEMENTARA
+function loadFormState() {
+    const savedState = localStorage.getItem('tempMatchData');
+    if (savedState) {
+        const formState = JSON.parse(savedState);
+        document.getElementById('homeTeam').value = formState.homeTeam;
+        document.getElementById('awayTeam').value = formState.awayTeam;
+        document.getElementById('homeScore').value = formState.homeScore;
+        document.getElementById('awayScore').value = formState.awayScore;
+        document.getElementById('homeYellow').value = formState.homeYellow;
+        document.getElementById('homeRed').value = formState.homeRed;
+        document.getElementById('awayYellow').value = formState.awayYellow;
+        document.getElementById('awayRed').value = formState.awayRed;
+    }
+}
+    // Helper function untuk update semua tampilan dan simpan data
+    function updateAllAndSave() {
+        updateTeamStats();
+        updateStandings();
+        updateMatchHistory();
+        updateTodayResults();
+        updateMatchStats(); 
+        saveData();
+        updateHomeAwayStats();
+        
+    }
+
+    function updateTeamStats() {
+        teams.forEach(team => {
+            team.played = 0; team.won = 0; team.drawn = 0; team.lost = 0;
+            team.goalsFor = 0; team.goalsAgainst = 0; team.points = 0;
+            team.yellowCards = 0; team.redCards = 0;
+        });
+
+        matches.forEach(match => {
+            const homeTeam = teams.find(t => t.name === match.homeTeam);
+            const awayTeam = teams.find(t => t.name === match.awayTeam);
+            
+            if (!homeTeam || !awayTeam) return;
+
+            homeTeam.played++; awayTeam.played++;
+            homeTeam.goalsFor += match.homeScore;
+            homeTeam.goalsAgainst += match.awayScore;
+            awayTeam.goalsFor += match.awayScore;
+            awayTeam.goalsAgainst += match.homeScore;
+            homeTeam.yellowCards += match.homeYellow;
+            homeTeam.redCards += match.homeRed;
+            awayTeam.yellowCards += match.awayYellow;
+            awayTeam.redCards += match.awayRed;
+
+            if (match.homeScore > match.awayScore) {
+                homeTeam.won++; homeTeam.points += 3; awayTeam.lost++;
+            } else if (match.homeScore < match.awayScore) {
+                awayTeam.won++; awayTeam.points += 3; homeTeam.lost++;
+            } else {
+                homeTeam.drawn++; awayTeam.drawn++;
+                homeTeam.points += 1; awayTeam.points += 1;
+            }
+        });
+
+        teams.forEach(team => {
+            team.goalDifference = team.goalsFor - team.goalsAgainst;
+            team.fairPlayScore = team.yellowCards + (team.redCards * 3);
+        });
+    }
+
+    function getHeadToHeadStats(teamNames) {
+        const h2hMatches = matches.filter(match => teamNames.includes(match.homeTeam) && teamNames.includes(match.awayTeam));
+        const h2hStats = {};
+        teamNames.forEach(teamName => {
+            h2hStats[teamName] = { points: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 };
+        });
+        h2hMatches.forEach(match => {
+            const homeStats = h2hStats[match.homeTeam];
+            const awayStats = h2hStats[match.awayTeam];
+            homeStats.goalsFor += match.homeScore;
+            homeStats.goalsAgainst += match.awayScore;
+            awayStats.goalsFor += match.awayScore;
+            awayStats.goalsAgainst += match.homeScore;
+            if (match.homeScore > match.awayScore) homeStats.points += 3;
+            else if (match.homeScore < match.awayScore) awayStats.points += 3;
+            else { homeStats.points += 1; awayStats.points += 1; }
+        });
+        Object.keys(h2hStats).forEach(teamName => {
+            h2hStats[teamName].goalDifference = h2hStats[teamName].goalsFor - h2hStats[teamName].goalsAgainst;
+        });
+        return h2hStats;
+    }
+
+    // GANTI FUNGSI LAMA DENGAN VERSI BARU INI
+function updateStandings() {
+   
+    const sortedTeams = [...teams].sort((a, b) => {
+        // Kriteria 1: Poin Keseluruhan
+
+        if (a.points !== b.points) return b.points - a.points;
+
+        // Kriteria 2: Head-to-Head (dengan validasi baru)
+        const tiedTeams = teams.filter(t => t.points === a.points);
+        if (tiedTeams.length >= 2) {
+            const tiedTeamNames = tiedTeams.map(t => t.name);
+            const h2hMatches = matches.filter(match => tiedTeamNames.includes(match.homeTeam) && tiedTeamNames.includes(match.awayTeam));
+            
+            // BARU: Lakukan validasi H2H
+            let isH2HValid = false;
+            if (h2hMatches.length > 0) {
+                const h2hPlayedCount = {};
+                tiedTeamNames.forEach(name => h2hPlayedCount[name] = 0);
+                h2hMatches.forEach(match => {
+                    h2hPlayedCount[match.homeTeam]++;
+                    h2hPlayedCount[match.awayTeam]++;
+                });
+
+                // Cek apakah semua tim yang terlibat sudah bermain dengan jumlah yang sama
+                const counts = Object.values(h2hPlayedCount);
+                const firstCount = counts[0];
+                if (firstCount > 0 && counts.every(count => count === firstCount)) {
+                    isH2HValid = true;
+                }
+            }
+
+            // HANYA jalankan H2H jika valid
+            if (isH2HValid) {
+                const h2hStats = getHeadToHeadStats(tiedTeamNames);
+                const aH2H = h2hStats[a.name];
+                const bH2H = h2hStats[b.name];
+                if (aH2H.points !== bH2H.points) return bH2H.points - aH2H.points;
+                if (aH2H.goalDifference !== bH2H.goalDifference) return bH2H.goalDifference - aH2H.goalDifference;
+                if (aH2H.goalsFor !== bH2H.goalsFor) return bH2H.goalsFor - aH2H.goalsFor;
+            }
+        }
+
+        // Kriteria 3, 4, 5... (dijalankan jika H2H tidak valid atau masih sama)
+        if (a.goalDifference !== b.goalDifference) return b.goalDifference - a.goalDifference;
+        if (a.goalsFor !== b.goalsFor) return b.goalsFor - a.goalsFor;
+        return a.fairPlayScore - b.fairPlayScore;
+    });
+
+    // Sisa fungsi untuk menampilkan tabel (tidak ada perubahan)
+    const tableBody = document.getElementById('standingsTable');
+    tableBody.innerHTML = '';
+    const pointGroups = {};
+    sortedTeams.forEach(team => {
+        if (!pointGroups[team.points]) pointGroups[team.points] = [];
+        pointGroups[team.points].push(team);
+    });
+    sortedTeams.forEach((team, index) => {
+       let arrowIcon = '';
+
+if (lastStandingsOrder) {
+    const oldIndex = lastStandingsOrder.indexOf(team.name);
+
+    if (oldIndex !== -1) {
+        if (oldIndex > index) {
+            arrowIcon = '<span class="ml-1 text-green-600 font-bold">▲</span>';
+        } else if (oldIndex < index) {
+            arrowIcon = '<span class="ml-1 text-red-600 font-bold">▼</span>';
+        }
+    }
+}
+
+        const row = document.createElement('tr');
+        const isTied = pointGroups[team.points] && pointGroups[team.points].length > 1;
+        row.className = 'standing-row border-b border-slate-200/80';
+        if (isTied) row.className += (index % 2 === 0 ? ' bg-slate-50/70' : ' bg-white');
+        else if (index < 3) row.className += ' top-tier';
+        else if (index >= sortedTeams.length - 3) row.className += ' risk-zone';
+        else row.className += (index % 2 === 0 ? ' bg-slate-50/70' : ' bg-white');
+        let positionClass = '';
+        if (!isTied && index < 3) positionClass = 'text-green-600 font-bold';
+        else if (!isTied && index >= sortedTeams.length - 3) positionClass = 'text-red-600 font-bold';
+        row.innerHTML = `
+            <td class="px-2 py-1.5 ${positionClass}">
+            <div class="flex items-center gap-2">
+             <span class="inline-flex h-7 w-7 items-center justify-center rounded-md bg-slate-900 text-white text-[11px] font-extrabold">${index + 1}</span>
+                 ${arrowIcon}
+                    </div>
+                        </td>
+            <td class="px-2 py-1.5 font-semibold text-slate-800">
+                 <div class="max-w-[180px] leading-tight">${team.name}</div>
+                </td>
+            <td class="px-2 py-1.5 text-center">${team.played}</td>
+            <td class="px-2 py-1.5 text-center">${team.won}</td>
+            <td class="px-2 py-1.5 text-center">${team.drawn}</td>
+            <td class="px-2 py-1.5 text-center">${team.lost}</td>
+            <td class="px-2 py-1.5 text-center">${team.goalsFor}</td>
+            <td class="px-2 py-1.5 text-center">${team.goalsAgainst}</td>
+            <td class="px-2 py-1.5 text-center ${team.goalDifference >= 0 ? 'text-emerald-600' : 'text-rose-600'}">${team.goalDifference >= 0 ? '+' : ''}${team.goalDifference}</td>
+            <td class="px-2 py-1.5 text-center"><span class="inline-flex min-w-[42px] items-center justify-center rounded-md bg-amber-400 px-2 py-0.5 font-extrabold text-slate-950">${team.points}</span></td>
+            <td class="px-2 py-1.5 text-center">
+                ${ isTied && pointGroups[team.points][0].name === team.name ? `<button onclick="showH2HDetails(${team.points})" class="rounded-md bg-rose-600 hover:bg-rose-700 text-white px-2 py-1 text-[11px] font-bold">H2H</button>` : '' }</td>
+            <td class="px-2 py-1.5 text-center fair-play-col">${team.fairPlayScore}
+            </td>`;
+            
+        tableBody.appendChild(row);
+    });
+    applyColumnVisibility();
+    lastStandingsOrder = sortedTeams.map(t => t.name);
+}
+    
+    function editMatch(matchIndex) {
+        const match = matches[matches.length - 1 - matchIndex];
+        document.getElementById('homeTeam').value = match.homeTeam;
+        document.getElementById('awayTeam').value = match.awayTeam;
+        document.getElementById('homeScore').value = match.homeScore;
+        document.getElementById('awayScore').value = match.awayScore;
+        document.getElementById('homeYellow').value = match.homeYellow;
+        document.getElementById('homeRed').value = match.homeRed;
+        document.getElementById('awayYellow').value = match.awayYellow;
+        document.getElementById('awayRed').value = match.awayRed;
+        matches.splice(matches.length - 1 - matchIndex, 1);
+        saveFormState();
+        matches.splice(index, 1);
+        updateAllAndSave();   
+           document.getElementById('riwayatContainer').scrollIntoView({ behavior: 'smooth' });
+    }
+
+   
+
+// Fungsi ini akan dipanggil saat tombol di header diklik
+function toggleFairPlayColumn() {
+    // Cek status saat ini dari localStorage (defaultnya 'false' atau tersembunyi)
+    const isVisible = localStorage.getItem('fairPlayVisible') === 'true';
+
+    // Simpan status kebalikannya
+    localStorage.setItem('fairPlayVisible', !isVisible);
+
+    // Terapkan perubahan tampilan
+    applyColumnVisibility();
+}
+
+// Fungsi ini menerapkan status visible/invisible ke kolom
+function applyColumnVisibility() {
+    // Ambil status terakhir dari localStorage
+    const isVisible = localStorage.getItem('fairPlayVisible') === 'true';
+    
+    // Cari semua sel dengan class 'fair-play-col'
+    const cells = document.querySelectorAll('.fair-play-col');
+    
+    // Atur properti 'display' berdasarkan status
+    cells.forEach(cell => {
+        cell.style.display = isVisible ? '' : 'none';
+    });
+}
+    
+    function deleteMatch(matchIndex) {
+        if (confirm('Apakah Anda yakin ingin menghapus pertandingan ini?')) {
+            matches.splice(matches.length - 1 - matchIndex, 1);
+            updateAllAndSave();
+        }
+    }
+
+    function updateMatchHistory() {
+        const historyDiv = document.getElementById('matchHistory');
+        historyDiv.innerHTML = '';
+        if (matches.length === 0) {
+            historyDiv.innerHTML = '<p class="text-slate-500 text-center bg-slate-100 rounded-2xl px-4 py-8">Belum ada pertandingan yang diinput</p>';
+            return;
+        }
+        matches.slice().reverse().forEach((match, index) => {
+            const matchDiv = document.createElement('div');
+            matchDiv.className = 'history-card rounded-2xl p-4 hover-scale';
+            let resultClass = '';
+            if (match.homeScore > match.awayScore) resultClass = 'text-green-600';
+            else if (match.homeScore < match.awayScore) resultClass = 'text-red-600';
+            else resultClass = 'text-yellow-600';
+            matchDiv.innerHTML = `
+    <div class="flex flex-col gap-4 xl:flex-row xl:justify-between xl:items-center">
+        <div class="flex flex-col gap-2 md:flex-row md:items-center md:space-x-4">
+            <span class="font-semibold text-slate-800">${match.homeTeam}</span>
+            <span class="inline-flex items-center justify-center rounded-xl bg-slate-900 px-4 py-2 text-2xl font-bold ${resultClass}">${match.homeScore} - ${match.awayScore}</span>
+            <span class="font-semibold text-slate-800">${match.awayTeam}</span>
+        </div>
+
+        <div class="flex flex-col gap-3 md:flex-row md:items-center md:space-x-4">
+            
+            <div class="text-sm text-slate-600">
+                <span class="text-yellow-500 font-bold">🟨</span> ${match.homeYellow}
+                <span class="text-red-600 font-bold">🟥</span> ${match.homeRed}
+                <span class="mx-2 text-gray-300">|</span>
+                <span class="text-yellow-500 font-bold">🟨</span> ${match.awayYellow}
+                <span class="text-red-600 font-bold">🟥</span> ${match.awayRed}
+            </div>
+
+            <div class="admin-buttons flex space-x-2">
+                <button onclick="editMatch(${index})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors">✏️ Edit</button>
+                <button onclick="deleteMatch(${index})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors">🗑️ Hapus</button>
+            </div>
+
+        </div>
+    </div>`;
+            historyDiv.appendChild(matchDiv);
+        });
+    }
+
+    function initializeSampleData() {
+        const participatingTeams = ['AREMA FC', 'BALI UNITED FC', 'BHAYANGKARA PRESISI LAMPUNG FC', 'BORNEO FC SAMARINDA', 'DEWA UNITED BANTEN FC', 'MADURA UNITED FC', 'MALUT UNITED FC', 'PERSEBAYA SURABAYA', 'PERSIB BANDUNG', 'PERSIJA JAKARTA', 'PERSIJAP JEPARA', 'PERSIK KEDIRI', 'PERSIS SOLO', 'PERSITA', 'PSBS BIAK', 'PSIM YOGYAKARTA', 'PSM MAKASSAR', 'SEMEN PADANG FC'];
+        participatingTeams.forEach(teamName => {
+            if (!teams.find(t => t.name === teamName)) {
+                teams.push({
+                    name: teamName, played: 0, won: 0, drawn: 0, lost: 0,
+                    goalsFor: 0, goalsAgainst: 0, goalDifference: 0, points: 0,
+                    yellowCards: 0, redCards: 0, fairPlayScore: 0
+                });
+            }
+        });
+        updateTeamSelects();
+        updateStandings();
+    }
+
+    // ▼▼▼ TAMBAHKAN FUNGSI INI DI DALAM SCRIPT ANDA ▼▼▼
+function adminLogout() {
+    // ✅ HAPUS STATUS LOGIN DARI LOCALSTORAGE
+    localStorage.removeItem('isAdminLoggedIn');
+    
+    // Muat ulang halaman untuk kembali ke kondisi awal
+    location.reload();
+}
+
+    function copyToClipboard() {
+        let textData = 'KLASEMEN BRI SUPER LEAGUE 2025/26\n';
+        textData += '='.repeat(80) + '\n';
+        textData += 'Pos\tTim\t\t\tMain\tM\tS\tK\tGM\tGK\tSG\tPoin\tFP\n';
+        textData += '-'.repeat(80) + '\n';
+        const sortedTeams = [...teams].sort((a, b) => {
+            if (a.points !== b.points) return b.points - a.points;
+            if (a.goalDifference !== b.goalDifference) return b.goalDifference - a.goalDifference;
+            if (a.goalsFor !== b.goalsFor) return b.goalsFor - a.goalsFor;
+            return a.fairPlayScore - b.fairPlayScore;
+        });
+        sortedTeams.forEach((team, index) => {
+            const teamName = team.name.padEnd(20);
+            textData += `${(index + 1).toString().padStart(2)}\t${teamName}\t${team.played}\t${team.won}\t${team.drawn}\t${team.lost}\t${team.goalsFor}\t${team.goalsAgainst}\t${team.goalDifference >= 0 ? '+' : ''}${team.goalDifference}\t${team.points}\t${team.fairPlayScore}\n`;
+        });
+        textData += '\n\nRIWAYAT PERTANDINGAN\n';
+        textData += '='.repeat(80) + '\n';
+        matches.forEach((match, index) => {
+            textData += `${index + 1}. ${match.homeTeam} ${match.homeScore} - ${match.awayScore} ${match.awayTeam}\n`;
+            if (match.homeYellow + match.homeRed + match.awayYellow + match.awayRed > 0) {
+                textData += `    Kartu: ${match.homeYellow + match.awayYellow} Kuning, ${match.homeRed + match.awayRed} Merah\n`;
+            }
+        });
+        navigator.clipboard.writeText(textData).then(() => {
+            showNotification('Klasemen berhasil disalin ke clipboard!', 'success');
+        }).catch(() => {
+            const textArea = document.createElement('textarea');
+            textArea.value = textData;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            showNotification('Klasemen berhasil disalin ke clipboard!', 'success');
+        });
+    }
+
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white z-50 shadow-lg ${type === 'success' ? 'bg-green-600' : (type === 'error' ? 'bg-red-600' : 'bg-blue-600')}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    setTimeout(() => { notification.remove(); }, 3000);
+}
+
+function getMatchIdentity(match, index = 0) {
+    const dateKey = getMatchDateKey(match) || 'no-date';
+    const createdKey = match?.createdAt || match?.created_at || '';
+    return [
+        match?.homeTeam || 'home',
+        match?.awayTeam || 'away',
+        dateKey,
+        createdKey || index
+    ].join('::');
+}
+
+function findUpdatedScoreNotifications(previousMatches, nextMatches) {
+    const previousMatchMap = new Map();
+
+    (previousMatches || []).forEach((match, index) => {
+        previousMatchMap.set(getMatchIdentity(match, index), match);
+    });
+
+    return (nextMatches || []).filter((match, index) => {
+        const previousMatch = previousMatchMap.get(getMatchIdentity(match, index));
+        if (!previousMatch) return false;
+
+        return Number(previousMatch.homeScore) !== Number(match.homeScore) ||
+            Number(previousMatch.awayScore) !== Number(match.awayScore);
+    });
+}
+
+let activeScoreUpdateNotification = null;
+let activeScoreUpdateTimeout = null;
+
+function showScoreUpdateNotification(match) {
+    if (activeScoreUpdateNotification) {
+        activeScoreUpdateNotification.remove();
+        activeScoreUpdateNotification = null;
+    }
+
+    if (activeScoreUpdateTimeout) {
+        clearTimeout(activeScoreUpdateTimeout);
+        activeScoreUpdateTimeout = null;
+    }
+
+    const notification = document.createElement('div');
+    notification.className = 'fixed bottom-4 right-4 w-[320px] max-w-[calc(100vw-2rem)] rounded-2xl border border-amber-300 bg-slate-950/95 px-5 py-4 text-white z-50 shadow-2xl';
+    notification.innerHTML = `
+        <div class="text-[11px] uppercase tracking-[0.22em] text-amber-300">Update Score</div>
+        <div class="mt-2 text-sm font-semibold leading-snug">${match.homeTeam} vs ${match.awayTeam}</div>
+        <div class="display-font mt-2 text-4xl leading-none text-white">${match.homeScore} - ${match.awayScore}</div>
+    `;
+    document.body.appendChild(notification);
+    activeScoreUpdateNotification = notification;
+    activeScoreUpdateTimeout = setTimeout(() => {
+        notification.remove();
+        if (activeScoreUpdateNotification === notification) {
+            activeScoreUpdateNotification = null;
+        }
+        activeScoreUpdateTimeout = null;
+    }, 10000);
+}
+
+
+// GANTI FUNGSI LAMA DENGAN VERSI BARU INI
+function showH2HDetails(points) {
+    const tiedTeams = teams.filter(t => t.points === points);
+    const tiedTeamNames = tiedTeams.map(t => t.name);
+    
+    // Dapatkan semua pertandingan H2H yang relevan
+    const h2hMatches = matches.filter(match => 
+        tiedTeamNames.includes(match.homeTeam) && tiedTeamNames.includes(match.awayTeam)
+    );
+
+    // BARU: Buat daftar tim yang benar-benar berpartisipasi dalam pertandingan H2H
+    const participatingTeamNames = new Set();
+    h2hMatches.forEach(match => {
+        participatingTeamNames.add(match.homeTeam);
+        participatingTeamNames.add(match.awayTeam);
+    });
+    const participatingTeams = tiedTeams.filter(team => participatingTeamNames.has(team.name));
+
+    // Lanjutkan perhitungan, tapi hanya untuk tim yang berpartisipasi
+    const h2hStats = getHeadToHeadStats(Array.from(participatingTeamNames));
+
+    // Buat tabel untuk "Klasemen Kecil"
+    let miniLeagueHtml = `<table class="w-full text-xs border"><thead class="bg-gray-100"><tr>
+        <th class="px-2 py-2 text-left font-semibold">Tim</th><th class="px-2 py-2 text-center font-semibold">Poin</th>
+        <th class="px-2 py-2 text-center font-semibold">SG</th><th class="px-2 py-2 text-center font-semibold">GM</th>
+        </tr></thead><tbody>`;
+
+    const sortedTiedTeams = participatingTeams.sort((a, b) => {
+        const aH2H = h2hStats[a.name];
+        const bH2H = h2hStats[b.name];
+        if (aH2H.points !== bH2H.points) return bH2H.points - aH2H.points;
+        if (aH2H.goalDifference !== bH2H.goalDifference) return bH2H.goalDifference - aH2H.goalDifference;
+        return bH2H.goalsFor - aH2H.goalsFor;
+    });
+
+    sortedTiedTeams.forEach(team => {
+        const stats = h2hStats[team.name];
+        miniLeagueHtml += `<tr class="border-b"><td class="px-2 py-2 font-medium">${team.name}</td>
+            <td class="px-2 py-2 text-center">${stats.points}</td>
+            <td class="px-2 py-2 text-center">${stats.goalDifference > 0 ? '+' : ''}${stats.goalDifference}</td>
+            <td class="px-2 py-2 text-center">${stats.goalsFor}</td></tr>`;
+    });
+    miniLeagueHtml += '</tbody></table>';
+
+    // Buat daftar untuk "Riwayat Pertandingan" (tidak berubah)
+    let matchListHtml = '';
+    h2hMatches.forEach(match => {
+        matchListHtml += `<div class="bg-gray-50 rounded-md p-2 text-sm flex justify-between items-center">
+            <span>${match.homeTeam}</span><span class="font-bold">${match.homeScore} - ${match.awayScore}</span>
+            <span>${match.awayTeam}</span></div>`;
+    });
+    if (h2hMatches.length === 0) {
+        matchListHtml = '<p class="text-sm text-gray-500">Belum ada pertandingan di antara tim-tim ini.</p>';
+    }
+
+    document.getElementById('h2hMiniLeague').innerHTML = miniLeagueHtml;
+    document.getElementById('h2hMatchList').innerHTML = matchListHtml;
+    document.getElementById('h2hModal').style.display = 'flex';
+}
+
+
+function closeH2HModal() {
+    document.getElementById('h2hModal').style.display = 'none';
+}
+
+    
+    // ===================================================================
+    // FUNGSI BARU UNTUK GOOGLE SHEET (PENGGANTI localStorage)
+    // ===================================================================
+
+    async function saveData() {
+        showNotification('Menyimpan data...', 'info');
+        // Hanya kirim nama tim dan data pertandingan. Statistik akan dihitung ulang.
+        const dataToSave = {
+            teams: teams.map(t => ({ name: t.name })),
+            matches: matches
+        };
+
+        try {
+            const response = await fetch(googleScriptURL, {
+                method: 'POST',
+                body: JSON.stringify(dataToSave),
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            });
+            const result = await response.json();
+            if (result.status === 'success') {
+                showNotification('Data berhasil disimpan!', 'success');
+            } else {
+                throw new Error(result.message);
+            }
+        } catch (error) {
+            console.error('Gagal menyimpan data:', error);
+            showNotification('Gagal menyimpan data!', 'error');
+        }
+    }
+
+// GANTI FUNGSI LAMA ANDA DENGAN VERSI BARU INI
+
+async function fetchAndUpdateData(isInitialLoad = false) {
+    // Tampilkan notifikasi "memuat" hanya saat pertama kali halaman dibuka
+    if (isInitialLoad) {
+        showNotification('Memuat data dari cloud...', 'info');
+    }
+
+    try {
+        const response = await fetch(googleScriptURL);
+        if (!response.ok) throw new Error('Gagal terhubung ke server.');
+        
+        const data = await response.json();
+        if (data.error) throw new Error(data.error);
+
+        // Cek apakah ada perubahan sebelum memperbarui layar
+        const currentDataString = JSON.stringify({ teams: teams.map(t => t.name), matches });
+        const newDataString = JSON.stringify({ teams: data.teams, matches: data.matches });
+
+        if (currentDataString !== newDataString) {
+            console.log('Perubahan data terdeteksi, memperbarui tampilan...');
+            const updatedScoreMatches = isInitialLoad
+                ? []
+                : findUpdatedScoreNotifications(matches, data.matches || []);
+
+            teams = (data.teams || []).map(t => ({
+                name: t.name, played: 0, won: 0, drawn: 0, lost: 0,
+                goalsFor: 0, goalsAgainst: 0, goalDifference: 0, points: 0,
+                yellowCards: 0, redCards: 0, fairPlayScore: 0
+            }));
+            matches = data.matches || [];
+
+            // Panggil semua fungsi untuk memperbarui tampilan
+            updateTeamStats();
+            updateTeamSelects(); // Dropdowns dibuat ulang di sini
+            updateStandings();
+            updateMatchHistory();
+            updateMatchStats();
+            updateHomeAwayStats();
+            updateTodayResults();
+
+            // ✅ SOLUSI: Panggil loadFormState() di sini untuk memuat ulang "draft"
+            // setelah dropdown di-refresh.
+            loadFormState(); 
+
+            if (!isInitialLoad) {
+                showNotification('Klasemen Update', 'success');
+                const latestUpdatedMatch = updatedScoreMatches[updatedScoreMatches.length - 1];
+                if (latestUpdatedMatch) {
+                    showScoreUpdateNotification(latestUpdatedMatch);
+                }
+            }
+        }
+
+        if (isInitialLoad) {
+             if (teams.length === 0) {
+                initializeSampleData();
+                updateTeamSelects();
+                updateStandings();
+                updateMatchHistory();
+                showNotification('Database kosong. Data contoh telah ditampilkan.', 'info');
+            } else {
+                 showNotification('Data berhasil dimuat!', 'success');
+            }
+        }
+        return true;
+    } catch (error) {
+        console.error('Gagal memuat data auto-refresh:', error);
+        if (isInitialLoad) {
+            showNotification('Gagal memuat data dari cloud!', 'error');
+        }
+        return false;
+    }
+}
+
+    function clearAllData() {
+        if (confirm('Yakin ingin menghapus SEMUA data tim dan pertandingan? Tindakan ini akan menghapus data di Google Sheet.')) {
+            teams = [];
+            matches = [];
+            initializeSampleData(); // Buat daftar tim awal lagi
+            updateAllAndSave(); // Simpan keadaan baru (dengan tim awal) ke sheet
+        }
+    }
+    
+// Ganti fungsi lama dengan yang ini
+function adminLogin() {
+    const correctPassword = 'yudhajuga'; // Password Anda
+    const enteredPassword = document.getElementById('adminPassword').value;
+
+    if (enteredPassword === correctPassword) {
+        // Tampilkan semua area admin
+        document.getElementById('adminArea').style.display = 'block';
+        document.getElementById('loginSection').style.display = 'none';
+        
+        // ✅ SIMPAN STATUS LOGIN KE LOCALSTORAGE
+        localStorage.setItem('isAdminLoggedIn', 'true');
+
+    } else {
+        alert('Siapa Juaranya ?');
+    }
+}
+
+
+
+    // ===================================================================
+    // ALUR INISIALISASI APLIKASI YANG BARU
+    // ===================================================================
+  // GANTI BLOK document.addEventListener('DOMContentLoaded', ...) LAMA ANDA DENGAN INI
+
+  
+
+document.addEventListener('DOMContentLoaded', async () => {
+    if (localStorage.getItem('fairPlayVisible') === null) {
+        localStorage.setItem('fairPlayVisible', 'false');
+    }
+
+    // Pengecekan status login (tidak berubah)
+    if (localStorage.getItem('isAdminLoggedIn') === 'true') {
+        document.getElementById('adminArea').style.display = 'block';
+        document.getElementById('loginSection').style.display = 'none';
+    }
+
+    // 1. Lakukan pemuatan data pertama kali saat halaman dibuka
+    await fetchAndUpdateData(true);
+
+    // Panggil fungsi untuk memuat 'draft' form setelah data utama ada
+    loadFormState(); // <-- TAMBAHKAN BARIS INI
+    applyColumnVisibility();
+    updateTodayResults();
+
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+            fetchAndUpdateData();
+        }
+    });
+
+    window.addEventListener('focus', () => {
+        fetchAndUpdateData();
+    });
+
+    // 2. Atur interval untuk melakukan auto-refresh setiap 30 detik
+    setInterval(() => {
+        fetchAndUpdateData();
+    }, 30000); 
+});
+
+// ---> FUNGSI ANIMASI KLASEMEN (LINE CHART) <---
+let racingInterval = null;
+let animationFrameId = null;
+let animTeams = [];
+let animationSnapshots = [];
+let selectedAnimTeamNames = [];
+const ANIMATION_DURATION_MS = 9000;
+const LINE_CHART_COLORS = ['#f59e0b', '#ef4444', '#3b82f6', '#22c55e', '#a855f7', '#06b6d4'];
+const TEAM_LOGO_MAP = {
+    'aremafc': 'AREMA FC.png',
+    'baliunitedfc': 'BALI UNITED FC.png',
+    'bhayangkarapresisilampungfc': 'BHAYANGKARA PRESISI LAMPUNG FC.png',
+    'borneofcsamarinda': 'BORNEO FC SAMARINDA.png',
+    'dewaunitedbantenfc': 'DEWA UNITED BANTEN FC.png',
+    'maduraunitedfc': 'MADURA UNITED FC.png',
+    'malutunitedfc': 'MALUT UNITED FC.png',
+    'persebayasurabaya': 'PERSEBAYA SURABAYA.png',
+    'persibbandung': 'PERSIB BANDUNG.png',
+    'persijajakarta': 'PERSIJA JAKARTA.png',
+    'persijapjepara': 'PERSIJAP JEPARA.png',
+    'persikkediri': 'PERSIK KEDIRI.png',
+    'persissolo': 'PERSIS SOLO.png',
+    'persita': 'PERSITA.png',
+    'psbsbiak': 'PSBS BIAK.png',
+    'psimyogyakarta': 'PSIM YOGYAKARTA.png',
+    'psmmakassar': 'PSM MAKASSAR.png',
+    'semenpadangfc': 'SEMEN PADANG FC.png'
+};
+const LINE_CHART_SIZE = {
+    width: 1100,
+    height: 620,
+    margin: { top: 32, right: 130, bottom: 80, left: 70 }
+};
+
+function normalizeTeamKey(teamName) {
+    return String(teamName || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function getTeamLogoPath(teamName) {
+    const fileName = TEAM_LOGO_MAP[normalizeTeamKey(teamName)];
+    return fileName ? encodeURI(`img/${fileName}`) : '';
+}
+
+function getChartMetrics() {
+    const { width, height, margin } = LINE_CHART_SIZE;
+    return {
+        width,
+        height,
+        margin,
+        chartWidth: width - margin.left - margin.right,
+        chartHeight: height - margin.top - margin.bottom
+    };
+}
+
+function getLinePointX(index, totalPoints, chartWidth) {
+    if (totalPoints <= 1) return 0;
+    return (index / (totalPoints - 1)) * chartWidth;
+}
+
+function getLinePointY(rank, totalTeams, chartHeight) {
+    if (totalTeams <= 1) return chartHeight / 2;
+    return ((rank - 1) / (totalTeams - 1)) * chartHeight;
+}
+
+function buildAnimationSnapshots() {
+    const tempTeams = teams.map(team => ({
+        name: team.name,
+        points: 0,
+        goalDifference: 0,
+        goalsFor: 0,
+        fairPlayScore: 0
+    }));
+
+    const snapshots = [{
+        label: 'Awal Musim',
+        ranks: Object.fromEntries(tempTeams.map((team, index) => [team.name, index + 1]))
+    }];
+
+    matches.forEach((match, index) => {
+        const home = tempTeams.find(t => t.name === match.homeTeam);
+        const away = tempTeams.find(t => t.name === match.awayTeam);
+
+        if (home && away) {
+            home.goalsFor += match.homeScore;
+            away.goalsFor += match.awayScore;
+            home.goalDifference += (match.homeScore - match.awayScore);
+            away.goalDifference += (match.awayScore - match.homeScore);
+            home.fairPlayScore += (match.homeYellow || 0) + ((match.homeRed || 0) * 3);
+            away.fairPlayScore += (match.awayYellow || 0) + ((match.awayRed || 0) * 3);
+
+            if (match.homeScore > match.awayScore) home.points += 3;
+            else if (match.homeScore < match.awayScore) away.points += 3;
+            else {
+                home.points += 1;
+                away.points += 1;
+            }
+        }
+
+        const sorted = [...tempTeams].sort((a, b) => {
+            if (a.points !== b.points) return b.points - a.points;
+            if (a.goalDifference !== b.goalDifference) return b.goalDifference - a.goalDifference;
+            if (a.goalsFor !== b.goalsFor) return b.goalsFor - a.goalsFor;
+            return a.fairPlayScore - b.fairPlayScore;
+        });
+
+        const ranks = {};
+        sorted.forEach((team, rankIndex) => {
+            ranks[team.name] = rankIndex + 1;
+        });
+
+        snapshots.push({
+            label: `Pertandingan ke-${index + 1}`,
+            match,
+            ranks
+        });
+    });
+
+    return snapshots;
+}
+
+function getSelectedAnimationTeams() {
+    const sortedCurrentTeams = [...teams].sort((a, b) => {
+        if (a.points !== b.points) return b.points - a.points;
+        if (a.goalDifference !== b.goalDifference) return b.goalDifference - a.goalDifference;
+        if (a.goalsFor !== b.goalsFor) return b.goalsFor - a.goalsFor;
+        return a.fairPlayScore - b.fairPlayScore;
+    });
+
+    return sortedCurrentTeams.slice(0, Math.min(8, sortedCurrentTeams.length)).map(team => team.name);
+}
+
+function openAnimationModal() {
+    document.getElementById('animationModal').style.display = 'flex';
+    initRacingChart();
+}
+
+function closeAnimationModal() {
+    document.getElementById('animationModal').style.display = 'none';
+    if (racingInterval) {
+        clearTimeout(racingInterval);
+        racingInterval = null;
+    }
+    if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+    }
+}
+
+function initRacingChart() {
+    const container = document.getElementById('racingChartContainer');
+    container.innerHTML = '';
+
+    animationSnapshots = buildAnimationSnapshots();
+    selectedAnimTeamNames = getSelectedAnimationTeams();
+    animTeams = selectedAnimTeamNames.map((teamName, index) => ({
+        name: teamName,
+        color: LINE_CHART_COLORS[index % LINE_CHART_COLORS.length],
+        logo: getTeamLogoPath(teamName),
+        ranks: animationSnapshots.map(snapshot => snapshot.ranks[teamName] || teams.length),
+        elements: {}
+    }));
+
+    document.getElementById('animMatchInfo').innerText = `Pertandingan: 0 / ${matches.length}`;
+    document.getElementById('playAnimBtn').disabled = false;
+    document.getElementById('playAnimBtn').classList.remove('opacity-50');
+
+    container.innerHTML = `
+        <div class="h-full flex flex-col gap-4">
+            <div id="lineChartLegend" class="flex flex-wrap gap-2 md:gap-3"></div>
+            <div class="flex-1 relative">
+                <svg id="standingsLineChart" class="w-full h-full" viewBox="0 0 1100 620" preserveAspectRatio="xMidYMid meet"></svg>
+            </div>
+        </div>
+    `;
+
+    renderLineChartLegend();
+    renderLineChartBase();
+    updateRacingBarsDOM(0);
+}
+
+function renderLineChartLegend() {
+    const legend = document.getElementById('lineChartLegend');
+    if (!legend) return;
+
+    legend.innerHTML = '';
+
+    animTeams.forEach(team => {
+        const item = document.createElement('div');
+        item.className = 'flex items-center gap-2 px-3 py-2 rounded-full bg-white/5 border border-white/10';
+        item.innerHTML = `
+            <img src="${team.logo}" alt="${team.name}" class="w-6 h-6 rounded-full bg-white object-contain p-1" onerror="this.style.display='none'">
+            <span class="inline-block w-4 h-[3px] rounded-full" style="background:${team.color}"></span>
+            <span class="text-xs md:text-sm font-semibold text-slate-200">${team.name}</span>
+        `;
+        legend.appendChild(item);
+    });
+}
+
+function createSvgNode(tagName, attrs = {}) {
+    const node = document.createElementNS('http://www.w3.org/2000/svg', tagName);
+    Object.entries(attrs).forEach(([key, value]) => node.setAttribute(key, value));
+    return node;
+}
+
+function renderLineChartBase() {
+    const svg = document.getElementById('standingsLineChart');
+    if (!svg) return;
+
+    const { width, height, margin, chartWidth, chartHeight } = getChartMetrics();
+    const totalTeams = teams.length;
+    const totalPoints = animationSnapshots.length;
+    svg.innerHTML = '';
+
+    const bg = createSvgNode('rect', { x: 0, y: 0, width, height, fill: 'transparent' });
+    svg.appendChild(bg);
+
+    for (let index = 0; index < totalTeams; index++) {
+        const rank = index + 1;
+        const y = margin.top + getLinePointY(rank, totalTeams, chartHeight);
+        svg.appendChild(createSvgNode('line', {
+            x1: margin.left,
+            y1: y,
+            x2: width - margin.right,
+            y2: y,
+            stroke: 'rgba(255,255,255,0.09)',
+            'stroke-width': 1
+        }));
+
+        const label = createSvgNode('text', {
+            x: margin.left - 16,
+            y: y + 4,
+            fill: '#94a3b8',
+            'font-size': 12,
+            'font-weight': 700,
+            'text-anchor': 'end'
+        });
+        label.textContent = rank;
+        svg.appendChild(label);
+    }
+
+    const xTickCount = Math.min(totalPoints, 6);
+    for (let index = 0; index < xTickCount; index++) {
+        const snapshotIndex = xTickCount === 1 ? 0 : Math.round((index / (xTickCount - 1)) * (totalPoints - 1));
+        const x = margin.left + getLinePointX(snapshotIndex, totalPoints, chartWidth);
+        svg.appendChild(createSvgNode('line', {
+            x1: x,
+            y1: margin.top,
+            x2: x,
+            y2: height - margin.bottom,
+            stroke: 'rgba(255,255,255,0.06)',
+            'stroke-width': 1
+        }));
+
+        const tickLabel = createSvgNode('text', {
+            x,
+            y: height - margin.bottom + 28,
+            fill: '#94a3b8',
+            'font-size': 12,
+            'font-weight': 700,
+            'text-anchor': 'middle'
+        });
+        tickLabel.textContent = snapshotIndex === 0 ? 'Start' : `M${snapshotIndex}`;
+        svg.appendChild(tickLabel);
+    }
+
+    svg.appendChild(createSvgNode('line', {
+        x1: margin.left,
+        y1: margin.top,
+        x2: margin.left,
+        y2: height - margin.bottom,
+        stroke: 'rgba(255,255,255,0.32)',
+        'stroke-width': 2
+    }));
+
+    svg.appendChild(createSvgNode('line', {
+        x1: margin.left,
+        y1: height - margin.bottom,
+        x2: width - margin.right,
+        y2: height - margin.bottom,
+        stroke: 'rgba(255,255,255,0.32)',
+        'stroke-width': 2
+    }));
+
+    const yTitle = createSvgNode('text', {
+        x: margin.left,
+        y: margin.top - 10,
+        fill: '#e2e8f0',
+        'font-size': 13,
+        'font-weight': 800
+    });
+    yTitle.textContent = 'Posisi';
+    svg.appendChild(yTitle);
+
+    const xTitle = createSvgNode('text', {
+        x: width - margin.right,
+        y: height - margin.bottom + 52,
+        fill: '#e2e8f0',
+        'font-size': 13,
+        'font-weight': 800,
+        'text-anchor': 'end'
+    });
+    xTitle.textContent = 'Perjalanan pertandingan';
+    svg.appendChild(xTitle);
+
+    const seriesLayer = createSvgNode('g', { id: 'lineSeriesLayer' });
+    svg.appendChild(seriesLayer);
+
+    animTeams.forEach(team => {
+        const teamGroup = createSvgNode('g', { 'data-team': team.name });
+        const path = createSvgNode('path', {
+            fill: 'none',
+            stroke: team.color,
+            'stroke-width': 4,
+            'stroke-linecap': 'round',
+            'stroke-linejoin': 'round'
+        });
+        const pointsGroup = createSvgNode('g');
+        const endpointLogo = createSvgNode('image', {
+            width: 24,
+            height: 24,
+            preserveAspectRatio: 'xMidYMid slice'
+        });
+        if (team.logo) {
+            endpointLogo.setAttribute('href', team.logo);
+            endpointLogo.setAttributeNS('http://www.w3.org/1999/xlink', 'href', team.logo);
+        }
+        const endpointLabel = createSvgNode('text', {
+            fill: team.color,
+            'font-size': 13,
+            'font-weight': 800
+        });
+
+        teamGroup.appendChild(path);
+        teamGroup.appendChild(pointsGroup);
+        teamGroup.appendChild(endpointLogo);
+        teamGroup.appendChild(endpointLabel);
+        seriesLayer.appendChild(teamGroup);
+
+        team.elements = { path, pointsGroup, endpointLogo, endpointLabel };
+    });
+}
+
+function playRacingAnimation() {
+    if (animationFrameId) return;
+    if (matches.length === 0) {
+        alert("Belum ada data pertandingan.");
+        return;
+    }
+
+    document.getElementById('playAnimBtn').disabled = true;
+    document.getElementById('playAnimBtn').classList.add('opacity-50');
+
+    const maxProgress = Math.max(animationSnapshots.length - 1, 1);
+    let startTime = null;
+
+    const tick = (timestamp) => {
+        if (startTime === null) startTime = timestamp;
+        const elapsed = timestamp - startTime;
+        const eased = Math.min(elapsed / ANIMATION_DURATION_MS, 1);
+        const progress = eased * maxProgress;
+
+        updateRacingBarsDOM(progress);
+
+        if (eased < 1) {
+            animationFrameId = requestAnimationFrame(tick);
+        } else {
+            animationFrameId = null;
+            document.getElementById('playAnimBtn').disabled = false;
+            document.getElementById('playAnimBtn').classList.remove('opacity-50');
+            document.getElementById('animMatchInfo').innerText += ' (SELESAI)';
+        }
+    };
+
+    updateRacingBarsDOM(0);
+    animationFrameId = requestAnimationFrame(tick);
+}
+
+function getInterpolatedRank(team, progress) {
+    const maxIndex = team.ranks.length - 1;
+    const clamped = Math.max(0, Math.min(progress, maxIndex));
+    const lowerIndex = Math.floor(clamped);
+    const upperIndex = Math.min(maxIndex, lowerIndex + 1);
+    const blend = clamped - lowerIndex;
+    const lowerRank = team.ranks[lowerIndex];
+    const upperRank = team.ranks[upperIndex];
+
+    return lowerRank + ((upperRank - lowerRank) * blend);
+}
+
+function buildVisiblePath(team, progress, chartWidth, chartHeight, totalTeams) {
+    const maxIndex = team.ranks.length - 1;
+    const clamped = Math.max(0, Math.min(progress, maxIndex));
+    const lowerIndex = Math.floor(clamped);
+    const commands = [];
+
+    for (let index = 0; index <= lowerIndex; index++) {
+        const x = getLinePointX(index, team.ranks.length, chartWidth);
+        const y = getLinePointY(team.ranks[index], totalTeams, chartHeight);
+        commands.push(`${index === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${y.toFixed(2)}`);
+    }
+
+    if (clamped > lowerIndex && lowerIndex < maxIndex) {
+        const x = getLinePointX(clamped, team.ranks.length, chartWidth);
+        const y = getLinePointY(getInterpolatedRank(team, clamped), totalTeams, chartHeight);
+        commands.push(`L ${x.toFixed(2)} ${y.toFixed(2)}`);
+    }
+
+    return commands.join(' ');
+}
+
+function updateAnimInfo(progress) {
+    const snapshotIndex = Math.floor(progress);
+    if (snapshotIndex <= 0) {
+        document.getElementById('animMatchInfo').innerText = `Pertandingan: 0 / ${matches.length}`;
+        return;
+    }
+
+    const match = animationSnapshots[snapshotIndex].match;
+    document.getElementById('animMatchInfo').innerText =
+        `Pertandingan ke: ${snapshotIndex} / ${matches.length} | ${match.homeTeam} ${match.homeScore}-${match.awayScore} ${match.awayTeam}`;
+}
+
+function updateRacingBarsDOM(progress = 0) {
+    const { width, margin, chartWidth, chartHeight } = getChartMetrics();
+    const totalTeams = teams.length;
+    const clampedProgress = Math.max(0, Math.min(progress, animationSnapshots.length - 1));
+    updateAnimInfo(clampedProgress);
+
+    animTeams.forEach(team => {
+        const { path, pointsGroup, endpointLogo, endpointLabel } = team.elements;
+        if (!path) return;
+
+        path.setAttribute('d', buildVisiblePath(team, clampedProgress, chartWidth, chartHeight, totalTeams));
+
+        const visibleWholePoints = Math.floor(clampedProgress);
+        pointsGroup.innerHTML = '';
+        for (let pointIndex = 0; pointIndex <= visibleWholePoints; pointIndex++) {
+            const cx = margin.left + getLinePointX(pointIndex, team.ranks.length, chartWidth);
+            const cy = margin.top + getLinePointY(team.ranks[pointIndex], totalTeams, chartHeight);
+            const circle = createSvgNode('circle', {
+                cx,
+                cy,
+                r: 4.5,
+                fill: team.color,
+                stroke: '#020617',
+                'stroke-width': 2
+            });
+            pointsGroup.appendChild(circle);
+        }
+
+        const endX = margin.left + getLinePointX(clampedProgress, team.ranks.length, chartWidth);
+        const endY = margin.top + getLinePointY(getInterpolatedRank(team, clampedProgress), totalTeams, chartHeight);
+        const labelX = Math.min(width - margin.right + 16, endX + 18);
+
+        endpointLogo.setAttribute('x', (endX - 12).toFixed(2));
+        endpointLogo.setAttribute('y', (endY - 12).toFixed(2));
+        endpointLogo.setAttribute('visibility', team.logo ? 'visible' : 'hidden');
+        endpointLabel.setAttribute('x', labelX.toFixed(2));
+        endpointLabel.setAttribute('y', (endY + 4).toFixed(2));
+        endpointLabel.textContent = team.name;
+    });
+}
+
+</script>
+<div id="h2hModal" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50" style="display: none;">
+    <div class="bg-white rounded-xl shadow-2xl p-6 w-11/12 md:w-2/3 lg:w-1/2 max-w-4xl animate-fade-in-up">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-semibold text-gray-800">🔍 Detail Head-to-Head</h2>
+            <button onclick="closeH2HModal()" class="text-gray-500 hover:text-gray-800 text-3xl font-bold">&times;</button>
+        </div>
+
+        <div id="h2hModalContent" class="space-y-6">
+            <div>
+                <h3 class="text-lg font-semibold mb-2 text-blue-600">Klasemen Kecil (Mini League)</h3>
+                <div id="h2hMiniLeague" class="overflow-x-auto"></div>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold mb-2 text-green-600">Riwayat Pertandingan Terkait</h3>
+                <div id="h2hMatchList" class="space-y-2"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Animasi Klasemen -->
+<div id="animationModal" class="fixed inset-0 bg-black bg-opacity-80 items-center justify-center z-50 p-4" style="display: none; flex-direction: column;">
+    <div class="bg-slate-950 text-white rounded-2xl shadow-2xl p-4 md:p-6 w-full max-w-6xl h-[95vh] flex flex-col relative animate-fade-in-up border border-slate-800 overflow-hidden">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">📈 Animasi Perjalanan Klasemen</h2>
+                <p id="animMatchInfo" class="text-sm font-semibold text-sky-200 mt-1 bg-sky-500/10 border border-sky-400/20 inline-block px-3 py-1 rounded-full">Pertandingan: 0 / 0</p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="playRacingAnimation()" id="playAnimBtn" class="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-lg font-bold flex items-center shadow-md transition-transform hover:scale-105">▶ MULAI ANIMASI</button>
+                <button onclick="closeAnimationModal()" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-5 py-2 rounded-lg font-bold border border-gray-300 transition-colors">Tutup</button>
+            </div>
+        </div>
+        
+        <div class="flex-1 w-full overflow-hidden bg-gray-50 border border-gray-200 rounded-lg p-2 md:p-4 relative">
+            <div id="racingChartContainer" class="relative w-full h-full">
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes fade-in-up {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in-up {
+        animation: fade-in-up 0.3s ease-out forwards;
+    }
+    #animationModal > div {
+        background: #020617;
+        color: white;
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        border-radius: 1rem;
+        max-width: 72rem;
+        overflow: hidden;
+    }
+    #animationModal #animMatchInfo {
+        color: #bae6fd;
+        background: rgba(14, 165, 233, 0.12);
+        border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+    #animationModal h2 {
+        color: #fff !important;
+    }
+    #animationModal #playAnimBtn {
+        background: #10b981;
+        border-radius: 0.75rem;
+        font-size: 0;
+    }
+    #animationModal #playAnimBtn::before {
+        content: 'MULAI ANIMASI';
+        font-size: 0.875rem;
+        line-height: 1;
+    }
+    #animationModal button[onclick="closeAnimationModal()"] {
+        background: #0f172a;
+        color: white;
+        border-color: rgba(100, 116, 139, 0.45);
+        border-radius: 0.75rem;
+    }
+    #animationModal .flex-1.w-full.overflow-hidden {
+        background: linear-gradient(135deg, #020617 0%, #0f172a 55%, #111827 100%);
+        border-color: rgba(51, 65, 85, 0.9);
+        border-radius: 1rem;
+    }
+    #racingChartContainer::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(180deg, transparent 0 45px, rgba(255,255,255,0.05) 45px 46px);
+        pointer-events: none;
+        opacity: 0.4;
+    }
+    .racing-team-wrap {
+        z-index: 1;
+    }
+    .racing-team-wrap .bar-fill::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, rgba(255,255,255,0.16), transparent 30%, transparent 70%, rgba(255,255,255,0.08));
+        pointer-events: none;
+    }
+</style>
+    
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b)
+{var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96d870b7b69f9d1d',t:'MTc1NDkyMjcyNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body)
+{var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function()
+{};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
