@@ -141,6 +141,61 @@
             border-bottom: 1px solid rgba(255,255,255,0.06);
         }
 
+        .standings-table {
+            table-layout: fixed;
+            width: max-content;
+            margin-inline: auto;
+            border-collapse: collapse;
+        }
+
+        .standings-table th,
+        .standings-table td {
+            padding-left: 0.45rem !important;
+            padding-right: 0.45rem !important;
+        }
+
+        .standings-table th:nth-child(1),
+        .standings-table td:nth-child(1) {
+            width: 4.75rem;
+        }
+
+        .standings-table th:nth-child(2),
+        .standings-table td:nth-child(2) {
+            width: 11rem;
+        }
+
+        .standings-table th:nth-child(3),
+        .standings-table td:nth-child(3),
+        .standings-table th:nth-child(4),
+        .standings-table td:nth-child(4),
+        .standings-table th:nth-child(5),
+        .standings-table td:nth-child(5),
+        .standings-table th:nth-child(6),
+        .standings-table td:nth-child(6),
+        .standings-table th:nth-child(7),
+        .standings-table td:nth-child(7),
+        .standings-table th:nth-child(8),
+        .standings-table td:nth-child(8),
+        .standings-table th:nth-child(9),
+        .standings-table td:nth-child(9) {
+            width: 3.5rem;
+        }
+
+        .standings-table th:nth-child(10),
+        .standings-table td:nth-child(10) {
+            width: 4.5rem;
+        }
+
+        .standings-table th:nth-child(11),
+        .standings-table td:nth-child(11) {
+            width: 4.25rem;
+        }
+
+        .standings-table th:nth-child(12),
+        .standings-table td:nth-child(12) {
+            width: 5.75rem;
+        }
+
         .standing-row {
             transition: transform 0.16s ease, background-color 0.16s ease;
         }
@@ -378,7 +433,7 @@
         
       </div>
             <div class="overflow-x-auto table-shell bg-white">
-                <table class="w-full text-xs">
+                <table class="text-xs standings-table">
                     <thead>
                         <tr>
                             <th class="px-2 py-2 text-left font-semibold">Pos</th>
@@ -1057,7 +1112,7 @@ if (lastStandingsOrder) {
                     </div>
                         </td>
             <td class="px-2 py-1.5 font-semibold text-slate-800">
-                 <div class="max-w-[180px] leading-tight">${team.name}</div>
+                 <div class="max-w-[176px] leading-tight">${team.name}</div>
                 </td>
             <td class="px-2 py-1.5 text-center">${team.played}</td>
             <td class="px-2 py-1.5 text-center">${team.won}</td>
