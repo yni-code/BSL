@@ -6,6 +6,7 @@
     <title>Klasemen BRI SUPER LEAGUE 2026/27</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -161,6 +162,10 @@
             </div>
         </div>
       </div>  
+      <button onclick="copyScreenshot()" 
+    class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm">
+    📸 Copy Screenshot
+</button>
     
     
  <!-- logout -->
@@ -228,6 +233,11 @@
     let filteredMatches = null;
     let lastStandingsOrder = null;
     let standingsSnapshotLocked = false;
+    // Pengurangan poin karena sanksi kompetisi.
+    const pointDeductions = {
+        'isenmulang fc': 2,
+        'java united fc': 2
+    };
    
     document.addEventListener('DOMContentLoaded', () => {
     fetch('/matches.json')
@@ -243,6 +253,34 @@
 
 
     // --- FUNGSI-FUNGSI DARI KODE ASLI ANDA (dengan sedikit penyesuaian) ---
+
+
+    async function copyScreenshot() {
+    const element = document.getElementById('pdfContent');
+
+    try {
+        const canvas = await html2canvas(element, {
+            scale: 2,
+            useCORS: true
+        });
+
+        canvas.toBlob(async (blob) => {
+            try {
+                await navigator.clipboard.write([
+                    new ClipboardItem({ 'image/png': blob })
+                ]);
+
+                alert('📋 Screenshot berhasil di-copy! Tinggal paste (Ctrl+V)');
+            } catch (err) {
+                console.error('Gagal copy ke clipboard:', err);
+                alert('❌ Gagal copy ke clipboard');
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        alert('❌ Gagal mengambil screenshot');
+    }
+}
 
     function updateHomeAwayStats() {
     const sourceMatches = filteredMatches || matches;
@@ -401,6 +439,7 @@ function updateTeamStatsFiltered() {
     });
 
     teams.forEach(team => {
+        team.points -= pointDeductions[team.name.trim().toLowerCase()] || 0;
         team.goalDifference = team.goalsFor - team.goalsAgainst;
         team.fairPlayScore = team.yellowCards + (team.redCards * 3);
     });
@@ -619,10 +658,10 @@ function loadFormState() {
         });
 
         teams.forEach(team => {
-    team.goalDifference = team.goalsFor - team.goalsAgainst;
-    team.fairPlayScore = team.yellowCards + (team.redCards * 3);
-});
-
+            team.points -= pointDeductions[team.name.trim().toLowerCase()] || 0;
+            team.goalDifference = team.goalsFor - team.goalsAgainst;
+            team.fairPlayScore = team.yellowCards + (team.redCards * 3);
+        });
     }
 
     function getHeadToHeadStats(teamNames) {
@@ -875,7 +914,7 @@ function adminLogout() {
 }
 
     function copyToClipboard() {
-        let textData = 'KLASEMEN BRI SUPER LEAGUE 2025/26\n';
+        let textData = 'KLASEMEN BRI SUPER LEAGUE 2026/27\n';
         textData += '='.repeat(80) + '\n';
         textData += 'Pos\tTim\t\t\tMain\tM\tS\tK\tGM\tGK\tSG\tPoin\tFP\n';
         textData += '-'.repeat(80) + '\n';
