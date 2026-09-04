@@ -404,6 +404,11 @@ function updateTeamStatsFiltered() {
         team.goalDifference = team.goalsFor - team.goalsAgainst;
         team.fairPlayScore = team.yellowCards + (team.redCards * 3);
     });
+    // Pengurangan poin
+    teams.forEach(team => {
+    if (team.name === 'ISENMULANG FC' || team.name === 'JAVA UNITED FC') {
+        team.points -= 2;
+    }
 }
 
 function resetMatchFilter() {
@@ -619,9 +624,16 @@ function loadFormState() {
         });
 
         teams.forEach(team => {
-            team.goalDifference = team.goalsFor - team.goalsAgainst;
-            team.fairPlayScore = team.yellowCards + (team.redCards * 3);
-        });
+    team.goalDifference = team.goalsFor - team.goalsAgainst;
+    team.fairPlayScore = team.yellowCards + (team.redCards * 3);
+});
+
+// Pengurangan poin
+teams.forEach(team => {
+    if (team.name === 'ISENMULANG FC' || team.name === 'JAVA UNITED FC') {
+        team.points -= 2;
+    }
+});
     }
 
     function getHeadToHeadStats(teamNames) {
