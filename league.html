@@ -6,7 +6,6 @@
     <title>Klasemen BRI SUPER LEAGUE 2026/27</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -162,12 +161,6 @@
             </div>
         </div>
       </div>  
-      <button onclick="copyScreenshot()" 
-    class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm">
-    📸 Copy Screenshot
-</button>
-    
-    
  <!-- logout -->
     <div id="adminArea" style="display:none;">
     <div class="bg-white rounded-xl card-shadow p-4 mb-8 flex justify-between items-center">
@@ -254,33 +247,6 @@
 
     // --- FUNGSI-FUNGSI DARI KODE ASLI ANDA (dengan sedikit penyesuaian) ---
 
-
-    async function copyScreenshot() {
-    const element = document.getElementById('pdfContent');
-
-    try {
-        const canvas = await html2canvas(element, {
-            scale: 2,
-            useCORS: true
-        });
-
-        canvas.toBlob(async (blob) => {
-            try {
-                await navigator.clipboard.write([
-                    new ClipboardItem({ 'image/png': blob })
-                ]);
-
-                alert('📋 Screenshot berhasil di-copy! Tinggal paste (Ctrl+V)');
-            } catch (err) {
-                console.error('Gagal copy ke clipboard:', err);
-                alert('❌ Gagal copy ke clipboard');
-            }
-        });
-    } catch (error) {
-        console.error(error);
-        alert('❌ Gagal mengambil screenshot');
-    }
-}
 
     function updateHomeAwayStats() {
     const sourceMatches = filteredMatches || matches;
@@ -761,7 +727,7 @@ if (lastStandingsOrder) {
 
         const row = document.createElement('tr');
         const isTied = pointGroups[team.points] && pointGroups[team.points].length > 1;
-        row.className = 'border-b' + (isTied ? ' bg-yellow-50' : (index % 2 === 0 ? ' bg-gray-50' : ' bg-white'));
+        row.className = 'border-b bg-white';
         let positionClass = '';
         if (index < 3) positionClass = 'text-green-600 font-bold';
         else if (index >= sortedTeams.length - 3) positionClass = 'text-red-600 font-bold';
